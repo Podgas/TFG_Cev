@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     [SerializeField]
     private float speed;
+    [SerializeField]
     private float rotSpeed;
     [SerializeField]
     private float DirectionDampTime = .25f;
@@ -35,8 +36,11 @@ public class PlayerController : MonoBehaviour
        
 
         myTransform.Translate(_moveDirection * speed * Time.deltaTime);
-
-        //StickToWorldSpace(transform, cameraPosition, ref _moveDirection);       
+        if (Input.anyKey)
+        {
+            StickToWorldSpace(transform, cameraPosition);
+        }
+           
 
 
     }
@@ -46,6 +50,11 @@ public class PlayerController : MonoBehaviour
     void Move()
     {
         _moveDirection = new Vector3(Input.GetAxis("Horizontal") * speed, 0, Input.GetAxis("Vertical") * speed);
+        if(Input.GetAxis("Vertical")!= 0)
+        {
+            float newForward = (Mathf.LerpAngle(transform.rotation.eulerAngles.y, cameraPosition.rotation.eulerAngles.y, 7f * Time.deltaTime));
+            transform.rotation = Quaternion.Euler(0f, newForward, 0f);
+        }
     }
 
 
@@ -58,15 +67,18 @@ public class PlayerController : MonoBehaviour
         //get camera rotation
         Vector3 cameraDirection = camera.forward;
         cameraDirection.y = 0.0f;
-        Quaternion reference = Quaternion.FromToRotation(Vector3.forward, cameraDirection);
+        Quaternion reference = Quaternion.FromToRotation(transform.forward, cameraDirection);
 
         Vector3 moveDirection = reference * stickDirection;
 
-        Quaternion.LookRotation(moveDirection);
 
-
-
-        directionOut = moveDirection * angleRootToMove;
+        Debug.DrawRay(transform.position, moveDirection, Color.blue);
+        Debug.DrawRay(transform.position, transform.forward, Color.red);
+        
+        Quaternion actualRot = Quaternion.LookRotation(moveDirection);
+        //transform.rotation = actualRot;
+        //transform.rotation = actualRot;
+        //directionOut = moveDirection * angleRootToMove;
 
     }
 

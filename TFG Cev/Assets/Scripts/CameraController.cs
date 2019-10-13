@@ -1,72 +1,107 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class CameraController : MonoBehaviour
 {
 
+    //Variables for camera position
+    [Header("Camera Position")]
     [SerializeField]
-    private float distanceAway;
+    private Vector3 offset;
     [SerializeField]
-    private float distanceUp;
-    [SerializeField]
-    private float smooth;
+    private bool useOffset;
     [SerializeField]
     private Transform target;
+
+    private Transform xForm_Camera;
+    private Transform xForm_CameraPivot;
+    private Vector3 localRotation;
+    
+
+
+
+    //Movement Vars
+    [Header("Camera Movement")]
+    
     [SerializeField]
-    private Vector3 offset = new Vector3(0f, 1.5f, 0f);
+    private Transform anchor;
     [SerializeField]
-    float rotateSpeed;
-
-    float horizontal;
-
-    private Vector3 lookDir;
-    private Vector3 targetPosition;
-
-    private Vector3 velocityCameraSmooth = Vector3.zero;
+    private float maxViewAngle;
     [SerializeField]
-    private float camSmoothDampTime = 0.1f;
+    private float minViewAngle;
+    [SerializeField]
+    private float smoothSpeed;
+    [SerializeField]
+    private float zoomSpeed;
+    [SerializeField]
+    private float orbitDamp;
+    [SerializeField]
+    private float orbitSpeed;
 
+    public Vector3 lookDirection;
+    [SerializeField]
+    private float _CameraDistance = 10f;
+
+
+
+
+    // Start is called before the first frame update
     void Start()
     {
+        //if we use offset, we will use the Vector3 defined on inspector for the cmaera position
+        if (!useOffset)
+        {
+            offset = target.position - transform.position;
+        }
 
-        target = GameObject.FindGameObjectWithTag("Player").transform;
-       
+        anchor = GameObject.FindGameObjectWithTag("CameraAnchor").transform;
+        //Copy the position of the target to the anchor and set Anchor free
+        anchor.transform.position = target.transform.position;
+        anchor.transform.parent = null;
+
+        xForm_Camera = this.transform;
+        xForm_CameraPivot = this.transform.parent;
+
     }
 
-    void Update()
-    {
-        horizontal = Input.GetAxis("Mouse X") * rotateSpeed;
-        target.Rotate(0, horizontal, 0);
-    }
-
+    // Update is called once per frame
     void LateUpdate()
     {
 
-        Vector3 characterOffset = target.position + offset;
+        anchor.transform.position = target.transform.position;
 
-        lookDir = characterOffset - this.transform.position;
-        lookDir.y = 0;
-        lookDir.Normalize();
-        Debug.DrawRay(this.transform.position, lookDir, Color.green);
 
-        //Sets the target position for the camera with the offset
-        targetPosition = target.position + target.up * distanceUp - lookDir * distanceAway;
+        if(Input.GetAxis("Axis-3") != 0 || Input.GetAxis("Axis-4") != 0)
+        {
+            localRotation.x += Input.GetAxis("Axis-4") * orbitSpeed;
+            localRotation.y += Input.GetAxis("Axis-3") * -orbitSpeed;
 
-        /*Debug.DrawRay(target.position, Vector3.up * distanceUp, Color.red);
-        Debug.DrawRay(target.position, -1f* target.forward * distanceAway, Color.blue);
-        Debug.DrawLine(target.position, targetPosition);*/
+            localRotation.y = Mathf.Clamp(localRotation.y, minViewAngle, maxViewAngle);
 
-        //smoothing the current possition and the new position
-        SmoothPosition(this.transform.position, targetPosition);
-        
+            if(Input.GetAxis("Axis-3") > 0 || Input.GetAxis("Axis-3") <= 0)
+            {
+                float scrollAmount = Input.GetAxis("Axis-3");
+
+                scrollAmount *= (xForm_Camera.position.z * 0.3f);
+
+                _CameraDistance += scrollAmount * -1f;
+
+                
+
+            }
+        }
+
+
+
+        Quaternion QT = Quaternion.Euler(localRotation.y, localRotation.x, 0);
+
+        xForm_CameraPivot.rotation = Quaternion.Lerp(xForm_CameraPivot.rotation, QT, Time.deltaTime * orbitDamp);
+        xForm_CameraPivot.position = Vector3.MoveTowards(xForm_CameraPivot.position, anchor.position, Time.time);
 
         transform.LookAt(target);
+
     }
 
-    private void SmoothPosition(Vector3 fromPos, Vector3 toPos)
-    {
-        this.transform.position = Vector3.SmoothDamp(fromPos, toPos, ref velocityCameraSmooth, camSmoothDampTime);
-    }
 }
-
