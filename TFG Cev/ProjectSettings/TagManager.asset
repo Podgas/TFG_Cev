@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CameraPivot
   - CameraAnchor
+  - Ground
   layers:
   - Default
   - TransparentFX
