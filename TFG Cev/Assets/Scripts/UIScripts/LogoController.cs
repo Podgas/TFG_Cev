@@ -5,7 +5,6 @@ using UnityEngine;
 public class LogoController : MonoBehaviour
 {
     [SerializeField]
-    SceneController sc;
     bool fadeout = false;
     float timeToFade = 2f;
     float actualTime;   
@@ -34,7 +33,7 @@ public class LogoController : MonoBehaviour
 
         if (Input.anyKey || anim.GetCurrentAnimatorStateInfo(0).IsName("FadeOut") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
-            sc.LoadScene(1);
+            SceneController.LoadScene(SceneController.Scene.TitleScreen,false);
         }
 
     }

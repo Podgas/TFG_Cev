@@ -5,18 +5,37 @@ using UnityEngine.UI;
 
 public class BlinkText : MonoBehaviour
 {
-    Color textColor;
+    Text text;
     [SerializeField]
+    float startTime;
     float actualTime;
-    float blinkTime = 0.5f;
+    public float blinkTime = 0.5f;
+
     bool blinkIn = true;
 
     private void Start()
     {
-        textColor = GetComponent<Text>().material.color;
+        text = GetComponent<Text>();
+        text.canvasRenderer.SetAlpha(0);
     }
 
     private void Update()
+    {
+
+
+        if (startTime >= 2f)
+        {
+            Blink();
+        }
+        else
+        {
+            startTime += Time.deltaTime;
+        }
+        
+        
+    }
+
+    void Blink()
     {
         actualTime += Time.deltaTime;
         if (actualTime >= blinkTime)
@@ -26,10 +45,10 @@ public class BlinkText : MonoBehaviour
         }
         if (blinkIn)
         {
-            textColor.a = 0;
+            text.CrossFadeAlpha(1, blinkTime, false);
         }
         else
-            textColor.a = 1;
-
+            text.CrossFadeAlpha(0, blinkTime, false);
     }
+
 }
