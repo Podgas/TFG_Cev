@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.EventSystems;
 public class TitleUI : MonoBehaviour
 {
     CanvasGroup actualCanvas;
@@ -10,7 +10,7 @@ public class TitleUI : MonoBehaviour
     CanvasGroup logoPanel;
     CanvasGroup mainMenu;
     CanvasGroup options;
-
+    public EventSystem eventSystem;
     float fadeTransitionTime = 1.5f;
 
 
@@ -64,27 +64,28 @@ public class TitleUI : MonoBehaviour
     void TitleUpdate()
     {
 
-        if(Input.anyKey && actualCanvas.name =="LogoPanel")
+        if (Input.anyKey && actualCanvas.name == "LogoPanel")
         {
             SwitchCanvas(actualCanvas, mainMenu, 0.5f);
-            
+
         }
 
     }
 
 
-    void SwitchCanvas(CanvasGroup actualCG, CanvasGroup nextCG,float time)
+    void SwitchCanvas(CanvasGroup actualCG, CanvasGroup nextCG, float time)
     {
         StartCoroutine(SwitchCanvasCoroutine(actualCG, nextCG, time));
     }
 
-    private IEnumerator FadeCanvas(CanvasGroup canvas, float start,float end, float time = 0.5f)
+    private IEnumerator FadeCanvas(CanvasGroup canvas, float start, float end, float time = 0.5f)
     {
         float timeStartLerping = Time.time;
         float timeSinceStarted = Time.time - timeStartLerping;
         float percentageComplete = timeSinceStarted / time;
 
-        while (true) {
+        while (true)
+        {
 
             timeSinceStarted = Time.time - timeStartLerping;
             percentageComplete = timeSinceStarted / time;
@@ -107,13 +108,14 @@ public class TitleUI : MonoBehaviour
 
         actualCanvas = nextCG;
 
-        actualCanvas.GetComponentInChildren<Button>().Select();
+        //actualCanvas.GetComponentInChildren<Button>().Select();
+        //eventSystem.SetSelectedGameObject(actualCanvas.GetComponentInChildren<Button>().gameObject);
     }
 
 
     public void OnStartClick()
     {
-        SceneController.LoadScene(SceneController.Scene.TestScene,true);
+        SceneController.LoadScene(SceneController.Scene.TestScene, true);
     }
     public void OnOptionsClick()
     {

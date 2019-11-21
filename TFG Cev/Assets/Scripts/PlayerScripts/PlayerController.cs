@@ -5,7 +5,10 @@ using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
-
+    //------------Stats Vars ---------------//
+    [Header("Stats")]
+    [SerializeField]
+    private PlayerHP hp;
     //------------Move Vars ---------------//
     [Header("Movement")]
     [SerializeField]
@@ -53,6 +56,11 @@ public class PlayerController : MonoBehaviour
 
     Vector3 forward;
     Vector3 right;
+
+    private void Awake()
+    {
+        InitStats();
+    }
     void Start()
     {
         myTransform = transform;
@@ -186,5 +194,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void UpdateHp(float value)
+    {
+        float percentage = (hp.value) / hp.maxValue;
+        if (percentage >= 1)
+        {
+            percentage = 1;
+
+        }
+        else if (percentage <= 0)
+        {
+            percentage = 0;
+        }
+        else
+        {
+            hp.value += value;
+        }
+        
+    }
+
+    void InitStats()
+    {
+        hp.value = hp.maxValue;
+    }
 
 }
