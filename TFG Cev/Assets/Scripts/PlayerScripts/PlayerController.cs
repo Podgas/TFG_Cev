@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     //------------Stats Vars ---------------//
     [Header("Stats")]
     [SerializeField]
-    private PlayerHP hp;
+    private PlayerStats stats;
     [SerializeField]
     private FloatEvent onHPChange;
 
@@ -202,17 +202,17 @@ public class PlayerController : MonoBehaviour
 
     void UpdateHp(float value)
     {
-        hp.value += value;
-        float percentage = (hp.value) / hp.maxValue;
+        stats.hp.value += value;
+        float percentage = (stats.hp.value) / stats.hp.maxValue;
         if (percentage >= 1)
         {
             percentage = 1;
-            hp.value = hp.maxValue;
+            stats.hp.value = stats.hp.maxValue;
         }
         else if (percentage <= 0)
         {
             percentage = 0;
-            hp.value = hp.minValue;
+            stats.hp.value = stats.hp.minValue;
         }
 
         Debug.Log("HPChange");
@@ -222,7 +222,7 @@ public class PlayerController : MonoBehaviour
 
     void InitStats()
     {
-        hp.value = hp.maxValue;
+        stats.hp.value = stats.hp.maxValue;
     }
 
 }

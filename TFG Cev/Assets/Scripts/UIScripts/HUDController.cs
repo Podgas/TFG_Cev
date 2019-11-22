@@ -6,14 +6,14 @@ using UnityEngine.UI;
 public class HUDController : MonoBehaviour
 {
     [SerializeField]
-    private PlayerHP playerHP;
+    private PlayerStats playerStats;
     [SerializeField]
     private Image hpBar;
 
 
     private void Start()
     {
-        hpBar.fillAmount = playerHP.value / playerHP.maxValue;
+        hpBar.fillAmount = playerStats.hp.value / playerStats.hp.maxValue;
     }
 
     public void UpdateHpBar(float percentage) {
