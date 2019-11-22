@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6bdd89d8f489be45b92237fa0b51cb7, type: 3}
-  m_Name: PlayerHP
+  m_Script: {fileID: 11500000, guid: 34294beb5382b8f4d927e33bf3dd0dd9, type: 3}
+  m_Name: Character_MeleeAttackStop
   m_EditorClassIdentifier: 
-  maxValue: 300
-  minValue: 0
-  value: 0

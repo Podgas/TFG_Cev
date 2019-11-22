@@ -5,6 +5,14 @@ using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
+
+    //------------Components Vars ---------------//
+    [Header("Components")]
+    [SerializeField]
+    Transform cameraPosition;
+    [SerializeField]
+    Rigidbody rb;
+
     //------------Stats Vars ---------------//
     [Header("Stats")]
     [SerializeField]
@@ -12,6 +20,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private FloatEvent onHPChange;
 
+    //------------Combat Vars ---------------//
+    [Header("Combat")]
+    [SerializeField]
+    private VoidEvent onAttackLaunch;
+    [SerializeField]
+    private VoidEvent onAttackStops;
 
     //------------Move Vars ---------------//
     [Header("Movement")]
@@ -19,47 +33,35 @@ public class PlayerController : MonoBehaviour
     private float walkSpeed;
     [SerializeField]
     private float runSpeed;
-
-    private float speed;
-    [SerializeField]
-    private float jumpForce;
-    [SerializeField]
-    private float DirectionDampTime = .25f;
-    [SerializeField]
-    private Transform bottomPosition;
     [SerializeField]
     Transform model;
 
+    private float speed;
+    private Vector3 _moveDirection;
+    Vector3 joystickDirection;
+    Vector3 forward;
+    Vector3 right;
 
 
     [Header("Jumping")]
     [SerializeField]
     float fallMultiplier = 2.5f;
+    [SerializeField]
+    private float jumpForce;
+    [SerializeField]
+    float hitDistance = 0.6f;
 
+    //----------------------------//
 
-
-
-    private Vector3 _moveDirection;
-    Vector3 joystickDirection;
-
-    Transform myTransform;
-    Rigidbody rb;
-    Transform cameraPosition;
-    Transform cameraAnchor;
-    private  CinemachineFreeLook CMFL;
-    bool rotating = false;
-
+    //------------Bool State Vars ---------------//
     bool isGrounded = true;
     bool isMoving = false;
     bool isRunning = false;
 
-
-    float hitDistance=1.05f;
+    //------------Anim Vars ---------------//
+    [Header("Animation")]
     [SerializeField]
-    LayerMask layer;
-
-    Vector3 forward;
-    Vector3 right;
+    Animator anim;
 
     private void Awake()
     {
@@ -67,11 +69,6 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
-        myTransform = transform;
-        cameraPosition = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        cameraAnchor = GameObject.FindGameObjectWithTag("CameraAnchor").transform;
-        CMFL = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CinemachineFreeLook>();
-        rb = GetComponent<Rigidbody>();
 
         RecalculatePivot();
         speed = walkSpeed;
@@ -89,11 +86,13 @@ public class PlayerController : MonoBehaviour
         {
             isMoving = true;
             Move(forward, right);
+            anim.SetBool("isMoving", isMoving);
         }
         else
         {
             isMoving = false;
             rb.velocity = Vector3.zero;
+            anim.SetBool("isMoving", isMoving);
         }
 
         if (isGrounded && Input.GetAxis("Jump") != 0)
@@ -101,7 +100,11 @@ public class PlayerController : MonoBehaviour
             Jump();
         }
 
-
+        if (Input.GetButtonDown("Attack"))
+        {
+            anim.SetTrigger("Attacked");
+            onAttackLaunch.Raise();
+        }
 
         if (!isGrounded)
         {
@@ -123,8 +126,6 @@ public class PlayerController : MonoBehaviour
             if(joystickDirection != Vector3.zero)
                 model.rotation = Quaternion.LookRotation(joystickDirection);
 
-
-            //myTransform.Translate(_moveDirection * Time.deltaTime, Space.Self);
         }
         else
         {
@@ -163,7 +164,7 @@ public class PlayerController : MonoBehaviour
 
     void IsGrounded()
     {
-        Debug.DrawLine(transform.position, transform.position - new Vector3(0, 0.95f, 0), Color.cyan);
+        Debug.DrawRay(transform.position, -transform.up, Color.cyan);
        
         if (Physics.Raycast(transform.position, -transform.up, hitDistance))
         {
