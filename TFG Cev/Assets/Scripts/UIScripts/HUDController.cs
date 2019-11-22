@@ -15,13 +15,8 @@ public class HUDController : MonoBehaviour
     {
         hpBar.fillAmount = playerHP.value / playerHP.maxValue;
     }
-    private void Update()
-    {
-        if(Input.anyKeyDown)
-            UpdateHpBar(-20);
-    }
 
-    void UpdateHpBar(float percentage) {
+    public void UpdateHpBar(float percentage) {
 
         hpBar.fillAmount = percentage;
 

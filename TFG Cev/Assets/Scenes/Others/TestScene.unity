@@ -1495,7 +1495,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 338974552}
-  m_LocalRotation: {x: 0.10260048, y: -0.000000004043284, z: -0.000000036007105, w: 0.99472266}
+  m_LocalRotation: {x: 0.10260042, y: -0.0000000040432697, z: -0.000000036007105,
+    w: 0.99472266}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2944,6 +2945,7 @@ GameObject:
   - component: {fileID: 1368880625}
   - component: {fileID: 1368880624}
   - component: {fileID: 1368880626}
+  - component: {fileID: 1368880627}
   m_Layer: 5
   m_Name: HUDPanel
   m_TagString: Untagged
@@ -3022,6 +3024,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHP: {fileID: 11400000, guid: f0842730b1f8375458d7fac8d542b21d, type: 2}
   hpBar: {fileID: 1397445242}
+--- !u!114 &1368880627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368880622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfe71675cc7ab0840a9d53c859846309, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: d9cc91b2e1a01b84e946a775ee090b1d, type: 2}
+  unityEventResponse:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1368880626}
+        m_MethodName: UpdateHpBar
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1397445240
 GameObject:
   m_ObjectHideFlags: 0
@@ -3157,6 +3186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: {fileID: 11400000, guid: f0842730b1f8375458d7fac8d542b21d, type: 2}
+  onHPChange: {fileID: 11400000, guid: d9cc91b2e1a01b84e946a775ee090b1d, type: 2}
   walkSpeed: 7
   runSpeed: 10
   jumpForce: 15
@@ -3452,7 +3482,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1496849715}
-  m_LocalRotation: {x: 0.14444646, y: -0.0000003521343, z: 0.0000006192872, w: 0.9895127}
+  m_LocalRotation: {x: 0.14444637, y: -0.00000035213304, z: 0.00000061928927, w: 0.9895127}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

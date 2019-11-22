@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
     [Header("Stats")]
     [SerializeField]
     private PlayerHP hp;
+    [SerializeField]
+    private FloatEvent onHPChange;
+
+
     //------------Move Vars ---------------//
     [Header("Movement")]
     [SerializeField]
@@ -105,6 +109,7 @@ public class PlayerController : MonoBehaviour
             _moveDirection.y += (Physics.gravity.y * fallMultiplier * Time.fixedDeltaTime);
         }
 
+
         /*DEBUGS*/
 
         Debug.DrawRay(transform.position, forward, Color.blue);
@@ -196,21 +201,22 @@ public class PlayerController : MonoBehaviour
 
     void UpdateHp(float value)
     {
+        hp.value += value;
         float percentage = (hp.value) / hp.maxValue;
         if (percentage >= 1)
         {
             percentage = 1;
-
+            hp.value = hp.maxValue;
         }
         else if (percentage <= 0)
         {
             percentage = 0;
+            hp.value = hp.minValue;
         }
-        else
-        {
-            hp.value += value;
-        }
-        
+
+        Debug.Log("HPChange");
+        onHPChange.Raise(percentage);
+
     }
 
     void InitStats()
