@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
     private float runSpeed;
     [SerializeField]
     Transform model;
+    [SerializeField]
+    CharacterController cc;
 
     private float speed;
     private Vector3 _moveDirection;
@@ -45,11 +47,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jumping")]
     [SerializeField]
-    float fallMultiplier = 2.5f;
+    float gravity = 2.5f;
     [SerializeField]
     private float jumpForce;
     [SerializeField]
-    float hitDistance = 0.6f;
+    float hitDistance;
+    [SerializeField]
+    float fallMultiplier;
+    [SerializeField]
+    LayerMask groundHitLayer;
 
     //----------------------------//
 
@@ -57,6 +63,7 @@ public class PlayerController : MonoBehaviour
     bool isGrounded = true;
     bool isMoving = false;
     bool isRunning = false;
+    bool isJumping = false;
 
     //------------Anim Vars ---------------//
     [Header("Animation")]
@@ -78,8 +85,12 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetButton("Axis-3") || Input.GetButton("Axis-4"))
+        {
+            RecalculatePivot();
+        }
 
-        RecalculatePivot();
+
         IsGrounded();
 
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
@@ -91,11 +102,10 @@ public class PlayerController : MonoBehaviour
         else
         {
             isMoving = false;
-            rb.velocity = Vector3.zero;
             anim.SetBool("isMoving", isMoving);
         }
-
-        if (isGrounded && Input.GetAxis("Jump") != 0)
+        
+        if (isGrounded && Input.GetButtonDown("Jump"))
         {
             Jump();
         }
@@ -106,35 +116,33 @@ public class PlayerController : MonoBehaviour
             onAttackLaunch.Raise();
         }
 
-        if (!isGrounded)
-        {
-            Debug.Log("IsNotGroudned");
-            _moveDirection.y += (Physics.gravity.y * fallMultiplier * Time.fixedDeltaTime);
-        }
-
 
         /*DEBUGS*/
-
+        /*
         Debug.DrawRay(transform.position, forward, Color.blue);
         Debug.DrawRay(transform.position, right, Color.green);
-        Debug.DrawRay(transform.position, transform.up, Color.red);
+        Debug.DrawRay(transform.position, transform.up, Color.red);*/
+        Debug.Log(isGrounded);
 
         //////////////////////////////////////////
 
         if (isMoving)
         {
-            if(joystickDirection != Vector3.zero)
+            if(joystickDirection != Vector3.zero) { }
                 model.rotation = Quaternion.LookRotation(joystickDirection);
 
         }
-        else
+
+
+        if (!isGrounded)
         {
-            _moveDirection.x = 0;
-            _moveDirection.z = 0;
+            if(isJumping)
+                _moveDirection.y += Physics.gravity.y * gravity * Time.deltaTime;
+            else
+                _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
         }
 
-        
-        rb.velocity = _moveDirection;
+        cc.Move(_moveDirection * Time.deltaTime);
 
     }
 
@@ -142,38 +150,46 @@ public class PlayerController : MonoBehaviour
 
     void Move(Vector3 forward, Vector3 right )
     {
-        if(isGrounded)
+        float storeY = _moveDirection.y;
+        if (isGrounded)
+        {
             CalculateSpeed();
-        _moveDirection = (Input.GetAxisRaw("Horizontal") * right * speed) +  (Input.GetAxisRaw("Vertical") *  forward * speed);
-        _moveDirection.y = rb.velocity.y;
-        joystickDirection = _moveDirection;
+        }
+        _moveDirection = (Input.GetAxisRaw("Horizontal") * right * speed) + (Input.GetAxisRaw("Vertical") * forward * speed);
+        _moveDirection.y = storeY;
+        joystickDirection = _moveDirection.normalized;
         joystickDirection.y = 0;
 
-        
+
     }
 
     void Jump()
     {
+        _moveDirection.y = jumpForce;
+        isJumping = true;
 
-        if(rb.velocity.y <= 0)
-        {
-            _moveDirection += Vector3.up * jumpForce;
-        }
-        
+
     }
 
     void IsGrounded()
     {
-        Debug.DrawRay(transform.position, -transform.up, Color.cyan);
-       
-        if (Physics.Raycast(transform.position, -transform.up, hitDistance))
+        Vector3 raycastTrans = transform.position;
+        raycastTrans.y += cc.center.y +0.1f;
+        Debug.DrawLine(raycastTrans, raycastTrans + Vector3.down*hitDistance, Color.cyan);
+        
+        if (Physics.Raycast(raycastTrans, -transform.up, hitDistance,groundHitLayer))
         {
             isGrounded = true;
-            _moveDirection.y =0;
+            if (isJumping)
+            {
+                isJumping = false;
+            }
+        }
+        else
+        {
+            isGrounded = false;
         }
             
-        else
-            isGrounded = false;
     }
 
     void RecalculatePivot()
