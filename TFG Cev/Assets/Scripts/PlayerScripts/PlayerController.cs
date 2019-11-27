@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     Transform cameraPosition;
     [SerializeField]
     Rigidbody rb;
+    [SerializeField]
+    PlayerCondition playerCondition;
 
     //------------Stats Vars ---------------//
     [Header("Stats")]
@@ -44,7 +46,7 @@ public class PlayerController : MonoBehaviour
     Vector3 forward;
     Vector3 right;
 
-
+    //------------Jump Vars ---------------//
     [Header("Jumping")]
     [SerializeField]
     float gravity = 2.5f;
@@ -59,11 +61,22 @@ public class PlayerController : MonoBehaviour
 
     //----------------------------//
 
+    [Header("Attack")]
+    [SerializeField]
+    float timeToCharge;
+    [SerializeField]
+    float damageModifier;
+
+    float damageDealt;
+    float actualTime;
+
+
     //------------Bool State Vars ---------------//
     bool isGrounded = true;
     bool isMoving = false;
     bool isRunning = false;
     bool isJumping = false;
+    bool isCharging = false;
 
     //------------Anim Vars ---------------//
     [Header("Animation")]
@@ -85,11 +98,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButton("Axis-3") || Input.GetButton("Axis-4"))
-        {
-            RecalculatePivot();
-        }
-
 
         IsGrounded();
 
@@ -104,39 +112,21 @@ public class PlayerController : MonoBehaviour
             isMoving = false;
             anim.SetBool("isMoving", isMoving);
         }
-        
-        if (isGrounded && Input.GetButtonDown("Jump"))
+
+        switch (playerCondition.GetCondition())
         {
-            Jump();
+            case PlayerCondition.Conditions.Main:
+
+                MainUpdate();
+                break;
+            case PlayerCondition.Conditions.Aim:
+                AimUpdate();
+                break;
         }
-
-        if (Input.GetButtonDown("Attack"))
-        {
-            anim.SetTrigger("Attacked");
-            onAttackLaunch.Raise();
-        }
-
-
-        /*DEBUGS*/
-        /*
-        Debug.DrawRay(transform.position, forward, Color.blue);
-        Debug.DrawRay(transform.position, right, Color.green);
-        Debug.DrawRay(transform.position, transform.up, Color.red);*/
-        Debug.Log(isGrounded);
-
-        //////////////////////////////////////////
-
-        if (isMoving)
-        {
-            if(joystickDirection != Vector3.zero) { }
-                model.rotation = Quaternion.LookRotation(joystickDirection);
-
-        }
-
 
         if (!isGrounded)
         {
-            if(isJumping)
+            if (isJumping)
                 _moveDirection.y += Physics.gravity.y * gravity * Time.deltaTime;
             else
                 _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
@@ -144,9 +134,59 @@ public class PlayerController : MonoBehaviour
 
         cc.Move(_moveDirection * Time.deltaTime);
 
+
     }
 
- 
+
+    void MainUpdate()
+    {
+        if (Input.GetAxis("Axis-3") >= 0 || Input.GetAxis("Axis-4") >= 0)
+        {
+            RecalculatePivot();
+        }
+
+        if (isGrounded && Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
+
+        if (Input.GetButton("Attack"))
+        {
+            Attack();
+        }
+        if (Input.GetButtonUp("Attack"))
+        {
+            isCharging = false;
+            anim.SetBool("isCharging", isCharging);
+
+            damageDealt += stats.baseDamage;
+            actualTime = 0;
+            onAttackLaunch.Raise();
+        }
+
+
+        /*DEBUGS*/
+
+        Debug.DrawRay(transform.position, forward, Color.blue);
+        Debug.DrawRay(transform.position, right, Color.green);
+        Debug.DrawRay(transform.position, transform.up, Color.red);
+        Debug.Log(isGrounded);
+
+        //////////////////////////////////////////
+
+        if (isMoving)
+        {
+            if (joystickDirection != Vector3.zero) { }
+            model.rotation = Quaternion.LookRotation(joystickDirection);
+
+        }
+
+    }
+
+    void AimUpdate()
+    {
+
+    }
 
     void Move(Vector3 forward, Vector3 right )
     {
@@ -238,7 +278,28 @@ public class PlayerController : MonoBehaviour
 
     void InitStats()
     {
+        playerCondition.ChangeCondition(PlayerCondition.Conditions.Main);
         stats.hp.value = stats.hp.maxValue;
+        stats.baseDamage = 1;
+    }
+
+    void Attack()
+    {
+        isCharging = true;
+        anim.SetBool("isCharging", isCharging);
+        actualTime += Time.deltaTime;
+
+        if(actualTime >= timeToCharge)
+        {
+            damageDealt = damageModifier;
+        }
+        //anim.SetTrigger("Attacked");
+
+
+    }
+    void Shot()
+    {
+
     }
 
 }
