@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
             cameras[currentCamera].gameObject.SetActive(true);
             ChangeCondition(PlayerCondition.Conditions.Aim);
         }
-        else
+        else if(Input.GetButtonUp("Aim"))
         {
             cameras[currentCamera].gameObject.SetActive(false);
             currentCamera = 0;

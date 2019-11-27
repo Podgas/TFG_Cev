@@ -92,6 +92,7 @@ public class PlayerController : MonoBehaviour
 
         RecalculatePivot();
         speed = walkSpeed;
+    
     }
 
 
@@ -185,7 +186,7 @@ public class PlayerController : MonoBehaviour
 
     void AimUpdate()
     {
-
+        
     }
 
     void Move(Vector3 forward, Vector3 right )
