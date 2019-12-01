@@ -10,6 +10,7 @@ TagManager:
   - PlayerHitBox
   - PlayerBullet
   - Enemy
+  - InteractObject
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - 
   - 
   - Terrain
-  - 
+  - Interaction
   - 
   - 
   - 

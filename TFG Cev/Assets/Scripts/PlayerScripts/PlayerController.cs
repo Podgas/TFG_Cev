@@ -42,14 +42,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float runSpeed;
     [SerializeField]
-    Transform model;
+    private Transform model;
     [SerializeField]
     CharacterController cc;
 
     private float speed;
     private Vector3 _moveDirection;
     Vector3 joystickDirection;
-    Vector3 forward;
+    public Vector3 forward;
     Vector3 right;
 
     //------------Jump Vars ---------------//
@@ -64,8 +64,10 @@ public class PlayerController : MonoBehaviour
     float fallMultiplier;
     [SerializeField]
     LayerMask groundHitLayer;
-    //---------Dash---------------//
 
+    //---------Dash Vars---------------//
+
+    [Header("Dash")]
     [SerializeField]
     private float maxDashTime = 1.0f;
     [SerializeField]
@@ -75,7 +77,25 @@ public class PlayerController : MonoBehaviour
 
     private float currentDashTime;
 
-    //----------------------------//
+    //--------Interaction Vars----------//
+
+    [Header("Interaction")]
+    [SerializeField]
+    private LayerMask interactionLayer;
+    [SerializeField]
+    private LayerMask obstacleMask;
+    [SerializeField]
+    public float viewRadius;
+    [SerializeField]
+    [Range(0, 360)]
+    public float viewAngle;
+
+    public List<Transform> interactableTargets = new List<Transform>();
+
+
+
+
+    //----------Attack Vars------------------//
 
     [Header("Attack")]
     [SerializeField]
@@ -95,6 +115,7 @@ public class PlayerController : MonoBehaviour
     bool isCharging = false;
     bool isShooting = false;
     bool isDashing = false;
+
 
     //------------Anim Vars ---------------//
     [Header("Animation")]
@@ -117,7 +138,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
+        if (Input.GetButtonDown("Interact"))
+        {
+            FindVisibleInteractObjects();
+        }
+        
         IsGrounded();
 
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
@@ -201,6 +226,7 @@ public class PlayerController : MonoBehaviour
         }
 
         Dash();
+        Interact();
 
     }
 
@@ -355,7 +381,6 @@ public class PlayerController : MonoBehaviour
 
     void Dash()
     {
-        Debug.Log("Dash?");
         if (Input.GetButtonDown("Dash"))
         {
             
@@ -363,7 +388,6 @@ public class PlayerController : MonoBehaviour
         }
         if (currentDashTime < maxDashTime && isGrounded)
         {
-            Debug.Log("Dash");
             dashSpeed = 5;
             currentDashTime += dashStoppingSpeed;
             isDashing = true;
@@ -380,25 +404,42 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("Interact"))
         {
-            RaycastHit hit;
 
-            Vector3 p1 = transform.position;
-            float distanceToObstacle = 0;
 
-            // Cast a sphere wrapping character controller 10 meters forward
-            // to see if it is about to hit anything.
-            if (Physics.SphereCast(p1, 2f, transform.forward, out hit, 2f))
-            {
-                Debug.Log("Dw");
-                //distanceToObstacle = hit.distance;
-            }
+          
         }
 
     }
-
-    private void OnDrawGizmos()
+    public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
-        Gizmos.DrawWireSphere(transform.position, 2f);
+        if (!angleIsGlobal)
+        {
+            angleInDegrees += model.eulerAngles.y;
+        }
+        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
+
+    void FindVisibleInteractObjects()
+    {
+
+        interactableTargets.Clear();
+
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, interactionLayer);
+
+        for(int i = 0; i < targetsInViewRadius.Length; i++)
+        {
+            Transform target = targetsInViewRadius[i].transform;
+            Vector3 dirToTarget = (target.position - transform.position).normalized;
+            if(Vector3.Angle(model.forward,dirToTarget)< viewAngle / 2)
+            {
+                float dstToTarget = Vector3.Distance(transform.position, target.position);
+
+                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
+                {
+                    target.GetComponent<IInteractObjects>().OnInteract(); ;
+                }
+            }
+        }
     }
 
 }
