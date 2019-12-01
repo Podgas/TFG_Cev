@@ -10,37 +10,48 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     PlayerCondition playerCondition;
     int currentCamera;
+    [SerializeField]
+    Transform cameraAnchor;
+
+    bool aimInUse = false;
 
     private void Start()
     {
         currentCamera = 0;
         for (int i = 0; i < cameras.Length; i++)
         {
-            cameras[i].gameObject.SetActive(false);
+            cameras[i].Priority = 1;
         }
 
 
-        cameras[currentCamera].gameObject.SetActive(true);
+        cameras[currentCamera].Priority = 10;
 
     }
 
     void Update()
     {
 
-        if (Input.GetAxis("Aim")>=0.5)
+        if (Input.GetAxisRaw("Aim") != 0)
         {
-            cameras[currentCamera].gameObject.SetActive(false);
-            currentCamera = 1;
-            cameras[currentCamera].gameObject.SetActive(true);
-            ChangeCondition(PlayerCondition.Conditions.Aim);
+            if (aimInUse == false)
+            {
+                aimInUse = true;
+                cameras[currentCamera].Priority = 1;
+                currentCamera = 1;
+                cameras[currentCamera].Priority = 10;
+                ChangeCondition(PlayerCondition.Conditions.Aim);
+            }
         }
-        else if(Input.GetButtonUp("Aim"))
+        if (Input.GetAxisRaw("Aim") == 0 && aimInUse)
         {
-            cameras[currentCamera].gameObject.SetActive(false);
+            aimInUse = false;
+            cameras[currentCamera].Priority = 1;
             currentCamera = 0;
-            cameras[currentCamera].gameObject.SetActive(true);
+            cameras[currentCamera].Priority = 10;
             ChangeCondition(PlayerCondition.Conditions.Main);
         }
+
+
 
     }
 

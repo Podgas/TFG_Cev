@@ -11,7 +11,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Transform cameraPosition;
     [SerializeField]
-    Rigidbody rb;
+    Transform aimCameraPosition;
+    [SerializeField]
+    Transform cameraAnchor;
     [SerializeField]
     PlayerCondition playerCondition;
 
@@ -28,6 +30,10 @@ public class PlayerController : MonoBehaviour
     private VoidEvent onAttackLaunch;
     [SerializeField]
     private VoidEvent onAttackStops;
+    [SerializeField]
+    GameObject bulletPrefab;
+    [SerializeField]
+    public Transform bulletSpawn;
 
     //------------Move Vars ---------------//
     [Header("Movement")]
@@ -77,6 +83,7 @@ public class PlayerController : MonoBehaviour
     bool isRunning = false;
     bool isJumping = false;
     bool isCharging = false;
+    bool isShooting = false;
 
     //------------Anim Vars ---------------//
     [Header("Animation")]
@@ -90,7 +97,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
 
-        RecalculatePivot();
+        RecalculatePivot(cameraPosition);
         speed = walkSpeed;
     
     }
@@ -133,8 +140,10 @@ public class PlayerController : MonoBehaviour
                 _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
         }
 
-        cc.Move(_moveDirection * Time.deltaTime);
+        
 
+        cc.Move(_moveDirection * Time.deltaTime);
+        
 
     }
 
@@ -143,7 +152,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetAxis("Axis-3") >= 0 || Input.GetAxis("Axis-4") >= 0)
         {
-            RecalculatePivot();
+            RecalculatePivot(cameraPosition);
         }
 
         if (isGrounded && Input.GetButtonDown("Jump"))
@@ -175,18 +184,44 @@ public class PlayerController : MonoBehaviour
 
         //////////////////////////////////////////
 
-        if (isMoving)
+        if (isMoving ||
+            (playerCondition.GetCondition() == PlayerCondition.Conditions.Aim && Input.GetAxis("Axis-4") != 0))
         {
             if (joystickDirection != Vector3.zero) { }
             model.rotation = Quaternion.LookRotation(joystickDirection);
 
         }
 
+
     }
 
     void AimUpdate()
     {
-        
+        if (Input.GetAxis("Axis-4") != 0)
+        {
+            RotatePlayer();
+        }
+        /*
+
+        if (Input.GetAxisRaw("Shoot") != 0)
+        {
+            if (isShooting == false)
+            {
+                Shoot();
+                isShooting = true;  
+            }
+        }
+        if (Input.GetAxisRaw("Shoot") == 0)
+        {
+            isShooting = false;
+        }
+        */
+        if (isMoving ||
+            (playerCondition.GetCondition() == PlayerCondition.Conditions.Aim && Input.GetAxis("Axis-4") != 0))
+        {
+            model.rotation = Quaternion.LookRotation(forward);
+
+        }
     }
 
     void Move(Vector3 forward, Vector3 right )
@@ -208,7 +243,6 @@ public class PlayerController : MonoBehaviour
     {
         _moveDirection.y = jumpForce;
         isJumping = true;
-
 
     }
 
@@ -233,9 +267,9 @@ public class PlayerController : MonoBehaviour
             
     }
 
-    void RecalculatePivot()
+    void RecalculatePivot(Transform camPosition)
     {
-        forward = transform.position - cameraPosition.position;
+        forward = transform.position - camPosition.position;
         right = -Vector3.Cross(forward.normalized, transform.up.normalized);
         forward.y = 0;
         right.y = 0;
@@ -294,12 +328,19 @@ public class PlayerController : MonoBehaviour
         {
             damageDealt = damageModifier;
         }
-        //anim.SetTrigger("Attacked");
-
 
     }
-    void Shot()
+    void Shoot()
     {
+        Vector3 instancePosition = bulletSpawn.position;
+       
+
+        Instantiate(bulletPrefab, instancePosition, Quaternion.identity);
+    }
+
+    void RotatePlayer()
+    {
+        RecalculatePivot(aimCameraPosition);
 
     }
 
