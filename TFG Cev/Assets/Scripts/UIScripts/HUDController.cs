@@ -9,6 +9,8 @@ public class HUDController : MonoBehaviour
     private PlayerStats playerStats;
     [SerializeField]
     private Image hpBar;
+    [SerializeField]
+    private GameObject cross;
 
 
     private void Start()
@@ -19,6 +21,19 @@ public class HUDController : MonoBehaviour
     public void UpdateHpBar(float percentage) {
 
         hpBar.fillAmount = percentage;
+
+    }
+    public void DisplayCross(PlayerCondition.Conditions condition)
+    {
+
+        if(condition == PlayerCondition.Conditions.Aim)
+        {
+                cross.SetActive(true);
+        }
+        else
+        {
+            cross.SetActive(false);
+        }
 
     }
 

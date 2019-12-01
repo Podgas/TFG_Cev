@@ -29,15 +29,14 @@ public class GunController : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        Debug.Log("Bug1");
+
         if (timer >= fireRate)
         {
             if (Input.GetAxisRaw("Shoot") != 0)
             {
-                Debug.Log("Bug2");
+
                 if (isShooting == false){ 
 
-                    Debug.Log("Fireeee!!!");
                     FireGun();
                     isShooting = true;
                 }
@@ -54,7 +53,10 @@ public class GunController : MonoBehaviour
     private void FireGun()
     {
         Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
-        Debug.DrawRay(ray.origin,ray.direction, Color.red,2f);
+        Debug.Log("hi");
+        Vector3 direction = ray.direction;
+        direction.x += 0.05f;
+        Debug.DrawRay(firePoint.position, direction*100, Color.red,2f);
         GameObject.Instantiate(bullet, firePoint.position, Quaternion.identity);
     }
 }

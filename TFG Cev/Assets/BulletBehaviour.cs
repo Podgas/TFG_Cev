@@ -15,13 +15,23 @@ public class BulletBehaviour : MonoBehaviour
     private void Awake()
     {
         Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
-        Debug.DrawRay(ray.origin, ray.direction, Color.red, 2f);
-        moveDirection = ray.direction;
+        Vector3 direction = ray.direction;
+        direction.x += 0.05f;
+        moveDirection = direction;
 
     }
 
     void Update()
     {
         transform.Translate(moveDirection * speed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Enemy")
+        {
+            Debug.Log("Destroy");
+            Destroy(gameObject);
+        }
     }
 }

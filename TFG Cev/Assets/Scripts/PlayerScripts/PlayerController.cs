@@ -64,6 +64,16 @@ public class PlayerController : MonoBehaviour
     float fallMultiplier;
     [SerializeField]
     LayerMask groundHitLayer;
+    //---------Dash---------------//
+
+    [SerializeField]
+    private float maxDashTime = 1.0f;
+    [SerializeField]
+    private float dashSpeed = 1.0f;
+    [SerializeField]
+    private float dashStoppingSpeed = 0.1f;
+
+    private float currentDashTime;
 
     //----------------------------//
 
@@ -84,6 +94,7 @@ public class PlayerController : MonoBehaviour
     bool isJumping = false;
     bool isCharging = false;
     bool isShooting = false;
+    bool isDashing = false;
 
     //------------Anim Vars ---------------//
     [Header("Animation")]
@@ -112,7 +123,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             isMoving = true;
-            Move(forward, right);
             anim.SetBool("isMoving", isMoving);
         }
         else
@@ -120,6 +130,7 @@ public class PlayerController : MonoBehaviour
             isMoving = false;
             anim.SetBool("isMoving", isMoving);
         }
+        Move(forward, right);
 
         switch (playerCondition.GetCondition())
         {
@@ -142,15 +153,14 @@ public class PlayerController : MonoBehaviour
 
         
 
-        cc.Move(_moveDirection * Time.deltaTime);
-        
+        cc.Move(_moveDirection* dashSpeed * Time.deltaTime);
 
     }
 
 
     void MainUpdate()
     {
-        if (Input.GetAxis("Axis-3") >= 0 || Input.GetAxis("Axis-4") >= 0)
+        if (Input.GetAxis("Axis-3") != 0 || Input.GetAxis("Axis-4") != 0 && !isDashing)
         {
             RecalculatePivot(cameraPosition);
         }
@@ -180,18 +190,17 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(transform.position, forward, Color.blue);
         Debug.DrawRay(transform.position, right, Color.green);
         Debug.DrawRay(transform.position, transform.up, Color.red);
-        Debug.Log(isGrounded);
 
         //////////////////////////////////////////
 
-        if (isMoving ||
-            (playerCondition.GetCondition() == PlayerCondition.Conditions.Aim && Input.GetAxis("Axis-4") != 0))
+        if (isMoving || Input.GetAxis("Axis-4") != 0)
         {
             if (joystickDirection != Vector3.zero) { }
             model.rotation = Quaternion.LookRotation(joystickDirection);
 
         }
 
+        Dash();
 
     }
 
@@ -342,6 +351,54 @@ public class PlayerController : MonoBehaviour
     {
         RecalculatePivot(aimCameraPosition);
 
+    }
+
+    void Dash()
+    {
+        Debug.Log("Dash?");
+        if (Input.GetButtonDown("Dash"))
+        {
+            
+            currentDashTime = 0.0f;
+        }
+        if (currentDashTime < maxDashTime && isGrounded)
+        {
+            Debug.Log("Dash");
+            dashSpeed = 5;
+            currentDashTime += dashStoppingSpeed;
+            isDashing = true;
+        }
+        else
+        {
+            isDashing = false;
+            dashSpeed = 1;
+        }
+    }
+
+    void Interact()
+    {
+
+        if (Input.GetButtonDown("Interact"))
+        {
+            RaycastHit hit;
+
+            Vector3 p1 = transform.position;
+            float distanceToObstacle = 0;
+
+            // Cast a sphere wrapping character controller 10 meters forward
+            // to see if it is about to hit anything.
+            if (Physics.SphereCast(p1, 2f, transform.forward, out hit, 2f))
+            {
+                Debug.Log("Dw");
+                //distanceToObstacle = hit.distance;
+            }
+        }
+
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, 2f);
     }
 
 }

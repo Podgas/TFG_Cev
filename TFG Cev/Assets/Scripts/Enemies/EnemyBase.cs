@@ -11,6 +11,7 @@ public class EnemyBase : MonoBehaviour
     {
         if(other.tag == "PlayerHitBox")
         {
+            Debug.Log("Hit");
             mat.material.SetColor("_Color",Random.ColorHSV());
         }
     }
