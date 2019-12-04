@@ -4,27 +4,36 @@ using UnityEngine;
 
 public class BaseInteractObject : MonoBehaviour, IInteractObjects
 {
-    [SerializeField]
-    private float interactRadius;
+
     [SerializeField]
     Animator anim;
+    [SerializeField]
+    GameObject mechanism;
 
     bool isOn = false;
 
-    private void Start()
+    protected virtual void Start()
     {
         anim.SetBool("isOn", isOn);
     }
-    public void OnInteract()
+    public virtual void OnInteract()
     {
         isOn = !isOn;
         anim.SetBool("isOn", isOn);
+        StartCoroutine("StartMechanimAnim");
     }
 
-    private void OnDrawGizmosSelected()
+    public virtual void ActivateMechanism()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactRadius);
+        mechanism.GetComponent<Animator>().SetBool("isOn", isOn);
     }
+
+    IEnumerator StartMechanimAnim()
+    {
+        yield return new WaitForSeconds(0.5f);
+        ActivateMechanism();
+
+    }
+
 
 }

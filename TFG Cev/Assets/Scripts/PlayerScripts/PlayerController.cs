@@ -52,6 +52,8 @@ public class PlayerController : MonoBehaviour
     public Vector3 forward;
     Vector3 right;
 
+    float playerHeight;
+
     //------------Jump Vars ---------------//
     [Header("Jumping")]
     [SerializeField]
@@ -92,7 +94,16 @@ public class PlayerController : MonoBehaviour
 
     public List<Transform> interactableTargets = new List<Transform>();
 
+    //--------Climb Vars----------//
+    [SerializeField]
+    private LayerMask climbMask;
 
+    //-------PickUp Vars---------//
+    [Header("PickUp")]
+    [SerializeField]
+    Transform hand;
+
+    Transform carriedObject;
 
 
     //----------Attack Vars------------------//
@@ -103,7 +114,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float damageModifier;
 
-    float damageDealt;
+    [HideInInspector]
+    public float damageDealt;
     float actualTime;
 
 
@@ -115,6 +127,9 @@ public class PlayerController : MonoBehaviour
     bool isCharging = false;
     bool isShooting = false;
     bool isDashing = false;
+    bool isCrouching = false;
+    bool isClimbing = false;
+    bool isCarring = false;
 
 
     //------------Anim Vars ---------------//
@@ -125,60 +140,71 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         InitStats();
+        playerHeight = cc.height;
     }
     void Start()
     {
 
         RecalculatePivot(cameraPosition);
         speed = walkSpeed;
-    
+
     }
 
 
 
     void Update()
     {
-        if (Input.GetButtonDown("Interact"))
+        if (isClimbing)
         {
-            FindVisibleInteractObjects();
-        }
-        
-        IsGrounded();
-
-        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-        {
-            isMoving = true;
-            anim.SetBool("isMoving", isMoving);
+            Climb();
         }
         else
         {
-            isMoving = false;
-            anim.SetBool("isMoving", isMoving);
-        }
-        Move(forward, right);
+            
 
-        switch (playerCondition.GetCondition())
-        {
-            case PlayerCondition.Conditions.Main:
+            IsGrounded();
 
-                MainUpdate();
-                break;
-            case PlayerCondition.Conditions.Aim:
-                AimUpdate();
-                break;
-        }
-
-        if (!isGrounded)
-        {
-            if (isJumping)
-                _moveDirection.y += Physics.gravity.y * gravity * Time.deltaTime;
+            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+            {
+                isMoving = true;
+                anim.SetBool("isMoving", isMoving);
+            }
             else
-                _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
+            {
+                isMoving = false;
+                anim.SetBool("isMoving", isMoving);
+            }
+            Move(forward, right);
+
+            switch (playerCondition.GetCondition())
+            {
+                case PlayerCondition.Conditions.Main:
+
+                    MainUpdate();
+                    break;
+                case PlayerCondition.Conditions.Aim:
+                    AimUpdate();
+                    break;
+            }
+
+            if (!isGrounded)
+            {
+                if (isJumping)
+                    _moveDirection.y += Physics.gravity.y * gravity * Time.deltaTime;
+                else
+                    _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
+            }
+
+
+
+            cc.Move(_moveDirection * dashSpeed * Time.deltaTime);
+
+            if (Input.GetButtonDown("Interact"))
+            {
+                FindVisibleInteractObjects();
+            }
         }
-
         
-
-        cc.Move(_moveDirection* dashSpeed * Time.deltaTime);
 
     }
 
@@ -226,7 +252,6 @@ public class PlayerController : MonoBehaviour
         }
 
         Dash();
-        Interact();
 
     }
 
@@ -399,17 +424,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Interact()
-    {
-
-        if (Input.GetButtonDown("Interact"))
-        {
 
 
-          
-        }
-
-    }
     public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
         if (!angleIsGlobal)
@@ -423,23 +439,129 @@ public class PlayerController : MonoBehaviour
     {
 
         interactableTargets.Clear();
-
+        //nonalloc
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, interactionLayer);
 
         for(int i = 0; i < targetsInViewRadius.Length; i++)
         {
+            
             Transform target = targetsInViewRadius[i].transform;
-            Vector3 dirToTarget = (target.position - transform.position).normalized;
-            if(Vector3.Angle(model.forward,dirToTarget)< viewAngle / 2)
-            {
-                float dstToTarget = Vector3.Distance(transform.position, target.position);
+            Vector3 targetNoY = target.position;
+            targetNoY.y = 0;
 
-                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
-                {
-                    target.GetComponent<IInteractObjects>().OnInteract(); ;
-                }
-            }
+            Vector3 dirToTarget = (targetNoY - transform.position).normalized;
+
+            Interact(target, dirToTarget);
         }
     }
+
+    void Interact(Transform target, Vector3 dirToTarget)
+    {
+
+        if (target.tag == "Climb" && Vector3.Angle(model.forward, dirToTarget) < 180)
+        {
+
+            Debug.DrawRay(transform.position, dirToTarget, Color.red, 1f);
+
+            isClimbing = true;
+            isGrounded = false;
+            _moveDirection.y = 0;
+        }
+        else if (target.tag == "Pickable")
+        {
+            PickObject(target.GetComponent<PickUpInteract>().OnInteract());
+        }
+        else if (Vector3.Angle(model.forward, dirToTarget) < viewAngle / 2)
+        {
+
+            float dstToTarget = Vector3.Distance(transform.position, target.position);
+
+            if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
+            {
+                target.GetComponent<IInteractObjects>().OnInteract();
+            }
+        }
+
+    }
+
+    public void CroachIn()
+    {
+        cc.height = 0.5f;
+        isCrouching = true;
+    }
+    public void CroachOut()
+    {
+        cc.height = playerHeight;
+        isCrouching = false;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "InteractObject" && isCrouching)
+        {
+            CroachOut();
+
+        }else if(other.tag =="Climb" && isClimbing)
+        {
+            isClimbing = false;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Ground")
+        {
+            isClimbing = false;
+        }
+    }
+
+    void Climb()
+    {
+        
+
+        RaycastHit hit;
+        Debug.DrawLine(transform.position, Vector3.forward + forward * 5f,Color.blue);
+        Debug.Log(Physics.Raycast(transform.position, forward, out hit, climbMask));
+
+        if(Physics.Raycast(transform.position, forward, out hit, 5f, climbMask)) {
+            isClimbing = true;
+            Debug.Log(hit.transform.gameObject.layer);
+
+            Vector3 climbDirection;
+
+            climbDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+
+            cc.Move(climbDirection * speed * Time.deltaTime);
+
+        }
+        else
+        {
+            isClimbing = false;
+        }
+
+        
+    }
+
+    void PickObject(Transform obj)
+    {
+        if (!isCarring)
+        {
+            obj.GetComponent<Rigidbody>().isKinematic = true;
+            obj.SetParent(hand);
+            obj.position = hand.position;
+            
+            carriedObject = obj;
+            isCarring = true;
+        }
+        else
+        {
+            obj.SetParent(GameObject.Find("_Dynamic").transform);
+            obj.GetComponent<Rigidbody>().isKinematic = false;
+            obj = null;
+            isCarring = false;
+        }
+        
+    }
+
+
 
 }
