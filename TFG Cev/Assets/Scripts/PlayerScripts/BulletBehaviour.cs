@@ -12,17 +12,27 @@ public class BulletBehaviour : MonoBehaviour
 
     Vector3 moveDirection;
 
+    Ray ray;
+
     private void Awake()
     {
-        Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
-        Vector3 direction = ray.direction;
-        direction.x += 0.05f;
-        moveDirection = direction;
+
+        Vector3 centre = new Vector3(0.5f, 0.5f, 0f);
+        ray = Camera.main.ViewportPointToRay(centre);
+
+        spawnTransform = GameObject.Find("FirePoint").transform;
+
 
     }
 
     void Update()
     {
+        Vector3 centre = new Vector3(0.5f, 0.5f, 0f);
+        ray = Camera.main.ViewportPointToRay(centre);
+        RaycastHit raycastHit;
+        Physics.Raycast(ray, out raycastHit, 3000f);
+
+        moveDirection = spawnTransform.position - raycastHit.point;
         transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 

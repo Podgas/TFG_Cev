@@ -28,6 +28,11 @@ public class GunController : MonoBehaviour
 
     void Update()
     {
+        Vector3 centre = new Vector3(0.5f, 0.5f, 0f);
+        Ray ray = Camera.main.ViewportPointToRay(centre);
+
+        
+        
         timer += Time.deltaTime;
 
         if (timer >= fireRate)
@@ -52,11 +57,28 @@ public class GunController : MonoBehaviour
 
     private void FireGun()
     {
-        Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
-        Debug.Log("hi");
+        Vector3 centre = new Vector3(0.5f, 0.5f, 0f);
+        Ray ray = Camera.main.ViewportPointToRay(centre);
+        RaycastHit raycastHit;
+        Physics.Raycast(ray, out raycastHit, 3000f);
+
         Vector3 direction = ray.direction;
-        direction.x += 0.05f;
-        Debug.DrawRay(firePoint.position, direction*100, Color.red,2f);
+
         GameObject.Instantiate(bullet, firePoint.position, Quaternion.identity);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 centre = new Vector3(0.5f, 0.5f, 0f);
+        Ray ray = Camera.main.ViewportPointToRay(centre);
+        RaycastHit raycastHit;
+        Physics.Raycast(ray,out raycastHit, 300f);
+
+        Debug.DrawLine(firePoint.position, raycastHit.point
+            , Color.red);
+
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(raycastHit.point, 0.1f);
     }
 }

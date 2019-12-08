@@ -1,0 +1,32 @@
+tree("Root")
+	fallback
+		parallel
+			tree("patrol")
+			tree("searchForPlayer")
+			tree("enterCombat")
+		tree("combat")
+
+tree("searchForPlayer")
+	while
+		isSearching
+		sequence
+			SearchForPlayer
+			Chase
+			MoveEnemy
+
+tree("patrol")
+	fallback
+		while
+			isPatroling
+			PatrolBehave
+		while
+			isWaiting
+			Wait
+				
+
+tree("enterCombat")
+	while
+		isChasing
+		SearchForCombat
+
+	

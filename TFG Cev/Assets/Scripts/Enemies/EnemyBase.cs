@@ -3,40 +3,61 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using Panda;
 
 
 public class EnemyBase : MonoBehaviour
 {
+    [Header("EnemyStats")]
     [SerializeField]
     float hp;
-
     [SerializeField]
     float speed;
     [SerializeField]
+
+    [Header("EnemyPatrol")]
     float timeWaiting;
     [SerializeField]
     float detectionRadius;
     [SerializeField]
     float escapeRadius;
     [SerializeField]
+    float combatRadius;
+    [SerializeField]
     LayerMask playerLayer;
+
+    Transform currentNode;
+    Vector3 _moveDirection;
+
+    [Header("Components")]
     [SerializeField]
     NavMeshAgent agent;
+    [SerializeField]
+    NodeManager nm;
+    [SerializeField]
+    protected GameObject hitCollider;
+
 
     float currentTime;
 
-    Vector3 _moveDirection;
-
-    Transform currentNode;
-
+    [SerializeField]
+    protected Animator anim;
+    
     Transform target;
 
-    bool isWaiting = false;
-    bool isPatroling = false;
-    bool isChasing = false;
+    //------------BT VARS-------//
+    [Task]
+    protected bool isWaiting = false;
+    [Task]
+    protected bool isPatroling;
+    [Task]
+    protected bool isSearching;
+    [Task]
+    protected bool isCombat = false;
+    [Task]
+    protected bool isChasing = false;
 
-    [SerializeField]
-    NodeManager nm;
+    
 
 
 
@@ -47,27 +68,15 @@ public class EnemyBase : MonoBehaviour
     [SerializeField]
     Renderer mat;
 
-    private void Start()
+    protected virtual void Start()
     {
         currentNode = nm.GetNode(0);
         isPatroling = true;
+        isSearching = true;
         _moveDirection = Vector3.forward;
     }
 
-    private void Update()
-    {
 
-        PatrolBehave();
-        if (!isChasing)
-            FindTargets();
-        else
-            Chase();
-
-        if (hp <= 0)
-        {
-            Destroy(gameObject);
-        }
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -81,8 +90,8 @@ public class EnemyBase : MonoBehaviour
 
         if(other.tag == "Node")
         {
-            isPatroling = false;
-            isWaiting = true;
+            //isPatroling = false;
+            //isWaiting = true;
             currentNode = nm.NextNode(currentNode);
         }
     }
@@ -94,68 +103,103 @@ public class EnemyBase : MonoBehaviour
         hpText.text = hp.ToString();
     }
     
-    
-
-    void PatrolBehave()
+    [Task]
+    protected void SearchForCombat()
     {
-        if (isPatroling)
-        {
-            agent.SetDestination(currentNode.position);
-            transform.LookAt(currentNode.position);
-        }else if (isWaiting)
-        {
-            currentTime += Time.deltaTime;
-            if (currentTime >= timeWaiting)
-            {
-                currentTime = 0;
-                isWaiting = false;
-                isPatroling = true;
+        Collider[] targets = Physics.OverlapSphere(transform.position, combatRadius, playerLayer);
 
+        
+        if (targets.Length == 0)
+        {
+            isCombat = false;
+            anim.SetBool("isCombat", isCombat);
+            isSearching = true;
+            isPatroling = true;
+            Task.current.Fail();
+        }
+        else
+        {
+            SetPandaConditionsToFalse();
+            isCombat = true;
+            anim.SetBool("isCombat", isCombat);
+            Task.current.Succeed();
 
-            }
+        }
+    }
+    
+    [Task]
+    protected void PatrolBehave()
+    {
+        agent.SetDestination(currentNode.position);
+        transform.LookAt(currentNode.position);
+    }
+
+    [Task]
+    protected void Wait()
+    {
+        currentTime += Time.deltaTime;
+        if (currentTime >= timeWaiting)
+        {
+            currentTime = 0;
+            isWaiting = false;
+            isPatroling = true;
+
         }
     }
 
-    private void FindTargets()
+    [Task]
+    protected void SearchForPlayer()
     {
 
         Collider[] targets = Physics.OverlapSphere(transform.position, detectionRadius, playerLayer);
 
-        for(int i=0; i < targets.Length; i++)
+
+        if (targets.Length == 0 )
         {
-            if(targets[i]!=null)
-            {
-                isChasing = true;
-                isPatroling = false;
-                isWaiting = false;
-                target = targets[i].transform;
-            }
-                
+            if (!isChasing)
+                Task.current.Fail();
+            else
+                Task.current.Succeed();
         }
-    }
-    private void MantainChase()
-    {
-        Collider[] targets = Physics.OverlapSphere(transform.position, escapeRadius, playerLayer);
-
-
-        if (targets.Length == 0)
+        else
         {
-            isChasing = false;
-            isPatroling = true;
-            target = null;
-
+            Task.current.Succeed();
+            target = targets[0].transform;
+            isChasing = true;
         }
-
-    
-        
+               
     }
 
-    void Chase()
+    [Task]
+    protected void MoveEnemy()
     {
         agent.SetDestination(target.position);
         transform.LookAt(target);
-        MantainChase();
+
+        
     }
+    [Task]
+    protected void Chase()
+    {
+        Collider[] targets = Physics.OverlapSphere(transform.position, escapeRadius, playerLayer);
+
+        if (targets.Length == 0)
+        {
+            
+            Task.current.Fail();
+            target = null;
+            SetPandaConditionsToFalse();
+            isPatroling = true;
+            isSearching = true;
+        }
+        else
+        {
+            Debug.Log("chase");
+            Task.current.Succeed();
+
+        }
+    }
+
 
     private void OnDrawGizmos()
     {
@@ -163,8 +207,17 @@ public class EnemyBase : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, escapeRadius);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, combatRadius);
     }
-
+    void SetPandaConditionsToFalse()
+    {
+        isPatroling = false;
+        isSearching = false;
+        isWaiting = false;
+        isCombat = false;
+        isChasing = false;
+    }
 
 
 }

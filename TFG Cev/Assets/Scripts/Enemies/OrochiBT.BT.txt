@@ -1,0 +1,17 @@
+
+tree("combat")
+	while
+		isCombat
+		fallback
+			while
+				isWaitingCombat
+				CombatWait
+			while
+				isAttacking
+				random
+					HorizontalAttack
+					VerticalAttack
+			tree("exitCombat")
+
+tree("exitCombat")
+	SearchForCombat

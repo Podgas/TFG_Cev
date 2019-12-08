@@ -512,6 +512,10 @@ public class PlayerController : MonoBehaviour
         {
             isClimbing = false;
         }
+        if(other.tag == "HitBoxEnemy")
+        {
+            UpdateHp(-10);
+        }
     }
 
     void Climb()
