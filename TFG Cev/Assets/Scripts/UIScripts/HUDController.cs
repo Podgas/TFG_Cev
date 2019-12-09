@@ -11,17 +11,24 @@ public class HUDController : MonoBehaviour
     private Image hpBar;
     [SerializeField]
     private GameObject cross;
+    [SerializeField]
+    private Text ammoText;
 
 
     private void Start()
     {
         hpBar.fillAmount = playerStats.hp.value / playerStats.hp.maxValue;
+        ammoText.text = playerStats.ammo + "/" + playerStats.maxAmmo;
     }
 
     public void UpdateHpBar(float percentage) {
 
         hpBar.fillAmount = percentage;
 
+    }
+    public void UpdateAmmoText()
+    {
+        ammoText.text = playerStats.ammo + "/" + playerStats.maxAmmo;
     }
     public void DisplayCross(PlayerCondition.Conditions condition)
     {

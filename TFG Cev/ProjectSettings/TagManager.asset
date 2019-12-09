@@ -15,6 +15,7 @@ TagManager:
   - Pickable
   - Node
   - HitBoxEnemy
+  - PickUpObject
   layers:
   - Default
   - TransparentFX

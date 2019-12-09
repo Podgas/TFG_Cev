@@ -18,20 +18,20 @@ public class EnemyBase : MonoBehaviour
     [Header("EnemyPatrol")]
     float timeWaiting;
     [SerializeField]
-    float detectionRadius;
+    protected float detectionRadius;
     [SerializeField]
     float escapeRadius;
     [SerializeField]
-    float combatRadius;
+    protected float combatRadius;
     [SerializeField]
-    LayerMask playerLayer;
+    protected LayerMask playerLayer;
 
     Transform currentNode;
     Vector3 _moveDirection;
 
     [Header("Components")]
     [SerializeField]
-    NavMeshAgent agent;
+    protected NavMeshAgent agent;
     [SerializeField]
     NodeManager nm;
     [SerializeField]
@@ -43,7 +43,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField]
     protected Animator anim;
     
-    Transform target;
+    protected Transform target;
 
     //------------BT VARS-------//
     [Task]
@@ -76,6 +76,11 @@ public class EnemyBase : MonoBehaviour
         _moveDirection = Vector3.forward;
     }
 
+    private void Update()
+    {
+        if (target != null)
+            transform.LookAt(target);
+    }
 
 
     private void OnTriggerEnter(Collider other)
@@ -90,9 +95,13 @@ public class EnemyBase : MonoBehaviour
 
         if(other.tag == "Node")
         {
-            //isPatroling = false;
-            //isWaiting = true;
-            currentNode = nm.NextNode(currentNode);
+            if(other.transform == currentNode)
+            {
+                isPatroling = false;
+                isWaiting = true;
+                currentNode = nm.NextNode(currentNode);
+            }
+                
         }
     }
 
@@ -130,8 +139,15 @@ public class EnemyBase : MonoBehaviour
     [Task]
     protected void PatrolBehave()
     {
-        agent.SetDestination(currentNode.position);
-        transform.LookAt(currentNode.position);
+        if (isPatroling) { 
+            agent.SetDestination(currentNode.position);
+            transform.LookAt(currentNode.position);
+            Task.current.Succeed();
+        }
+        else
+        {
+            Task.current.Fail();
+        }
     }
 
     [Task]
@@ -148,7 +164,7 @@ public class EnemyBase : MonoBehaviour
     }
 
     [Task]
-    protected void SearchForPlayer()
+    protected virtual void SearchForPlayer()
     {
 
         Collider[] targets = Physics.OverlapSphere(transform.position, detectionRadius, playerLayer);

@@ -20,6 +20,11 @@ public class GunController : MonoBehaviour
     [SerializeField]
     GameObject bullet;
 
+    [SerializeField]
+    PlayerStats playerStats;
+    [SerializeField]
+    VoidEvent onWeaponFire;
+
     private float timer;
 
     private bool isShooting = false;
@@ -41,9 +46,11 @@ public class GunController : MonoBehaviour
             {
 
                 if (isShooting == false){ 
-
-                    FireGun();
-                    isShooting = true;
+                    if(playerStats.ammo > 0)
+                    {
+                        FireGun();
+                        isShooting = true;
+                    }
                 }
             }
             if (Input.GetAxisRaw("Shoot") == 0 && isShooting)
@@ -57,6 +64,7 @@ public class GunController : MonoBehaviour
 
     private void FireGun()
     {
+
         Vector3 centre = new Vector3(0.5f, 0.5f, 0f);
         Ray ray = Camera.main.ViewportPointToRay(centre);
         RaycastHit raycastHit;
@@ -65,6 +73,9 @@ public class GunController : MonoBehaviour
         Vector3 direction = ray.direction;
 
         GameObject.Instantiate(bullet, firePoint.position, Quaternion.identity);
+        playerStats.ammo--;
+        onWeaponFire.Raise();
+
     }
 
     private void OnDrawGizmos()
@@ -74,11 +85,10 @@ public class GunController : MonoBehaviour
         RaycastHit raycastHit;
         Physics.Raycast(ray,out raycastHit, 300f);
 
-        Debug.DrawLine(firePoint.position, raycastHit.point
-            , Color.red);
+        Debug.DrawRay(firePoint.position, raycastHit.point - firePoint.position, Color.green);
 
 
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.green;
         Gizmos.DrawSphere(raycastHit.point, 0.1f);
     }
 }

@@ -16,6 +16,9 @@ public class PlayerStats : ScriptableObject
 
     [SerializeField]
     public PlayerHP hp;
+    [SerializeField]
+    public int maxAmmo;
+    public int ammo;
     public float baseDamage;
 
 }

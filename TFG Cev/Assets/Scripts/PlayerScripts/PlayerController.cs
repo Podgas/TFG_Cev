@@ -351,7 +351,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void UpdateHp(float value)
+    public void UpdateHp(float value)
     {
         stats.hp.value += value;
         float percentage = (stats.hp.value) / stats.hp.maxValue;
@@ -376,6 +376,7 @@ public class PlayerController : MonoBehaviour
         playerCondition.ChangeCondition(PlayerCondition.Conditions.Main);
         stats.hp.value = stats.hp.maxValue;
         stats.baseDamage = 1;
+        stats.ammo = stats.maxAmmo;
     }
 
     void Attack()
@@ -515,7 +516,10 @@ public class PlayerController : MonoBehaviour
         if(other.tag == "HitBoxEnemy")
         {
             UpdateHp(-10);
+           
         }
+
+        
     }
 
     void Climb()

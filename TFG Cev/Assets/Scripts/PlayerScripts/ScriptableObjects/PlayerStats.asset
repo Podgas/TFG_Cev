@@ -16,4 +16,6 @@ MonoBehaviour:
     maxValue: 300
     minValue: 0
     value: 300
-  baseDamage: 5
+  maxAmmo: 6
+  ammo: 6
+  baseDamage: 1

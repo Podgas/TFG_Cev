@@ -8,7 +8,7 @@ public class BulletBehaviour : MonoBehaviour
     [SerializeField]
     float speed;
 
-    Transform spawnTransform;
+    Vector3 spawnTransform;
 
     Vector3 moveDirection;
 
@@ -20,7 +20,7 @@ public class BulletBehaviour : MonoBehaviour
         Vector3 centre = new Vector3(0.5f, 0.5f, 0f);
         ray = Camera.main.ViewportPointToRay(centre);
 
-        spawnTransform = GameObject.Find("FirePoint").transform;
+        spawnTransform = GameObject.Find("FirePoint").transform.position;
 
 
     }
@@ -28,12 +28,11 @@ public class BulletBehaviour : MonoBehaviour
     void Update()
     {
         Vector3 centre = new Vector3(0.5f, 0.5f, 0f);
-        ray = Camera.main.ViewportPointToRay(centre);
         RaycastHit raycastHit;
-        Physics.Raycast(ray, out raycastHit, 3000f);
+        Physics.Raycast(ray, out raycastHit, 300f);
 
-        moveDirection = spawnTransform.position - raycastHit.point;
-        transform.Translate(moveDirection * speed * Time.deltaTime);
+
+        transform.Translate((raycastHit.point - spawnTransform).normalized * speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
