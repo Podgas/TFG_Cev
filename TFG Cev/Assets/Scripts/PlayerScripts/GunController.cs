@@ -14,8 +14,6 @@ public class GunController : MonoBehaviour
     private float damage = 1;
     [SerializeField]
     private Transform firePoint;
-    [SerializeField]
-    Camera main;
 
     [SerializeField]
     GameObject bullet;

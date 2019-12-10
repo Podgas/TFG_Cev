@@ -1,6 +1,11 @@
 tree("Root")
 	fallback
+		while
+			not
+				isAlive
+			Die
 		parallel
+			
 			tree("patrol")
 			tree("searchForPlayer")
 			tree("enterCombat")

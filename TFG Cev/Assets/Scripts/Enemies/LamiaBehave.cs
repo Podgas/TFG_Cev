@@ -68,6 +68,7 @@ public class LamiaBehave : EnemyBase
             castTime = 0;
             GameObject projectyle = Instantiate(boltPrefab, hitCollider.transform.position, Quaternion.identity);
             projectyle.GetComponent<ProjectyleBehaviour>().SetDestination(target.position - hitCollider.transform.position);
+            Debug.DrawLine(hitCollider.transform.position, target.position, Color.cyan, 3f);
             Debug.Log("Bolt");
             isAttacking = false;
             isWaitingCombat = true; 
@@ -124,7 +125,7 @@ public class LamiaBehave : EnemyBase
 
     IEnumerator DestroyArea(GameObject area)
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(3);
         Destroy(area);
     }
 

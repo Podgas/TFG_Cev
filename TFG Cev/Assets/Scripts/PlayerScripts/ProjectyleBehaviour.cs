@@ -16,11 +16,10 @@ public class ProjectyleBehaviour : MonoBehaviour
 
     public void SetDestination(Vector3 direction)
     {
-        _direction = direction;
-        _direction.y += 1;
+        _direction = direction; 
     }
 
-    private void OnParticleCollision(GameObject other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {

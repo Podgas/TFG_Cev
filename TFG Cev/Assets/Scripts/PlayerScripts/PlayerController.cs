@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform model;
     [SerializeField]
-    CharacterController cc;
+    public CharacterController cc;
 
     private float speed;
     private Vector3 _moveDirection;
@@ -163,6 +163,11 @@ public class PlayerController : MonoBehaviour
             
 
             IsGrounded();
+            isGrounded = cc.isGrounded;
+            if(isGrounded&& isJumping)
+            {
+                isJumping = false;
+            }
 
             if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             {
@@ -293,8 +298,11 @@ public class PlayerController : MonoBehaviour
         }
         _moveDirection = (Input.GetAxisRaw("Horizontal") * right * speed) + (Input.GetAxisRaw("Vertical") * forward * speed);
         _moveDirection.y = storeY;
-        joystickDirection = _moveDirection.normalized;
-        joystickDirection.y = 0;
+        if(Input.GetAxisRaw("Horizontal")!=0|| Input.GetAxisRaw("Vertical") != 0){
+            joystickDirection = _moveDirection.normalized;
+            joystickDirection.y = 0;
+        }
+        
 
 
     }
@@ -448,7 +456,7 @@ public class PlayerController : MonoBehaviour
             
             Transform target = targetsInViewRadius[i].transform;
             Vector3 targetNoY = target.position;
-            targetNoY.y = 0;
+            targetNoY.y = transform.position.y;
 
             Vector3 dirToTarget = (targetNoY - transform.position).normalized;
 
@@ -459,16 +467,17 @@ public class PlayerController : MonoBehaviour
     void Interact(Transform target, Vector3 dirToTarget)
     {
 
-        if (target.tag == "Climb" && Vector3.Angle(model.forward, dirToTarget) < 180)
-        {
 
-            Debug.DrawRay(transform.position, dirToTarget, Color.red, 1f);
+        Debug.DrawRay(transform.position, dirToTarget, Color.red, 1f);
+
+        if (target.tag == "Climb" && Vector3.Angle(model.forward, dirToTarget) < 180)
+        {  
 
             isClimbing = true;
             isGrounded = false;
             _moveDirection.y = 0;
         }
-        else if (target.tag == "Pickable")
+        else if (target.tag == "Pickable" )
         {
             PickObject(target.GetComponent<PickUpInteract>().OnInteract());
         }
@@ -502,9 +511,6 @@ public class PlayerController : MonoBehaviour
         {
             CroachOut();
 
-        }else if(other.tag =="Climb" && isClimbing)
-        {
-            isClimbing = false;
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -512,6 +518,11 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "Ground")
         {
             isClimbing = false;
+        }
+
+        if(other.tag == "ClimbBoundaries")
+        {
+            isClimbing=false;
         }
         if(other.tag == "HitBoxEnemy")
         {
@@ -527,16 +538,17 @@ public class PlayerController : MonoBehaviour
         
 
         RaycastHit hit;
-        Debug.DrawLine(transform.position, Vector3.forward + forward * 5f,Color.blue);
-        Debug.Log(Physics.Raycast(transform.position, forward, out hit, climbMask));
+        Debug.DrawRay(transform.position, forward,Color.blue, 30f);
+        Debug.Log(Physics.Raycast(transform.position, forward, out hit,300f, climbMask));
 
+        
         if(Physics.Raycast(transform.position, forward, out hit, 5f, climbMask)) {
             isClimbing = true;
             Debug.Log(hit.transform.gameObject.layer);
 
             Vector3 climbDirection;
 
-            climbDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+            climbDirection = new Vector3(-Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 
             cc.Move(climbDirection * speed * Time.deltaTime);
 
@@ -570,6 +582,14 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    private void OnDrawGizmos()
+    {
+        RaycastHit hit;
+        Physics.Raycast(transform.position, forward, out hit, 5f, climbMask);
 
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position, forward);
+        
+    }
 
 }

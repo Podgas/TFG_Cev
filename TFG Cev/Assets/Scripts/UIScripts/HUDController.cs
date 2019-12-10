@@ -13,12 +13,17 @@ public class HUDController : MonoBehaviour
     private GameObject cross;
     [SerializeField]
     private Text ammoText;
+    [SerializeField]
+    private MapController mc;
+    [SerializeField]
+    private Text collectableText;
 
 
     private void Start()
     {
         hpBar.fillAmount = playerStats.hp.value / playerStats.hp.maxValue;
         ammoText.text = playerStats.ammo + "/" + playerStats.maxAmmo;
+        collectableText.text = "0/" + mc.extras.Count.ToString();
     }
 
     public void UpdateHpBar(float percentage) {
@@ -26,10 +31,12 @@ public class HUDController : MonoBehaviour
         hpBar.fillAmount = percentage;
 
     }
+
     public void UpdateAmmoText()
     {
         ammoText.text = playerStats.ammo + "/" + playerStats.maxAmmo;
     }
+
     public void DisplayCross(PlayerCondition.Conditions condition)
     {
 
@@ -42,6 +49,10 @@ public class HUDController : MonoBehaviour
             cross.SetActive(false);
         }
 
+    }
+    public void UpdateCollectables()
+    {
+        collectableText.text = mc.completedExtras.Count.ToString() + "/" + mc.extras.Count.ToString();
     }
 
 }

@@ -56,6 +56,8 @@ public class EnemyBase : MonoBehaviour
     protected bool isCombat = false;
     [Task]
     protected bool isChasing = false;
+    [Task]
+    protected bool isAlive = true;
 
     
 
@@ -79,7 +81,17 @@ public class EnemyBase : MonoBehaviour
     private void Update()
     {
         if (target != null)
-            transform.LookAt(target);
+        {
+            Vector3 lookPos = target.position - transform.position;
+            lookPos.y = 0;
+            Quaternion rotation = Quaternion.LookRotation(lookPos);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 1);
+        }
+        if (hp <= 0)
+        {
+            isAlive = false;
+        }
+
     }
 
 
@@ -141,7 +153,11 @@ public class EnemyBase : MonoBehaviour
     {
         if (isPatroling) { 
             agent.SetDestination(currentNode.position);
-            transform.LookAt(currentNode.position);
+
+            Vector3 lookPos = currentNode.position - transform.position;
+            lookPos.y = 0;
+            Quaternion rotation = Quaternion.LookRotation(lookPos);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 1);
             Task.current.Succeed();
         }
         else
@@ -190,9 +206,12 @@ public class EnemyBase : MonoBehaviour
     protected void MoveEnemy()
     {
         agent.SetDestination(target.position);
-        transform.LookAt(target);
+        Vector3 lookPos = target.position - transform.position;
+        lookPos.y = 0;
+        Quaternion rotation = Quaternion.LookRotation(lookPos);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 1);
 
-        
+
     }
     [Task]
     protected void Chase()
@@ -215,6 +234,12 @@ public class EnemyBase : MonoBehaviour
 
         }
     }
+    [Task]
+    protected void Die()
+    {
+        Destroy(gameObject);
+    }
+
 
 
     private void OnDrawGizmos()
