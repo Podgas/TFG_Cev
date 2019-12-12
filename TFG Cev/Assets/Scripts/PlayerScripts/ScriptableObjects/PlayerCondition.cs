@@ -10,7 +10,8 @@ public class PlayerCondition : ScriptableObject
     public enum Conditions
     {
         Main,
-        Aim
+        Aim,
+        Fox
     }
 
     private static Conditions currentCondition;

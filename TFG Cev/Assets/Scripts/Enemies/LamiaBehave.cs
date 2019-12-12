@@ -44,7 +44,6 @@ public class LamiaBehave : EnemyBase
         combatTime += Time.deltaTime;
         if (combatTime >= attackCD)
         {
-            Debug.Log("Waiting");
             combatTime = 0;
             isAttacking = true;
             isWaitingCombat = false;
@@ -69,7 +68,6 @@ public class LamiaBehave : EnemyBase
             GameObject projectyle = Instantiate(boltPrefab, hitCollider.transform.position, Quaternion.identity);
             projectyle.GetComponent<ProjectyleBehaviour>().SetDestination(target.position - hitCollider.transform.position);
             Debug.DrawLine(hitCollider.transform.position, target.position, Color.cyan, 3f);
-            Debug.Log("Bolt");
             isAttacking = false;
             isWaitingCombat = true; 
         }
@@ -83,14 +81,15 @@ public class LamiaBehave : EnemyBase
         castTime += Time.deltaTime;
         if (areaEffect == null)
         {
-            areaEffect = Instantiate(areaEffectPrefab, target.position, areaEffectPrefab.transform.rotation);
+            Vector3 areapos = target.position;
+            areapos.y = 0;
+            areaEffect = Instantiate(areaEffectPrefab, areapos, areaEffectPrefab.transform.rotation);
         }
         
         
         if (castTime >= areaCastTime)
         {
             castTime = 0;
-            Debug.Log("Area");
             isAttacking = false;
             isWaitingCombat = true;
             StartCoroutine("DestroyArea", areaEffect);

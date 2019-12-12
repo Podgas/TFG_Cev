@@ -71,7 +71,12 @@ public class GunController : MonoBehaviour
         Vector3 direction = ray.direction;
 
         GameObject.Instantiate(bullet, firePoint.position, Quaternion.identity);
-        playerStats.ammo--;
+
+        if (!GodMode.Instance.isGodMode)
+        {
+            playerStats.ammo--;
+        }
+        
         onWeaponFire.Raise();
 
     }

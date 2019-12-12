@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2222614054298970277}
   - component: {fileID: 3027439940171959274}
   - component: {fileID: 1508441714887890791}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel_Whole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,3 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destroyedObject: {fileID: 4779056841479304329, guid: 670dbd29a8ec66e4aaf7a2153225f338,
     type: 3}
+  drops:
+  - {fileID: 8883249670018893311, guid: 5d27c9c9d200d624f9138fb289b90d34, type: 3}
+  - {fileID: 6753672226829912133, guid: 64cc06321430894419ab0c82228e6077, type: 3}
+  meshRenderer: {fileID: 6190470395125011065}

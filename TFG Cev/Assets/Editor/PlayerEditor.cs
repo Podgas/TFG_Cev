@@ -6,6 +6,7 @@ using UnityEditor;
 [CustomEditor(typeof (PlayerController))]
 public class PlayerEditor : Editor
 {
+    /*
     private void OnSceneGUI()
     {
         PlayerController fow = (PlayerController)target;
@@ -22,5 +23,5 @@ public class PlayerEditor : Editor
         {
             Handles.DrawLine(fow.transform.position, visibleTargets.position);
         }
-    }
+    }*/
 }

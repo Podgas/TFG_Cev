@@ -16,6 +16,11 @@ TagManager:
   - Node
   - HitBoxEnemy
   - PickUpObject
+  - Transform
+  - Untransform
+  - Boss
+  - BossAttack
+  - LamiaAttack
   layers:
   - Default
   - TransparentFX
@@ -30,7 +35,7 @@ TagManager:
   - Breakable
   - Player
   - Enemies
-  - 
+  - null
   - 
   - 
   - 

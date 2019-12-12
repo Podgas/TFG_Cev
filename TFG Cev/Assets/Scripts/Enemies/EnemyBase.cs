@@ -72,7 +72,8 @@ public class EnemyBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        currentNode = nm.GetNode(0);
+        if(nm!=null)
+            currentNode = nm.GetNode(0);
         isPatroling = true;
         isSearching = true;
         _moveDirection = Vector3.forward;
@@ -229,7 +230,6 @@ public class EnemyBase : MonoBehaviour
         }
         else
         {
-            Debug.Log("chase");
             Task.current.Succeed();
 
         }

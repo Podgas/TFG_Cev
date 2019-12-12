@@ -19,14 +19,4 @@ public class ProjectyleBehaviour : MonoBehaviour
         _direction = direction; 
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-
-            other.GetComponent<PlayerController>().UpdateHp(-5);
-        }
-        Debug.Log("Vaia");
-    }
-
 }

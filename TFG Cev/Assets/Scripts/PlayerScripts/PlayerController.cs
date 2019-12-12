@@ -16,6 +16,12 @@ public class PlayerController : MonoBehaviour
     Transform cameraAnchor;
     [SerializeField]
     PlayerCondition playerCondition;
+    [SerializeField]
+    private Transform playerModel;
+    [SerializeField]
+    private Transform foxModel;
+
+    private Transform model;
 
     //------------Stats Vars ---------------//
     [Header("Stats")]
@@ -42,15 +48,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float runSpeed;
     [SerializeField]
-    private Transform model;
+    private float runFoxSpeed;
     [SerializeField]
     public CharacterController cc;
 
     private float speed;
-    private Vector3 _moveDirection;
+    public Vector3 _moveDirection;
     Vector3 joystickDirection;
     public Vector3 forward;
     Vector3 right;
+    public Vector3 dir;
 
     float playerHeight;
 
@@ -61,11 +68,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float jumpForce;
     [SerializeField]
+    private float jumpFox;
+    [SerializeField]
     float hitDistance;
     [SerializeField]
     float fallMultiplier;
     [SerializeField]
     LayerMask groundHitLayer;
+    [SerializeField]
+    public int jumpTimes;
+
+    int jumpCount = 0;
 
     //---------Dash Vars---------------//
 
@@ -130,17 +143,26 @@ public class PlayerController : MonoBehaviour
     bool isCrouching = false;
     bool isClimbing = false;
     bool isCarring = false;
-
+    bool isFox = false;
 
     //------------Anim Vars ---------------//
     [Header("Animation")]
     [SerializeField]
     Animator anim;
 
+
+    [SerializeField]
+    BossBehaviour boss;
+
+
+
     private void Awake()
     {
         InitStats();
         playerHeight = cc.height;
+        playerModel.gameObject.SetActive(true);
+        foxModel.gameObject.SetActive(false);
+        model = playerModel;
     }
     void Start()
     {
@@ -154,74 +176,88 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (isClimbing)
+        if (!MenuManager.GetPaused())
         {
-            Climb();
-        }
-        else
-        {
-            
-
-            IsGrounded();
-            isGrounded = cc.isGrounded;
-            if(isGrounded&& isJumping)
+            if (isClimbing)
             {
-                isJumping = false;
-            }
-
-            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-            {
-                isMoving = true;
-                anim.SetBool("isMoving", isMoving);
+                Climb();
             }
             else
             {
-                isMoving = false;
-                anim.SetBool("isMoving", isMoving);
-            }
-            Move(forward, right);
 
-            switch (playerCondition.GetCondition())
-            {
-                case PlayerCondition.Conditions.Main:
 
-                    MainUpdate();
-                    break;
-                case PlayerCondition.Conditions.Aim:
-                    AimUpdate();
-                    break;
-            }
+                //IsGrounded();
+                isGrounded = cc.isGrounded;
 
-            if (!isGrounded)
-            {
-                if (isJumping)
-                    _moveDirection.y += Physics.gravity.y * gravity * Time.deltaTime;
+                if (isGrounded && isJumping)
+                {
+                    isJumping = false;
+                    jumpCount = 0;
+                }
+
+                if ((Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) && !boss.isPushing)
+                {
+                    Debug.Log("JoystickMovement");
+                    isMoving = true;
+                    anim.SetBool("isMoving", isMoving);
+                    dir = (Input.GetAxisRaw("Horizontal") * right * speed) + (Input.GetAxisRaw("Vertical") * forward * speed);
+                }
                 else
-                    _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
-            }
+                {
+                    if (!boss.isPushing)
+                        dir = Vector3.zero;
+                    isMoving = false;
+                    anim.SetBool("isMoving", isMoving);
+                }
+
+                Move(forward, right, dir);
+
+                switch (playerCondition.GetCondition())
+                {
+                    case PlayerCondition.Conditions.Main:
+
+                        MainUpdate();
+                        break;
+                    case PlayerCondition.Conditions.Aim:
+                        AimUpdate();
+                        break;
+                    case PlayerCondition.Conditions.Fox:
+                        FoxUpdate();
+                        break;
+                }
+
+                if (!isGrounded)
+                {
+                    if (isJumping)
+                        _moveDirection.y += Physics.gravity.y * gravity * Time.deltaTime;
+                    else
+                        _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
+                }
 
 
-
-            cc.Move(_moveDirection * dashSpeed * Time.deltaTime);
-
-            if (Input.GetButtonDown("Interact"))
-            {
-                FindVisibleInteractObjects();
+                if (!boss.phaseChange)
+                    cc.Move(_moveDirection * dashSpeed * Time.deltaTime);
+                
+                if (Input.GetButtonDown("Interact") && !isFox)
+                {
+                    FindVisibleInteractObjects();
+                }
             }
         }
         
 
+
     }
 
 
-    void MainUpdate()
+        void MainUpdate()
     {
         if (Input.GetAxis("Axis-3") != 0 || Input.GetAxis("Axis-4") != 0 && !isDashing)
         {
             RecalculatePivot(cameraPosition);
         }
 
-        if (isGrounded && Input.GetButtonDown("Jump"))
+        if ((isGrounded || jumpCount < jumpTimes) && Input.GetButtonDown("Jump"))
         {
             Jump();
         }
@@ -233,6 +269,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonUp("Attack"))
         {
             isCharging = false;
+
             anim.SetBool("isCharging", isCharging);
 
             damageDealt += stats.baseDamage;
@@ -252,7 +289,7 @@ public class PlayerController : MonoBehaviour
         if (isMoving || Input.GetAxis("Axis-4") != 0)
         {
             if (joystickDirection != Vector3.zero) { }
-            model.rotation = Quaternion.LookRotation(joystickDirection);
+            model.rotation = Quaternion.LookRotation(joystickDirection * Time.deltaTime);
 
         }
 
@@ -289,17 +326,38 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Move(Vector3 forward, Vector3 right )
+    void FoxUpdate()
+    {
+
+        if (Input.GetAxis("Axis-3") != 0 || Input.GetAxis("Axis-4") != 0 && !isDashing)
+        {
+            RecalculatePivot(cameraPosition);
+        }
+
+        if ((isGrounded || jumpCount < jumpTimes) && Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
+        if (isMoving || Input.GetAxis("Axis-4") != 0)
+        {
+            if (joystickDirection != Vector3.zero) { }
+            model.rotation = Quaternion.LookRotation(joystickDirection);
+
+        }
+    }
+
+    void Move(Vector3 forward, Vector3 right, Vector3 dir)
     {
         float storeY = _moveDirection.y;
         if (isGrounded)
         {
             CalculateSpeed();
         }
-        _moveDirection = (Input.GetAxisRaw("Horizontal") * right * speed) + (Input.GetAxisRaw("Vertical") * forward * speed);
+ 
+        _moveDirection = dir;
         _moveDirection.y = storeY;
         if(Input.GetAxisRaw("Horizontal")!=0|| Input.GetAxisRaw("Vertical") != 0){
-            joystickDirection = _moveDirection.normalized;
+            joystickDirection = dir.normalized;
             joystickDirection.y = 0;
         }
         
@@ -309,8 +367,13 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        _moveDirection.y = jumpForce;
+        if(!isFox)
+            _moveDirection.y = jumpForce;
+        else
+            _moveDirection.y = jumpFox;
+
         isJumping = true;
+        jumpCount++;
 
     }
 
@@ -326,6 +389,7 @@ public class PlayerController : MonoBehaviour
             if (isJumping)
             {
                 isJumping = false;
+                jumpCount = 0;
             }
         }
         else
@@ -349,7 +413,10 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetAxis("Run") != 0 && !isRunning)
         {
-            speed = runSpeed;
+            if (isFox)
+                speed = runFoxSpeed;
+            else
+                speed = runSpeed;
             isRunning = true;
         }
         else if(Input.GetAxis("Run")==0 && isRunning)
@@ -385,6 +452,7 @@ public class PlayerController : MonoBehaviour
         stats.hp.value = stats.hp.maxValue;
         stats.baseDamage = 1;
         stats.ammo = stats.maxAmmo;
+        jumpCount = 1;
     }
 
     void Attack()
@@ -470,14 +538,14 @@ public class PlayerController : MonoBehaviour
 
         Debug.DrawRay(transform.position, dirToTarget, Color.red, 1f);
 
-        if (target.tag == "Climb" && Vector3.Angle(model.forward, dirToTarget) < 180)
+        if (target.tag == "Climb" && Vector3.Angle(model.forward, dirToTarget) < 180 && !isFox)
         {  
 
             isClimbing = true;
             isGrounded = false;
             _moveDirection.y = 0;
         }
-        else if (target.tag == "Pickable" )
+        else if (target.tag == "Pickable" && !isFox)
         {
             PickObject(target.GetComponent<PickUpInteract>().OnInteract());
         }
@@ -524,13 +592,25 @@ public class PlayerController : MonoBehaviour
         {
             isClimbing=false;
         }
-        if(other.tag == "HitBoxEnemy")
+        if(other.tag == "HitBoxEnemy" && !GodMode.Instance.isGodMode)
         {
             UpdateHp(-10);
            
         }
+        if (other.tag == "LamiaAttack" && !GodMode.Instance.isGodMode)
+        {
+            UpdateHp(-5);
+        }
 
-        
+
+
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "BossAttack" && !GodMode.Instance.isGodMode)
+        {
+            UpdateHp(-1f);
+        }
     }
 
     void Climb()
@@ -592,4 +672,42 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    public void OnTransformZone(bool transform)
+    {
+        if(transform && !isFox)
+        {
+            Transform();
+        }
+        else if(!transform && isFox)
+        {
+            UnTransform();
+        }
+    }
+
+    private void Transform()
+    {
+        playerCondition.ChangeCondition(PlayerCondition.Conditions.Fox);
+        isFox = true;
+        jumpTimes = 2;
+        model.gameObject.SetActive(false);
+        model = foxModel;
+        model.gameObject.SetActive(true);
+    }
+    private void UnTransform()
+    {
+        playerCondition.ChangeCondition(PlayerCondition.Conditions.Main);
+        isFox = false;
+        jumpTimes = 1;
+        model.gameObject.SetActive(false);
+        model = playerModel;
+        model.gameObject.SetActive(true);
+
+    }
+
+    public void GoTo(Transform pos)
+    {
+        cc.enabled = false;
+        transform.position = pos.position;
+        cc.enabled = true;
+    }
 }

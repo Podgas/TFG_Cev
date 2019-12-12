@@ -37,7 +37,7 @@ public class PlatformController : MonoBehaviour
     }
 
     
-    private void Update()
+    private void FixedUpdate()
     {
         delayCurrent += Time.deltaTime;
         if (!isMoving && delayCurrent >= delay)

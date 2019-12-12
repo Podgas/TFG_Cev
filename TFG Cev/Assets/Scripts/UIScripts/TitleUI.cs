@@ -14,8 +14,25 @@ public class TitleUI : MonoBehaviour
     float fadeTransitionTime = 1.5f;
 
 
+    [Header("OptionMenu")]
+    [SerializeField]
+    Button gameplayButton;
+    [SerializeField]
+    Button graphicButton;
+    [SerializeField]
+    Button soundbutton;
+
+    [SerializeField]
+    CanvasGroup gameplayOptions;
+    [SerializeField]
+    CanvasGroup graphicOptions;
+    [SerializeField]
+    CanvasGroup soundOptions;
+
+
     private void Start()
     {
+
         switch (SceneController.GetActualScreenName())
         {
 
@@ -58,6 +75,37 @@ public class TitleUI : MonoBehaviour
                 break;
 
         }
+
+        if (Input.GetButton("Cancel"))
+        {
+            if(actualCanvas == options)
+            {
+                SwitchCanvas(actualCanvas, mainMenu, 0.5f);
+            }
+        }
+        Debug.Log(EventSystem.current.currentSelectedGameObject);
+        if (Input.GetAxis("Horizontal") != 0)
+        {
+            if (gameplayButton.gameObject == EventSystem.current.currentSelectedGameObject)
+            {
+                gameplayOptions.gameObject.SetActive(true);
+                soundOptions.gameObject.SetActive(false);
+                graphicOptions.gameObject.SetActive(false);
+            }
+            else if (graphicButton.gameObject == EventSystem.current.currentSelectedGameObject)
+            {
+                gameplayOptions.gameObject.SetActive(false);
+                soundOptions.gameObject.SetActive(false);
+                graphicOptions.gameObject.SetActive(true);
+            }
+            else if (soundbutton.gameObject  == EventSystem.current.currentSelectedGameObject)
+            {
+                gameplayOptions.gameObject.SetActive(false);
+                soundOptions.gameObject.SetActive(true);
+                graphicOptions.gameObject.SetActive(false);
+            }
+        }
+        
 
     }
 
@@ -108,23 +156,21 @@ public class TitleUI : MonoBehaviour
 
         actualCanvas = nextCG;
 
-        //actualCanvas.GetComponentInChildren<Button>().Select();
-        //eventSystem.SetSelectedGameObject(actualCanvas.GetComponentInChildren<Button>().gameObject);
+        eventSystem.SetSelectedGameObject(actualCanvas.GetComponentInChildren<Button>().gameObject);
+        actualCanvas.GetComponentInChildren<Button>().OnSelect(null);
+        
     }
 
 
     public void OnStartClick()
     {
-        SceneController.LoadScene(SceneController.Scene.TestScene, true);
+        SceneController.LoadScene(SceneController.Scene.TestLevel, true);
     }
     public void OnOptionsClick()
     {
         SwitchCanvas(actualCanvas, options, 0.5f);
-
+        
     }
-    public void OnExitClick()
-    {
-
-    }
+    
 
 }

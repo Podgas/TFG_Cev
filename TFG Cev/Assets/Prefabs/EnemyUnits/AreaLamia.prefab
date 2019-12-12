@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 4004921108310074994}
   - component: {fileID: 559171420140400931}
   - component: {fileID: 4553608210487734696}
+  - component: {fileID: 5627198661785411541}
   m_Layer: 0
   m_Name: AreaLamia
-  m_TagString: Untagged
+  m_TagString: LamiaAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4754,6 +4755,20 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &5627198661785411541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6860911397004775843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7db6e35fb83df744b9e54dc423ff513, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackTime: 2
+  destroyTime: 2.1
 --- !u!1 &8582267717625260210
 GameObject:
   m_ObjectHideFlags: 0
