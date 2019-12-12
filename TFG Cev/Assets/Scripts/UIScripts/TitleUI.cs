@@ -83,7 +83,7 @@ public class TitleUI : MonoBehaviour
                 SwitchCanvas(actualCanvas, mainMenu, 0.5f);
             }
         }
-        Debug.Log(EventSystem.current.currentSelectedGameObject);
+
         if (Input.GetAxis("Horizontal") != 0)
         {
             if (gameplayButton.gameObject == EventSystem.current.currentSelectedGameObject)
