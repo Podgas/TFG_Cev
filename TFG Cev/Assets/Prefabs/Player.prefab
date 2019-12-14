@@ -140,6 +140,7 @@ MonoBehaviour:
   bullet: {fileID: 3421561479230481015, guid: 1c1d4703125a6d54f8ff1eb019e0c8ca, type: 3}
   playerStats: {fileID: 11400000, guid: f0842730b1f8375458d7fac8d542b21d, type: 2}
   onWeaponFire: {fileID: 11400000, guid: 0a983a936320e0d4fb11915f596a1d34, type: 2}
+  playerCondition: {fileID: 0}
 --- !u!1 &1593239977
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,6 +414,7 @@ MonoBehaviour:
   dir: {x: 0, y: 0, z: 0}
   gravity: 3.5
   jumpForce: 16
+  jumpFox: 0
   hitDistance: 0.93
   fallMultiplier: 2
   groundHitLayer:
@@ -440,6 +442,8 @@ MonoBehaviour:
   damageDealt: 0
   anim: {fileID: 1444866301849625048}
   boss: {fileID: 0}
+  levelChanger: {fileID: 0}
+  vfx: {fileID: 0}
 --- !u!143 &1539298956279234039
 CharacterController:
   m_ObjectHideFlags: 0
@@ -715,6 +719,11 @@ PrefabInstance:
     - target: {fileID: 4000013213727148, guid: b626a35cb24b0654cb15cf8f04e4a55e, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.7473821
+      objectReference: {fileID: 0}
+    - target: {fileID: 95000010466729916, guid: b626a35cb24b0654cb15cf8f04e4a55e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4000012430366774, guid: b626a35cb24b0654cb15cf8f04e4a55e, type: 3}
       propertyPath: m_LocalRotation.x

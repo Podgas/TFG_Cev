@@ -10,6 +10,8 @@ public class SakeController : MonoBehaviour
     FloatEvent onSakePick;
     [SerializeField]
     float heal;
+    [SerializeField]
+    AudioLibrary vfx;
 
     public void OnPickUp()
     {
@@ -17,6 +19,8 @@ public class SakeController : MonoBehaviour
         {
 
             onSakePick.Raise(heal);
+            vfx.PlayVFX(AudioLibrary.VfxSounds.Drink);
+
             Destroy(gameObject);
         }
 

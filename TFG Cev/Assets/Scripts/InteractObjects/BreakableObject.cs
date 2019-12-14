@@ -16,6 +16,9 @@ public class BreakableObject : MonoBehaviour
     [SerializeField]
     MeshRenderer meshRenderer;
 
+    [SerializeField]
+    AudioLibrary vfx;
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -37,12 +40,13 @@ public class BreakableObject : MonoBehaviour
             {
                 Instantiate(drops[1], transform.position, Quaternion.identity);
             }
+            vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
 
-            StartCoroutine("DesrtoyBreakedObject");
+            StartCoroutine(DestroyBreakedObject());
         }
     }
 
-    IEnumerator DestroyBreakedObject()
+    private IEnumerator DestroyBreakedObject()
     {
         yield return new WaitForSeconds(2f);
         Destroy(gameObject);

@@ -59,6 +59,10 @@ public class EnemyBase : MonoBehaviour
     [Task]
     protected bool isAlive = true;
 
+
+    [SerializeField]
+    AudioLibrary vfx;
+
     
 
 
@@ -102,8 +106,9 @@ public class EnemyBase : MonoBehaviour
         {
 
             GetDamage(GameObject.Find("Player").GetComponent<PlayerController>().damageDealt);
+            vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
+            vfx.PlayVFX(AudioLibrary.VfxSounds.Hurt);
 
-            mat.material.SetColor("_Color",Random.ColorHSV());
         }
 
         if(other.tag == "Node")

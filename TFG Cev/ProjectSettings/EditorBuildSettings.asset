@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Others/TestLevel.unity
     guid: 67e5c5623ba82b64491fda9fcee31f92
+  - enabled: 1
+    path: Assets/Scenes/Menu/FinalScene.unity
+    guid: db5e975d6552eae41808528b51d59244
   m_configObjects: {}

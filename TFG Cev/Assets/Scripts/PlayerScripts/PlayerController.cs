@@ -86,11 +86,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float maxDashTime = 1.0f;
     [SerializeField]
-    private float dashSpeed = 1.0f;
+    private float dashSpeed = 3.0f;
     [SerializeField]
     private float dashStoppingSpeed = 0.1f;
 
-    private float currentDashTime;
+    private float currentDashTime = 99f;
+
+    Vector3 dashDirection;
 
     //--------Interaction Vars----------//
 
@@ -144,6 +146,7 @@ public class PlayerController : MonoBehaviour
     bool isClimbing = false;
     bool isCarring = false;
     bool isFox = false;
+    bool isDead = false;
 
     //------------Anim Vars ---------------//
     [Header("Animation")]
@@ -153,6 +156,13 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     BossBehaviour boss;
+    [SerializeField]
+    LevelChanger levelChanger;
+    [SerializeField]
+    AudioLibrary vfx;
+
+    float actualFootTime;
+    float footTime = 0.5f;
 
 
 
@@ -166,7 +176,7 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
-
+        Cursor.visible = false;
         RecalculatePivot(cameraPosition);
         speed = walkSpeed;
 
@@ -176,7 +186,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (!MenuManager.GetPaused())
+        if (!MenuManager.GetPaused() || !isDead)
         {
             if (isClimbing)
             {
@@ -236,7 +246,28 @@ public class PlayerController : MonoBehaviour
 
 
                 if (!boss.phaseChange)
-                    cc.Move(_moveDirection * dashSpeed * Time.deltaTime);
+                {
+                    if (!isDashing)
+                    {
+                        Debug.Log("MoveWithoutDash");
+
+                        if(isMoving && isGrounded)
+                        {
+                            actualFootTime += Time.deltaTime;
+                            if (actualFootTime >= footTime)
+                            {
+                                actualFootTime = 0;
+                                vfx.PlayVFX(AudioLibrary.VfxSounds.Footstep,0.04f);
+                            }
+                        }
+                        
+
+
+                        cc.Move(_moveDirection  * Time.deltaTime);
+                    }
+                    
+                }
+                    
                 
                 if (Input.GetButtonDown("Interact") && !isFox)
                 {
@@ -272,9 +303,10 @@ public class PlayerController : MonoBehaviour
 
             anim.SetBool("isCharging", isCharging);
 
-            damageDealt += stats.baseDamage;
+            damageDealt = stats.baseDamage + damageModifier;
             actualTime = 0;
             onAttackLaunch.Raise();
+
         }
 
 
@@ -286,14 +318,16 @@ public class PlayerController : MonoBehaviour
 
         //////////////////////////////////////////
 
-        if (isMoving || Input.GetAxis("Axis-4") != 0)
+        if (isMoving || Input.GetAxis("Axis-4") != 0 )
         {
-            if (joystickDirection != Vector3.zero) { }
-            model.rotation = Quaternion.LookRotation(joystickDirection * Time.deltaTime);
+            if(!isDashing)
+                model.rotation = Quaternion.LookRotation(joystickDirection * Time.deltaTime);
 
         }
+        if(isDashing || Input.GetButtonDown("Dash")){
 
-        Dash();
+            Dash();
+        }
 
     }
 
@@ -321,7 +355,8 @@ public class PlayerController : MonoBehaviour
         if (isMoving ||
             (playerCondition.GetCondition() == PlayerCondition.Conditions.Aim && Input.GetAxis("Axis-4") != 0))
         {
-            model.rotation = Quaternion.LookRotation(forward);
+            if (!isDashing)
+                model.rotation = Quaternion.LookRotation(forward);
 
         }
     }
@@ -338,9 +373,9 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
-        if (isMoving || Input.GetAxis("Axis-4") != 0)
+        if (isMoving || Input.GetAxis("Axis-4") != 0 && !isDashing)
         {
-            if (joystickDirection != Vector3.zero) { }
+            
             model.rotation = Quaternion.LookRotation(joystickDirection);
 
         }
@@ -443,6 +478,12 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("HPChange");
         onHPChange.Raise(percentage);
+        if (percentage == 0)
+        {
+            isDead = true;
+            levelChanger.FadeToLevel(SceneController.Scene.FinalScene);
+            stats.win = false;
+        }
 
     }
 
@@ -483,21 +524,26 @@ public class PlayerController : MonoBehaviour
 
     void Dash()
     {
-        if (Input.GetButtonDown("Dash"))
+        if (Input.GetButtonDown("Dash") && !isDashing&& isGrounded)
         {
-            
+
+            _moveDirection.y = 0;
+            dashDirection = _moveDirection;
             currentDashTime = 0.0f;
-        }
-        if (currentDashTime < maxDashTime && isGrounded)
-        {
-            dashSpeed = 5;
-            currentDashTime += dashStoppingSpeed;
+            if (dashDirection == Vector3.zero)
+                dashDirection = forward * -1f * speed;
             isDashing = true;
+        }
+
+        if (currentDashTime < maxDashTime && isDashing)
+        {
+            currentDashTime += dashStoppingSpeed;
+            cc.Move(dashDirection * dashSpeed * Time.deltaTime);
         }
         else
         {
+            Debug.Log("StopDash");
             isDashing = false;
-            dashSpeed = 1;
         }
     }
 
@@ -595,11 +641,12 @@ public class PlayerController : MonoBehaviour
         if(other.tag == "HitBoxEnemy" && !GodMode.Instance.isGodMode)
         {
             UpdateHp(-10);
+            vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
            
         }
         if (other.tag == "LamiaAttack" && !GodMode.Instance.isGodMode)
         {
-            UpdateHp(-5);
+            UpdateHp(-7);
         }
 
 

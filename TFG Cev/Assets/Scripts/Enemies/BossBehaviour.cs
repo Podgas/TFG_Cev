@@ -51,6 +51,10 @@ public class BossBehaviour : MonoBehaviour
 
     [SerializeField]
     GameObject earthQuakePrefab;
+    [SerializeField]
+    LevelChanger levelChanger;
+    [SerializeField]
+    PlayerStats stats;
 
     void Update()
     {
@@ -132,9 +136,21 @@ public class BossBehaviour : MonoBehaviour
         {
             if (currentTime >= delay)
             {
-                OnPlayerHit();
-                currentTime = 0;
-                phaseChange = true;
+                if (hits == maxHits-1) {
+                    phaseChange = true;
+                    ChangePhase();
+                    stats.win = true;
+                    levelChanger.FadeToLevel(SceneController.Scene.FinalScene);
+                    
+                }
+                else
+                {
+                    OnPlayerHit();
+                    currentTime = 0;
+                    phaseChange = true;
+                }
+                
+                
             }
             
         }

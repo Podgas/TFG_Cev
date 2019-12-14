@@ -8,14 +8,27 @@ public class SwordController : MonoBehaviour
     [SerializeField]
     GameObject hitBox;
 
+    bool isEnabled;
+
+
+
     public void EnableHitbox()
     {
-        hitBox.SetActive(true);
+        if (!isEnabled)
+        {
+            isEnabled = true;
+            hitBox.SetActive(isEnabled);
+        }
+            
     }
 
     public void DisableHitbox()
     {
-        hitBox.SetActive(false);
+        if (isEnabled)
+        {
+            isEnabled = false;
+            hitBox.SetActive(isEnabled);
+        }
     }
 
 }

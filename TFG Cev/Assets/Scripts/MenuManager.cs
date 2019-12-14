@@ -9,7 +9,9 @@ public class MenuManager : MonoBehaviour
     [SerializeField]
     EventSystem es;
     [SerializeField]
-    GameObject pausePanel;
+    CanvasGroup pausePanel;
+    [SerializeField]
+    CanvasGroup optionPanel;
     [SerializeField]
     Button pauseFirstButton;
 
@@ -18,7 +20,7 @@ public class MenuManager : MonoBehaviour
 
     private void Awake()
     {
-        pausePanel.SetActive(false);
+        pausePanel.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -29,7 +31,7 @@ public class MenuManager : MonoBehaviour
             {
                 
                 isPaused = false;
-                pausePanel.SetActive(false);
+                pausePanel.gameObject.SetActive(false);
                 Time.timeScale = 1f;
             }
             else
@@ -38,7 +40,7 @@ public class MenuManager : MonoBehaviour
                 pauseFirstButton.OnSelect(null);
                 pauseFirstButton.Select();
                 isPaused = true;
-                pausePanel.SetActive(true);
+                pausePanel.gameObject.SetActive(true);
                 
                 Time.timeScale = 0f;
             }
@@ -49,7 +51,7 @@ public class MenuManager : MonoBehaviour
     public void OnResume()
     {
         isPaused = false;
-        pausePanel.SetActive(false);
+        pausePanel.gameObject.SetActive(false);
         Time.timeScale = 1f;
     }
 
@@ -62,4 +64,15 @@ public class MenuManager : MonoBehaviour
     {
         return isPaused;
     }
+
+    public void OpenOptions()
+    {
+
+        optionPanel.gameObject.SetActive(true);
+        pausePanel.gameObject.SetActive(false);
+    }
+
+    
+
+    
 }

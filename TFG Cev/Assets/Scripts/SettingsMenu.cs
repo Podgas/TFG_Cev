@@ -7,38 +7,14 @@ public class SettingsMenu : MonoBehaviour
 {
 
 
-    Resolution[] resolutions;
-
     [SerializeField]
     Dropdown resolutionDropdown;
+    [SerializeField]
+    Vector2[] screenRes;
 
     private void Start()
     {
-        resolutions = Screen.resolutions;
-
-        resolutionDropdown.ClearOptions();
-
-        List<string> options = new List<string>();
-
-        int currentResolutionIndex = 0;
-        for(int i =0; i<resolutions.Length; i++)
-        {
-            if (resolutions[i].width == 1280 || resolutions[i].width == 1920 || resolutions[i].width == 1600)
-            {
-                string option = resolutions[i].width + " x " + resolutions[i].height;
-                options.Add(option);
-
-                if (resolutions[i].width == Screen.currentResolution.width &&
-                    resolutions[i].height == Screen.currentResolution.height)
-                {
-                    currentResolutionIndex = i;
-                }
-            }
-            
-        }
-        resolutionDropdown.AddOptions(options);
-        resolutionDropdown.value = currentResolutionIndex;
-        resolutionDropdown.RefreshShownValue();
+       
     }
 
     public void SetQuality(int qualityIndex)
@@ -49,7 +25,8 @@ public class SettingsMenu : MonoBehaviour
 
     public void SerResolution(int resolutionIndex)
     {
-        Resolution resolution = resolutions[resolutionIndex];
-        Screen.SetResolution(resolution.width, resolution.height, true);
+
+        Screen.SetResolution((int)screenRes[resolutionIndex].x, (int)screenRes[resolutionIndex].y, true);
+
     }
 }

@@ -59,6 +59,9 @@ public class TitleUI : MonoBehaviour
 
         actualCanvas = logoPanel;
 
+        mainMenu.gameObject.SetActive(false);
+        options.gameObject.SetActive(false);
+
 
     }
 
@@ -83,7 +86,7 @@ public class TitleUI : MonoBehaviour
                 SwitchCanvas(actualCanvas, mainMenu, 0.5f);
             }
         }
-
+        Debug.Log(EventSystem.current.currentSelectedGameObject);
         if (Input.GetAxis("Horizontal") != 0)
         {
             if (gameplayButton.gameObject == EventSystem.current.currentSelectedGameObject)
@@ -152,6 +155,8 @@ public class TitleUI : MonoBehaviour
     {
         StartCoroutine(FadeCanvas(actualCG, actualCG.alpha, 0, time));
         yield return new WaitForSeconds(time);
+        actualCG.gameObject.SetActive(false);
+        nextCG.gameObject.SetActive(true);
         StartCoroutine(FadeCanvas(nextCG, nextCG.alpha, 1, time));
 
         actualCanvas = nextCG;

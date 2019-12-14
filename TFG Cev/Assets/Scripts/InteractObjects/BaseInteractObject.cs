@@ -25,7 +25,9 @@ public class BaseInteractObject : MonoBehaviour, IInteractObjects
 
     public virtual void ActivateMechanism()
     {
+        
         mechanism.GetComponent<Animator>().SetBool("isOn", isOn);
+        Debug.Log("MecanismoActivao" + isOn);
     }
 
     IEnumerator StartMechanimAnim()

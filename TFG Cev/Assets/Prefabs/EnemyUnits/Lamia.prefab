@@ -546,9 +546,9 @@ MonoBehaviour:
   hp: 4
   speed: 4
   timeWaiting: 3
-  detectionRadius: 27
-  escapeRadius: 30
-  combatRadius: 21
+  detectionRadius: 12
+  escapeRadius: 14
+  combatRadius: 10
   playerLayer:
     serializedVersion: 2
     m_Bits: 2048
@@ -556,9 +556,15 @@ MonoBehaviour:
   nm: {fileID: 0}
   hitCollider: {fileID: 3401531948320598589}
   anim: {fileID: 5837172436889705675}
+  vfx: {fileID: 11400000, guid: cc24ca2624be3e54495b693d4d0fcbc1, type: 2}
   hpText: {fileID: 7617087410155510371}
   mat: {fileID: 1075806955630979191}
   attackCD: 2
+  boltCastTime: 0
+  areaCastTime: 0
+  boltPrefab: {fileID: 0}
+  areaPrefab: {fileID: 0}
+  areaEffectPrefab: {fileID: 0}
 --- !u!95 &5837172436889705675
 Animator:
   serializedVersion: 3
@@ -592,7 +598,7 @@ NavMeshAgent:
   m_Acceleration: 60
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 12
+  m_StoppingDistance: 10
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

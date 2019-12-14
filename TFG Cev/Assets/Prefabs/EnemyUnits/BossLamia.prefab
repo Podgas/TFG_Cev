@@ -128,6 +128,7 @@ MonoBehaviour:
   nm: {fileID: 1255656014}
   hitCollider: {fileID: 7013201637962316058}
   anim: {fileID: 2262640534590312428}
+  vfx: {fileID: 11400000, guid: cc24ca2624be3e54495b693d4d0fcbc1, type: 2}
   hpText: {fileID: 2869384877416876356}
   mat: {fileID: 4650325375797410640}
   attackCD: 0.5

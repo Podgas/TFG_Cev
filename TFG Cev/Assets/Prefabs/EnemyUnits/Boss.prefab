@@ -206,6 +206,9 @@ MonoBehaviour:
   isPushing: 0
   isKnockBack: 0
   phaseChange: 0
+  earthQuakePrefab: {fileID: 0}
+  levelChanger: {fileID: 0}
+  stats: {fileID: 11400000, guid: f0842730b1f8375458d7fac8d542b21d, type: 2}
 --- !u!114 &3739911430053505472
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2ad9e1ef59121742a56e7cb879aed26, type: 3}
+  m_Name: VFXLibrary
+  m_EditorClassIdentifier: 
+  sounds:
+  - sound: 0
+    audioClip: {fileID: 8300000, guid: bc3b7824a2715404480c056b1fcb0dcd, type: 3}
+  - sound: 1
+    audioClip: {fileID: 8300000, guid: feebac28f91f2814a89e7d685765a7b1, type: 3}
+  - sound: 2
+    audioClip: {fileID: 8300000, guid: e4e25fa0cfa6e934b9a30c89f154ce79, type: 3}
+  - sound: 3
+    audioClip: {fileID: 8300000, guid: bc323d5967cc9f14b9cea3ac779f68ce, type: 3}
+  - sound: 4
+    audioClip: {fileID: 8300000, guid: 70d5e86043353d146a530216c683ec56, type: 3}

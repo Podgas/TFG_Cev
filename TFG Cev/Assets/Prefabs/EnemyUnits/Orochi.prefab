@@ -48,7 +48,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264199505959522505}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -107,7 +107,6 @@ GameObject:
   - component: {fileID: 118323377106996155}
   - component: {fileID: 2080335667}
   - component: {fileID: 2080335668}
-  - component: {fileID: 2080335670}
   m_Layer: 12
   m_Name: Orochi
   m_TagString: Enemy
@@ -179,8 +178,8 @@ MonoBehaviour:
   hp: 5
   speed: 3
   timeWaiting: 1
-  detectionRadius: 10
-  escapeRadius: 15
+  detectionRadius: 7
+  escapeRadius: 10
   combatRadius: 3.2
   playerLayer:
     serializedVersion: 2
@@ -189,6 +188,7 @@ MonoBehaviour:
   nm: {fileID: 0}
   hitCollider: {fileID: 264199505959522505}
   anim: {fileID: 118323377106996155}
+  vfx: {fileID: 11400000, guid: cc24ca2624be3e54495b693d4d0fcbc1, type: 2}
   hpText: {fileID: 4112006086934793491}
   mat: {fileID: 6794695584949354247}
   attackCD: 2
@@ -261,33 +261,6 @@ MonoBehaviour:
     breakPointStatuses: 
     collapsedLines: 1200000013000000150000001600000017000000180000000e000000
     btScript: 
---- !u!114 &2080335670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1188401602191332519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67ba4f6870ef2ce4bb866213b977857d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: dc4390533386bdd4abfe6021c320507e, type: 2}
-  unityEventResponse:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2080335663}
-        m_MethodName: ActivateHitCollider
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &1517461933086111524
 GameObject:
   m_ObjectHideFlags: 0

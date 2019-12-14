@@ -13,7 +13,8 @@ public static class SceneController
         TitleScreen,
         TestScene,
         LoadingScene,
-        TestLevel
+        TestLevel,
+        FinalScene
     }
 
     private static Action onLoaderCallBack;

@@ -21,4 +21,6 @@ public class PlayerStats : ScriptableObject
     public int ammo;
     public float baseDamage;
 
+    public bool win;
+
 }

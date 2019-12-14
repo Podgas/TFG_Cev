@@ -27,6 +27,12 @@ public class GunController : MonoBehaviour
 
     private bool isShooting = false;
 
+    [SerializeField]
+    PlayerCondition playerCondition;
+
+    [SerializeField]
+    AudioLibrary vfx;
+
 
 
     void Update()
@@ -40,7 +46,7 @@ public class GunController : MonoBehaviour
 
         if (timer >= fireRate)
         {
-            if (Input.GetAxisRaw("Shoot") != 0)
+            if (Input.GetAxisRaw("Shoot") != 0 && playerCondition.GetCondition() == PlayerCondition.Conditions.Aim)
             {
 
                 if (isShooting == false){ 
@@ -70,6 +76,7 @@ public class GunController : MonoBehaviour
 
         Vector3 direction = ray.direction;
 
+        vfx.PlayVFX(AudioLibrary.VfxSounds.GunShot);
         GameObject.Instantiate(bullet, firePoint.position, Quaternion.identity);
 
         if (!GodMode.Instance.isGodMode)
