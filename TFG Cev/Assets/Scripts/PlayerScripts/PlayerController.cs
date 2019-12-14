@@ -17,11 +17,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     PlayerCondition playerCondition;
     [SerializeField]
-    private Transform playerModel;
+    public Transform playerModel;
     [SerializeField]
     private Transform foxModel;
+    [SerializeField]
+    public Transform testModel;
 
-    private Transform model;
+    [HideInInspector]
+    public Transform model;
 
     //------------Stats Vars ---------------//
     [Header("Stats")]
@@ -756,5 +759,11 @@ public class PlayerController : MonoBehaviour
         cc.enabled = false;
         transform.position = pos.position;
         cc.enabled = true;
+    }
+    public void SwitchModel(Transform mts)
+    {
+        model.gameObject.SetActive(false);
+        model = mts;
+        model.gameObject.SetActive(true);
     }
 }
