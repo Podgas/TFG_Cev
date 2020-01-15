@@ -157,8 +157,7 @@ public class PlayerController : MonoBehaviour
     Animator anim;
 
 
-    [SerializeField]
-    BossBehaviour boss;
+
     [SerializeField]
     LevelChanger levelChanger;
     [SerializeField]
@@ -208,7 +207,7 @@ public class PlayerController : MonoBehaviour
                     jumpCount = 0;
                 }
 
-                if ((Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) && !boss.isPushing)
+                if ((Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
                 {
                     Debug.Log("JoystickMovement");
                     isMoving = true;
@@ -217,8 +216,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    if (!boss.isPushing)
-                        dir = Vector3.zero;
                     isMoving = false;
                     anim.SetBool("isMoving", isMoving);
                 }
@@ -248,29 +245,26 @@ public class PlayerController : MonoBehaviour
                 }
 
 
-                if (!boss.phaseChange)
-                {
-                    if (!isDashing)
-                    {
-                        Debug.Log("MoveWithoutDash");
 
-                        if(isMoving && isGrounded)
+                if (!isDashing)
+                {
+                    Debug.Log("MoveWithoutDash");
+
+                    if(isMoving && isGrounded)
+                    {
+                        actualFootTime += Time.deltaTime;
+                        if (actualFootTime >= footTime)
                         {
-                            actualFootTime += Time.deltaTime;
-                            if (actualFootTime >= footTime)
-                            {
-                                actualFootTime = 0;
-                                vfx.PlayVFX(AudioLibrary.VfxSounds.Footstep,0.04f);
-                            }
+                            actualFootTime = 0;
+                            vfx.PlayVFX(AudioLibrary.VfxSounds.Footstep,0.04f);
                         }
+                    }
                         
 
 
-                        cc.Move(_moveDirection  * Time.deltaTime);
-                    }
-                    
+                    cc.Move(_moveDirection  * Time.deltaTime);
                 }
-                    
+    
                 
                 if (Input.GetButtonDown("Interact") && !isFox)
                 {
