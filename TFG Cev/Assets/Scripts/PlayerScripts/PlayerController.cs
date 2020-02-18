@@ -53,6 +53,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float runFoxSpeed;
     [SerializeField]
+    private float timeToMax;
+    [SerializeField]
+    private float timeToMin;
+    [SerializeField]
     public CharacterController cc;
 
     private float speed;
@@ -61,6 +65,10 @@ public class PlayerController : MonoBehaviour
     public Vector3 forward;
     Vector3 right;
     public Vector3 dir;
+    float accelRatePerSec;
+    float decelRatePerSec;
+    [SerializeField]
+    float velocity;
 
     float playerHeight;
 
@@ -112,14 +120,13 @@ public class PlayerController : MonoBehaviour
 
     public List<Transform> interactableTargets = new List<Transform>();
 
+    [SerializeField]
+    FieldOfViewSystem fov;
+
     //--------Climb Vars----------//
     [SerializeField]
     private LayerMask climbMask;
 
-    //-------PickUp Vars---------//
-    [Header("PickUp")]
-    [SerializeField]
-    Transform hand;
 
     Transform carriedObject;
 
@@ -136,20 +143,6 @@ public class PlayerController : MonoBehaviour
     public float damageDealt;
     float actualTime;
 
-
-    //------------Bool State Vars ---------------//
-    bool isGrounded = true;
-    bool isMoving = false;
-    bool isRunning = false;
-    bool isJumping = false;
-    bool isCharging = false;
-    bool isShooting = false;
-    bool isDashing = false;
-    bool isCrouching = false;
-    bool isClimbing = false;
-    bool isCarring = false;
-    bool isFox = false;
-    bool isDead = false;
 
     //------------Anim Vars ---------------//
     [Header("Animation")]
@@ -173,24 +166,27 @@ public class PlayerController : MonoBehaviour
         InitStats();
         playerHeight = cc.height;
         playerModel.gameObject.SetActive(true);
-        foxModel.gameObject.SetActive(false);
+        //foxModel.gameObject.SetActive(false);
         model = playerModel;
+        
     }
     void Start()
     {
         Cursor.visible = false;
         RecalculatePivot(cameraPosition);
         speed = walkSpeed;
-
+        accelRatePerSec = speed / timeToMax;
+        decelRatePerSec = speed / timeToMin;
     }
 
 
 
     void Update()
     {
-        if (!MenuManager.GetPaused() || !isDead)
+        
+        if (!MenuManager.GetPaused() || !stats.playerStatus.isDead)
         {
-            if (isClimbing)
+            if (stats.playerStatus.isClimbing)
             {
                 Climb();
             }
@@ -199,26 +195,15 @@ public class PlayerController : MonoBehaviour
 
 
                 //IsGrounded();
-                isGrounded = cc.isGrounded;
+                stats.playerStatus.isGrounded = cc.isGrounded;
 
-                if (isGrounded && isJumping)
+                if (stats.playerStatus.isGrounded && stats.playerStatus.isJumping)
                 {
-                    isJumping = false;
+                    stats.playerStatus.isJumping = false;
                     jumpCount = 0;
                 }
 
-                if ((Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
-                {
-                    Debug.Log("JoystickMovement");
-                    isMoving = true;
-                    anim.SetBool("isMoving", isMoving);
-                    dir = (Input.GetAxisRaw("Horizontal") * right * speed) + (Input.GetAxisRaw("Vertical") * forward * speed);
-                }
-                else
-                {
-                    isMoving = false;
-                    anim.SetBool("isMoving", isMoving);
-                }
+                
 
                 Move(forward, right, dir);
 
@@ -236,37 +221,31 @@ public class PlayerController : MonoBehaviour
                         break;
                 }
 
-                if (!isGrounded)
+                if (!stats.playerStatus.isGrounded)
                 {
-                    if (isJumping)
+                    if (stats.playerStatus.isJumping)
                         _moveDirection.y += Physics.gravity.y * gravity * Time.deltaTime;
                     else
                         _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
                 }
 
 
-
-                if (!isDashing)
+                if(stats.playerStatus.isGrounded)
                 {
-                    Debug.Log("MoveWithoutDash");
-
-                    if(isMoving && isGrounded)
+                    actualFootTime += Time.deltaTime;
+                    if (actualFootTime >= footTime)
                     {
-                        actualFootTime += Time.deltaTime;
-                        if (actualFootTime >= footTime)
-                        {
-                            actualFootTime = 0;
-                            vfx.PlayVFX(AudioLibrary.VfxSounds.Footstep,0.04f);
-                        }
+                        actualFootTime = 0;
+                        //vfx.PlayVFX(AudioLibrary.VfxSounds.Footstep,0.04f);
                     }
-                        
-
-
-                    cc.Move(_moveDirection  * Time.deltaTime);
                 }
+
+                if (velocity !=0 || stats.playerStatus.isJumping)
+                    cc.Move(_moveDirection * Time.deltaTime);
+                
     
                 
-                if (Input.GetButtonDown("Interact") && !isFox)
+                if (Input.GetButtonDown("Interact") && !stats.playerStatus.isFox)
                 {
                     FindVisibleInteractObjects();
                 }
@@ -280,12 +259,12 @@ public class PlayerController : MonoBehaviour
 
         void MainUpdate()
     {
-        if (Input.GetAxis("Axis-3") != 0 || Input.GetAxis("Axis-4") != 0 && !isDashing)
+        if (Input.GetAxis("Axis-3") != 0 || Input.GetAxis("Axis-4") != 0 && !stats.playerStatus.isDashing)
         {
             RecalculatePivot(cameraPosition);
         }
 
-        if ((isGrounded || jumpCount < jumpTimes) && Input.GetButtonDown("Jump"))
+        if ((stats.playerStatus.isGrounded || jumpCount < jumpTimes) && Input.GetButtonDown("Jump"))
         {
             Jump();
         }
@@ -296,9 +275,9 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonUp("Attack"))
         {
-            isCharging = false;
+            stats.playerStatus.isCharging = false;
 
-            anim.SetBool("isCharging", isCharging);
+            anim.SetBool("isCharging", stats.playerStatus.isCharging);
 
             damageDealt = stats.baseDamage + damageModifier;
             actualTime = 0;
@@ -315,13 +294,17 @@ public class PlayerController : MonoBehaviour
 
         //////////////////////////////////////////
 
-        if (isMoving || Input.GetAxis("Axis-4") != 0 )
+        if (stats.playerStatus.isMoving)
         {
-            if(!isDashing)
-                model.rotation = Quaternion.LookRotation(joystickDirection * Time.deltaTime);
+            if (!stats.playerStatus.isDashing)
+            {
+                model.rotation = Quaternion.Lerp(model.rotation, Quaternion.LookRotation(joystickDirection * 
+                    Time.deltaTime), speed * Time.deltaTime);
+            }
+               
 
         }
-        if(isDashing || Input.GetButtonDown("Dash")){
+        if(stats.playerStatus.isDashing || Input.GetButtonDown("Dash")){
 
             Dash();
         }
@@ -349,10 +332,10 @@ public class PlayerController : MonoBehaviour
             isShooting = false;
         }
         */
-        if (isMoving ||
+        if (stats.playerStatus.isMoving ||
             (playerCondition.GetCondition() == PlayerCondition.Conditions.Aim && Input.GetAxis("Axis-4") != 0))
         {
-            if (!isDashing)
+            if (!stats.playerStatus.isDashing)
                 model.rotation = Quaternion.LookRotation(forward);
 
         }
@@ -361,16 +344,16 @@ public class PlayerController : MonoBehaviour
     void FoxUpdate()
     {
 
-        if (Input.GetAxis("Axis-3") != 0 || Input.GetAxis("Axis-4") != 0 && !isDashing)
+        if (Input.GetAxis("Axis-3") != 0 || Input.GetAxis("Axis-4") != 0 && !stats.playerStatus.isDashing)
         {
             RecalculatePivot(cameraPosition);
         }
 
-        if ((isGrounded || jumpCount < jumpTimes) && Input.GetButtonDown("Jump"))
+        if ((stats.playerStatus.isGrounded || jumpCount < jumpTimes) && Input.GetButtonDown("Jump"))
         {
             Jump();
         }
-        if (isMoving || Input.GetAxis("Axis-4") != 0 && !isDashing)
+        if (stats.playerStatus.isMoving || Input.GetAxis("Axis-4") != 0 && !stats.playerStatus.isDashing)
         {
             
             model.rotation = Quaternion.LookRotation(joystickDirection);
@@ -380,8 +363,35 @@ public class PlayerController : MonoBehaviour
 
     void Move(Vector3 forward, Vector3 right, Vector3 dir)
     {
+
+        if ((Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
+        {
+
+            dir = (Input.GetAxisRaw("Horizontal") * right * velocity) +
+                (Input.GetAxisRaw("Vertical") * forward * velocity);
+            velocity += accelRatePerSec * Time.deltaTime;
+            velocity = Mathf.Min(velocity, speed);
+
+            stats.playerStatus.isMoving = true;
+            anim.SetBool("isMoving", stats.playerStatus.isMoving);
+            
+        }
+        else if (velocity != 0)
+        {
+            velocity = 0;
+            /*velocity -= decelRatePerSec * Time.deltaTime;
+            velocity = Mathf.Max(velocity, 0);*/
+
+        }
+        else if (velocity == 0)
+        {
+            dir = Vector3.zero;
+            stats.playerStatus.isMoving = false;
+            anim.SetBool("isMoving", stats.playerStatus.isMoving);
+        }
+
         float storeY = _moveDirection.y;
-        if (isGrounded)
+        if (stats.playerStatus.isGrounded)
         {
             CalculateSpeed();
         }
@@ -399,35 +409,19 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if(!isFox)
+        if(!stats.playerStatus.isFox)
             _moveDirection.y = jumpForce;
         else
             _moveDirection.y = jumpFox;
 
-        isJumping = true;
+        stats.playerStatus.isJumping = true;
         jumpCount++;
 
     }
 
     void IsGrounded()
     {
-        Vector3 raycastTrans = transform.position;
-        raycastTrans.y += cc.center.y +0.1f;
-        Debug.DrawLine(raycastTrans, raycastTrans + Vector3.down*hitDistance, Color.cyan);
-        
-        if (Physics.Raycast(raycastTrans, -transform.up, hitDistance,groundHitLayer))
-        {
-            isGrounded = true;
-            if (isJumping)
-            {
-                isJumping = false;
-                jumpCount = 0;
-            }
-        }
-        else
-        {
-            isGrounded = false;
-        }
+
             
     }
 
@@ -439,22 +433,23 @@ public class PlayerController : MonoBehaviour
         right.y = 0;
         forward.Normalize();
         right.Normalize();
+        
     }
     void CalculateSpeed()
     {
 
-        if(Input.GetAxis("Run") != 0 && !isRunning)
+        if(Input.GetAxis("Run") != 0 && !stats.playerStatus.isRunning)
         {
-            if (isFox)
+            if (stats.playerStatus.isFox)
                 speed = runFoxSpeed;
             else
                 speed = runSpeed;
-            isRunning = true;
+            stats.playerStatus.isRunning = true;
         }
-        else if(Input.GetAxis("Run")==0 && isRunning)
+        else if(Input.GetAxis("Run")==0 && stats.playerStatus.isRunning)
         {
             speed = walkSpeed;
-            isRunning = false;
+            stats.playerStatus.isRunning = false;
         }
     }
 
@@ -477,7 +472,7 @@ public class PlayerController : MonoBehaviour
         onHPChange.Raise(percentage);
         if (percentage == 0)
         {
-            isDead = true;
+            stats.playerStatus.isDead = true;
             levelChanger.FadeToLevel(SceneController.Scene.FinalScene);
             stats.win = false;
         }
@@ -495,8 +490,8 @@ public class PlayerController : MonoBehaviour
 
     void Attack()
     {
-        isCharging = true;
-        anim.SetBool("isCharging", isCharging);
+        stats.playerStatus.isCharging = true;
+        anim.SetBool("isCharging", stats.playerStatus.isCharging);
         actualTime += Time.deltaTime;
 
         if(actualTime >= timeToCharge)
@@ -521,7 +516,7 @@ public class PlayerController : MonoBehaviour
 
     void Dash()
     {
-        if (Input.GetButtonDown("Dash") && !isDashing&& isGrounded)
+        if (Input.GetButtonDown("Dash") && !stats.playerStatus.isDashing && stats.playerStatus.isGrounded)
         {
 
             _moveDirection.y = 0;
@@ -529,10 +524,10 @@ public class PlayerController : MonoBehaviour
             currentDashTime = 0.0f;
             if (dashDirection == Vector3.zero)
                 dashDirection = forward * -1f * speed;
-            isDashing = true;
+            stats.playerStatus.isDashing = true;
         }
 
-        if (currentDashTime < maxDashTime && isDashing)
+        if (currentDashTime < maxDashTime && stats.playerStatus.isDashing)
         {
             currentDashTime += dashStoppingSpeed;
             cc.Move(dashDirection * dashSpeed * Time.deltaTime);
@@ -540,7 +535,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             Debug.Log("StopDash");
-            isDashing = false;
+            stats.playerStatus.isDashing = false;
         }
     }
 
@@ -559,7 +554,7 @@ public class PlayerController : MonoBehaviour
     {
 
         interactableTargets.Clear();
-        //nonalloc
+
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, interactionLayer);
 
         for(int i = 0; i < targetsInViewRadius.Length; i++)
@@ -577,20 +572,14 @@ public class PlayerController : MonoBehaviour
 
     void Interact(Transform target, Vector3 dirToTarget)
     {
-
-
         Debug.DrawRay(transform.position, dirToTarget, Color.red, 1f);
 
-        if (target.tag == "Climb" && Vector3.Angle(model.forward, dirToTarget) < 180 && !isFox)
-        {  
-
-            isClimbing = true;
-            isGrounded = false;
-            _moveDirection.y = 0;
-        }
-        else if (target.tag == "Pickable" && !isFox)
+        if (target.tag == "Climb" && Vector3.Angle(model.forward, dirToTarget) < 180 && !stats.playerStatus.isFox)
         {
-            PickObject(target.GetComponent<PickUpInteract>().OnInteract());
+
+            stats.playerStatus.isClimbing = true;
+            stats.playerStatus.isGrounded = false;
+            _moveDirection.y = 0;
         }
         else if (Vector3.Angle(model.forward, dirToTarget) < viewAngle / 2)
         {
@@ -605,35 +594,17 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void CroachIn()
-    {
-        cc.height = 0.5f;
-        isCrouching = true;
-    }
-    public void CroachOut()
-    {
-        cc.height = playerHeight;
-        isCrouching = false;
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "InteractObject" && isCrouching)
-        {
-            CroachOut();
-
-        }
-    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Ground")
         {
-            isClimbing = false;
+            stats.playerStatus.isClimbing = false;
         }
 
         if(other.tag == "ClimbBoundaries")
         {
-            isClimbing=false;
+            stats.playerStatus.isClimbing = false;
         }
         if(other.tag == "HitBoxEnemy" && !GodMode.Instance.isGodMode)
         {
@@ -667,7 +638,7 @@ public class PlayerController : MonoBehaviour
 
         
         if(Physics.Raycast(transform.position, forward, out hit, 5f, climbMask)) {
-            isClimbing = true;
+            stats.playerStatus.isClimbing = true;
             Debug.Log(hit.transform.gameObject.layer);
 
             Vector3 climbDirection;
@@ -679,30 +650,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            isClimbing = false;
+            stats.playerStatus.isClimbing = false;
         }
 
-        
-    }
-
-    void PickObject(Transform obj)
-    {
-        if (!isCarring)
-        {
-            obj.GetComponent<Rigidbody>().isKinematic = true;
-            obj.SetParent(hand);
-            obj.position = hand.position;
-            
-            carriedObject = obj;
-            isCarring = true;
-        }
-        else
-        {
-            obj.SetParent(GameObject.Find("_Dynamic").transform);
-            obj.GetComponent<Rigidbody>().isKinematic = false;
-            obj = null;
-            isCarring = false;
-        }
         
     }
 
@@ -716,22 +666,10 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    public void OnTransformZone(bool transform)
-    {
-        if(transform && !isFox)
-        {
-            Transform();
-        }
-        else if(!transform && isFox)
-        {
-            UnTransform();
-        }
-    }
-
     private void Transform()
     {
         playerCondition.ChangeCondition(PlayerCondition.Conditions.Fox);
-        isFox = true;
+        stats.playerStatus.isFox = true;
         jumpTimes = 2;
         model.gameObject.SetActive(false);
         model = foxModel;
@@ -740,7 +678,7 @@ public class PlayerController : MonoBehaviour
     private void UnTransform()
     {
         playerCondition.ChangeCondition(PlayerCondition.Conditions.Main);
-        isFox = false;
+        stats.playerStatus.isFox = false;
         jumpTimes = 1;
         model.gameObject.SetActive(false);
         model = playerModel;

@@ -31,13 +31,13 @@ TagManager:
   - 
   - 
   - Terrain
-  - Interaction
+  - Interaction2
   - Breakable
   - Player
   - Enemies
   - null
-  - 
-  - 
+  - PostProcessing
+  - Obstacle
   - 
   - 
   - 

@@ -1,0 +1,165 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemyFOV : FieldOfViewSystem
+{
+    
+    
+    MaterialPropertyBlock block;
+
+
+    public Color freeColor;
+    public Color alertColor;
+    public Color findColor;
+    public Color detectedColor;
+
+    [Header("Enemy")]
+    [SerializeField]
+    float aggresionRadius;
+    [SerializeField]
+    float detectionValue;
+    [SerializeField]
+    GameObject go;
+    public Color color;
+
+    float distance;
+
+    public float timeToDetect;
+    public float actualTime;
+
+    //booleanStates
+    public bool isPatroling = true;
+    public bool isFinding = false;
+    public bool isChasing = false;
+
+    float detectionLerpSolver;
+    public float soundDetectionRadius;
+
+    protected override void Start()
+    {
+        base.Start();
+        block = new MaterialPropertyBlock();
+        color = freeColor;
+        block.SetColor("_BaseColor", color);
+        go.GetComponent<Renderer>().SetPropertyBlock(block);
+       
+    }
+
+    protected override void LateUpdate()
+    {
+       
+        base.LateUpdate();
+        ListenTargets();
+
+        if (visibleTargets.Count > 0)
+        {
+            distance = Vector3.Distance(transform.position + new Vector3(aggresionRadius, 0, 0),
+                visibleTargets[0].position);
+
+            if (isPatroling)
+            {
+                StateTransition(ref isPatroling, ref isFinding);
+                OnObjectAlert();
+            }  
+
+            if((distance / (viewRadius - aggresionRadius) * 100) <= 100 && !isChasing) { 
+
+                actualTime += Time.deltaTime / (distance / (viewRadius - aggresionRadius));
+                color = findColor;
+                if (actualTime >= timeToDetect)
+                {
+                    actualTime = 0;
+                    StateTransition(ref isFinding, ref isChasing);
+                    OnObjectDetected();
+                }
+            }
+            else
+            {
+                color = alertColor;
+            }
+
+
+        }
+        else if(!isPatroling && !isChasing)
+        {
+            ResetStates(ref isFinding, ref isChasing, ref isPatroling);
+            color = freeColor;
+            actualTime = 0;
+            OnObjectOut();
+        }
+        if (isChasing)
+        {
+            color = detectedColor;
+        }
+
+        block.SetColor("_BaseColor", color);
+        go.GetComponent<Renderer>().SetPropertyBlock(block);
+    }
+
+    public void OnObjectDetected()
+    {
+        //base.OnObjectDetected();
+        Debug.Log("DETECTED!!");
+    }
+    public void OnObjectAlert()
+    {
+        Debug.Log("ALERT!!");
+    }
+    public void OnObjectOut()
+    {
+        Debug.Log("RELAX");
+    }
+
+    private void StateTransition(ref bool initState,ref bool newState)
+    {
+        initState = !initState;
+        newState = !newState;
+
+        /*if (isPatroling)
+            color = freeColor;
+        else if (isFinding)
+            color = findColor;
+        else if (isChasing)
+            color = detectedColor;*/
+
+    }
+    private void ResetStates(ref bool state1, ref bool state2 , ref bool newState)
+    {
+        state1 = false;
+        state2 = false;
+        newState = true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(transform.position + new Vector3(aggresionRadius, 0, 0), 2f);
+        Gizmos.DrawWireSphere(transform.position , soundDetectionRadius);
+    }
+
+    void ListenTargets()
+    {
+        Collider[] targetInListenRadius = Physics.OverlapSphere(transform.position, soundDetectionRadius, targetMask);
+        
+        for (int i = 0; i < targetInListenRadius.Length; i++)
+        {
+            
+            Vector3 target = targetInListenRadius[i].transform.position;
+
+            Vector3 dirToTarget = (target - transform.position).normalized;
+            Chase();
+            OnObjectDetected();
+            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
+            {
+                Chase();
+            }
+        }
+    }
+
+    void Chase()
+    {
+        isChasing = true;
+        isFinding = false;
+        isPatroling = false;
+    }
+}

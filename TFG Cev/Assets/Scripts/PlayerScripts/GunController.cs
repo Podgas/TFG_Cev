@@ -65,6 +65,8 @@ public class GunController : MonoBehaviour
         }
         
     }
+    
+
 
     private void FireGun()
     {
