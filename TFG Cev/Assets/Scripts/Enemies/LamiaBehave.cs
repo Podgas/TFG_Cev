@@ -98,7 +98,7 @@ public class LamiaBehave : EnemyBase
 
         }
     }
-
+    /*
     [Task]
     protected override void SearchForPlayer()
     {
@@ -111,7 +111,7 @@ public class LamiaBehave : EnemyBase
             agent.stoppingDistance = 3;
         }
 
-    }
+    }*/
 
     public void ActivateHitCollider()
     {

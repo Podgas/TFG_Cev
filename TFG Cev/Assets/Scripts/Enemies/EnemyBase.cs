@@ -44,6 +44,8 @@ public class EnemyBase : MonoBehaviour
     protected Animator anim;
     
     protected Transform target;
+    protected Vector3 alertPosition;
+
 
     //------------BT VARS-------//
     [Task]
@@ -52,6 +54,8 @@ public class EnemyBase : MonoBehaviour
     protected bool isPatroling;
     [Task]
     protected bool isSearching;
+    //[Task]
+    protected bool isAlert = false;
     [Task]
     protected bool isCombat = false;
     [Task]
@@ -60,19 +64,10 @@ public class EnemyBase : MonoBehaviour
     protected bool isAlive = true;
 
 
-    [SerializeField]
-    AudioLibrary vfx;
+    /*[SerializeField]
+    AudioLibrary vfx;*/
 
     
-
-
-
-    //--------Test---------//
-    [SerializeField]
-    Text hpText;
-
-    [SerializeField]
-    Renderer mat;
 
     protected virtual void Start()
     {
@@ -96,6 +91,10 @@ public class EnemyBase : MonoBehaviour
         {
             isAlive = false;
         }
+        if (isAlert)
+        {
+            Alert();
+        }
 
     }
 
@@ -106,8 +105,8 @@ public class EnemyBase : MonoBehaviour
         {
 
             GetDamage(GameObject.Find("Player").GetComponent<PlayerController>().damageDealt);
-            vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
-            vfx.PlayVFX(AudioLibrary.VfxSounds.Hurt);
+            /*vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
+            vfx.PlayVFX(AudioLibrary.VfxSounds.Hurt);*/
 
         }
 
@@ -126,8 +125,6 @@ public class EnemyBase : MonoBehaviour
     void GetDamage(float dmg)
     {
         hp -= dmg;
-
-        hpText.text = hp.ToString();
     }
     
     [Task]
@@ -146,7 +143,7 @@ public class EnemyBase : MonoBehaviour
         }
         else
         {
-            SetPandaConditionsToFalse();
+            //SetPandaConditionsToFalse();
             isCombat = true;
             anim.SetBool("isCombat", isCombat);
             Task.current.Succeed();
@@ -157,7 +154,7 @@ public class EnemyBase : MonoBehaviour
     [Task]
     protected void PatrolBehave()
     {
-        if (isPatroling) { 
+        if (isPatroling && !isAlert) { 
             agent.SetDestination(currentNode.position);
 
             Vector3 lookPos = currentNode.position - transform.position;
@@ -186,26 +183,18 @@ public class EnemyBase : MonoBehaviour
     }
 
     [Task]
-    protected virtual void SearchForPlayer()
+    protected void Alert()
     {
-
-        Collider[] targets = Physics.OverlapSphere(transform.position, detectionRadius, playerLayer);
-
-
-        if (targets.Length == 0 )
+        if (isAlert)
         {
-            if (!isChasing)
-                Task.current.Fail();
-            else
-                Task.current.Succeed();
+            agent.isStopped = true;
+            Task.current.Succeed();
         }
         else
         {
-            Task.current.Succeed();
-            target = targets[0].transform;
-            isChasing = true;
+            Task.current.Fail();
         }
-               
+             
     }
 
     [Task]
@@ -216,7 +205,6 @@ public class EnemyBase : MonoBehaviour
         lookPos.y = 0;
         Quaternion rotation = Quaternion.LookRotation(lookPos);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 1);
-
 
     }
     [Task]
@@ -229,7 +217,7 @@ public class EnemyBase : MonoBehaviour
             
             Task.current.Fail();
             target = null;
-            SetPandaConditionsToFalse();
+            //SetPandaConditionsToFalse();
             isPatroling = true;
             isSearching = true;
         }
@@ -263,6 +251,24 @@ public class EnemyBase : MonoBehaviour
         isWaiting = false;
         isCombat = false;
         isChasing = false;
+        isAlert = false;
+    }
+    public void SetAlert(Vector3 alertDetectionPoint)
+    {
+        SetPandaConditionsToFalse();
+        isAlert = true;
+        alertPosition = alertDetectionPoint;
+
+    }
+    public void SetCalm()
+    {
+        SetPandaConditionsToFalse();
+        isPatroling = true;
+        agent.isStopped = false;
+    }
+    public void OnDetected()
+    {
+
     }
 
 

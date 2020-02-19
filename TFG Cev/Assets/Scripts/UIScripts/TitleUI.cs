@@ -169,7 +169,7 @@ public class TitleUI : MonoBehaviour
 
     public void OnStartClick()
     {
-        SceneController.LoadScene(SceneController.Scene.TestLevel, true);
+        SceneController.LoadScene(SceneController.Scene.FortressLevelTest, true);
     }
     public void OnOptionsClick()
     {

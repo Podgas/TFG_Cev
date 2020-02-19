@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Panda;
 
 public class EnemyFOV : FieldOfViewSystem
 {
@@ -22,6 +23,8 @@ public class EnemyFOV : FieldOfViewSystem
     [SerializeField]
     GameObject go;
     public Color color;
+    [SerializeField]
+    EnemyBase enemyBehave;
 
     float distance;
 
@@ -30,11 +33,13 @@ public class EnemyFOV : FieldOfViewSystem
 
     //booleanStates
     public bool isPatroling = true;
-    public bool isFinding = false;
+    [Task]
+    public bool isAlert = false;
     public bool isChasing = false;
 
     float detectionLerpSolver;
     public float soundDetectionRadius;
+    
 
     protected override void Start()
     {
@@ -59,8 +64,8 @@ public class EnemyFOV : FieldOfViewSystem
 
             if (isPatroling)
             {
-                StateTransition(ref isPatroling, ref isFinding);
-                OnObjectAlert();
+                StateTransition(ref isPatroling, ref isAlert);
+                OnObjectAlert(visibleTargets[0].gameObject);
             }  
 
             if((distance / (viewRadius - aggresionRadius) * 100) <= 100 && !isChasing) { 
@@ -70,7 +75,7 @@ public class EnemyFOV : FieldOfViewSystem
                 if (actualTime >= timeToDetect)
                 {
                     actualTime = 0;
-                    StateTransition(ref isFinding, ref isChasing);
+                    StateTransition(ref isAlert, ref isChasing);
                     OnObjectDetected();
                 }
             }
@@ -83,7 +88,7 @@ public class EnemyFOV : FieldOfViewSystem
         }
         else if(!isPatroling && !isChasing)
         {
-            ResetStates(ref isFinding, ref isChasing, ref isPatroling);
+            ResetStates(ref isAlert, ref isChasing, ref isPatroling);
             color = freeColor;
             actualTime = 0;
             OnObjectOut();
@@ -91,7 +96,16 @@ public class EnemyFOV : FieldOfViewSystem
         if (isChasing)
         {
             color = detectedColor;
+            Collider[] targetForChase = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
+
+            if (targetForChase.Length == 0)
+            {
+                isChasing = false;
+                isPatroling = true;
+                color = freeColor;
+            }
         }
+
 
         block.SetColor("_BaseColor", color);
         go.GetComponent<Renderer>().SetPropertyBlock(block);
@@ -99,16 +113,15 @@ public class EnemyFOV : FieldOfViewSystem
 
     public void OnObjectDetected()
     {
-        //base.OnObjectDetected();
-        Debug.Log("DETECTED!!");
+        enemyBehave.OnDetected();
     }
-    public void OnObjectAlert()
+    public void OnObjectAlert(GameObject objectDetected)
     {
-        Debug.Log("ALERT!!");
+        enemyBehave.SetAlert(objectDetected.transform.position);
     }
     public void OnObjectOut()
     {
-        Debug.Log("RELAX");
+        enemyBehave.SetCalm();
     }
 
     private void StateTransition(ref bool initState,ref bool newState)
@@ -133,8 +146,8 @@ public class EnemyFOV : FieldOfViewSystem
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawSphere(transform.position + new Vector3(aggresionRadius, 0, 0), 2f);
-        Gizmos.DrawWireSphere(transform.position , soundDetectionRadius);
+        //Gizmos.DrawSphere(transform.position + new Vector3(aggresionRadius, 0, 0), 2f);
+        //Gizmos.DrawWireSphere(transform.position , soundDetectionRadius);
     }
 
     void ListenTargets()
@@ -159,7 +172,7 @@ public class EnemyFOV : FieldOfViewSystem
     void Chase()
     {
         isChasing = true;
-        isFinding = false;
+        isAlert = false;
         isPatroling = false;
     }
 }

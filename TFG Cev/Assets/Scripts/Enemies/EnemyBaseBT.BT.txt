@@ -7,17 +7,9 @@ tree("Root")
 		parallel
 			
 			tree("patrol")
-			tree("searchForPlayer")
 			tree("enterCombat")
 		tree("combat")
-
-tree("searchForPlayer")
-	while
-		isSearching
-		sequence
-			SearchForPlayer
-			Chase
-			MoveEnemy
+		
 
 tree("patrol")
 	fallback
@@ -27,6 +19,9 @@ tree("patrol")
 		while
 			isWaiting
 			Wait
+		while
+			isAlert
+			Alert
 				
 
 tree("enterCombat")
