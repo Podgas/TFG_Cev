@@ -7,9 +7,7 @@ tree("Root")
 		parallel
 			
 			tree("patrol")
-			tree("enterCombat")
-		tree("combat")
-		
+			tree("enterCombat")	
 
 tree("patrol")
 	fallback
@@ -22,11 +20,13 @@ tree("patrol")
 		while
 			isAlert
 			Alert
+		Chase
 				
 
 tree("enterCombat")
 	while
 		isChasing
-		SearchForCombat
+		sequence
+			MoveEnemy
 
 	
