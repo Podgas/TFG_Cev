@@ -23,7 +23,7 @@ public class BlinkText : MonoBehaviour
     {
 
 
-        if (startTime >= 2f)
+        if (startTime >= 0)
         {
             Blink();
         }

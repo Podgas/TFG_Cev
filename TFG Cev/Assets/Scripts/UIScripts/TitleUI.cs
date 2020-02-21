@@ -12,6 +12,8 @@ public class TitleUI : MonoBehaviour
     CanvasGroup options;
     public EventSystem eventSystem;
     float fadeTransitionTime = 1.5f;
+    [SerializeField]
+    Animator animator;
 
 
     [Header("OptionMenu")]
@@ -28,6 +30,8 @@ public class TitleUI : MonoBehaviour
     CanvasGroup graphicOptions;
     [SerializeField]
     CanvasGroup soundOptions;
+
+    
 
 
     private void Start()
@@ -49,19 +53,11 @@ public class TitleUI : MonoBehaviour
     {
         logoPanel = GameObject.Find("LogoPanel").GetComponent<CanvasGroup>();
         mainMenu = GameObject.Find("MainMenu").GetComponent<CanvasGroup>();
-        logo = GameObject.Find("Logo").GetComponent<CanvasGroup>();
         options = GameObject.Find("OptionPanel").GetComponent<CanvasGroup>();
-        logoPanel.alpha = 1;
-        mainMenu.alpha = 0;
-        logo.alpha = 0;
-        options.alpha = 0;
-        StartCoroutine(FadeCanvas(logo, logo.alpha, 1, fadeTransitionTime));
+
 
         actualCanvas = logoPanel;
-
-        mainMenu.gameObject.SetActive(false);
-        options.gameObject.SetActive(false);
-
+        Debug.Log(logoPanel);
 
     }
 
@@ -83,10 +79,10 @@ public class TitleUI : MonoBehaviour
         {
             if(actualCanvas == options)
             {
-                SwitchCanvas(actualCanvas, mainMenu, 0.5f);
+                SwitchCanvas(actualCanvas, mainMenu);
             }
         }
-        Debug.Log(EventSystem.current.currentSelectedGameObject);
+
         if (Input.GetAxis("Horizontal") != 0)
         {
             if (gameplayButton.gameObject == EventSystem.current.currentSelectedGameObject)
@@ -114,66 +110,30 @@ public class TitleUI : MonoBehaviour
 
     void TitleUpdate()
     {
-
+        //Debug.Log(actualCanvas);
         if (Input.anyKey && actualCanvas.name == "LogoPanel")
         {
-            SwitchCanvas(actualCanvas, mainMenu, 0.5f);
+            SwitchCanvas(actualCanvas, mainMenu);
 
         }
 
     }
 
 
-    void SwitchCanvas(CanvasGroup actualCG, CanvasGroup nextCG, float time)
+    void SwitchCanvas(CanvasGroup actualCG, CanvasGroup nextCG)
     {
-        StartCoroutine(SwitchCanvasCoroutine(actualCG, nextCG, time));
-    }
 
-    private IEnumerator FadeCanvas(CanvasGroup canvas, float start, float end, float time = 0.5f)
-    {
-        float timeStartLerping = Time.time;
-        float timeSinceStarted = Time.time - timeStartLerping;
-        float percentageComplete = timeSinceStarted / time;
-
-        while (true)
-        {
-
-            timeSinceStarted = Time.time - timeStartLerping;
-            percentageComplete = timeSinceStarted / time;
-
-            float currentVlaue = Mathf.Lerp(start, end, percentageComplete);
-
-            canvas.alpha = currentVlaue;
-
-            if (percentageComplete >= 1) break;
-
-            yield return new WaitForEndOfFrame();
-        }
-
-    }
-    private IEnumerator SwitchCanvasCoroutine(CanvasGroup actualCG, CanvasGroup nextCG, float time)
-    {
-        StartCoroutine(FadeCanvas(actualCG, actualCG.alpha, 0, time));
-        yield return new WaitForSeconds(time);
-        actualCG.gameObject.SetActive(false);
-        nextCG.gameObject.SetActive(true);
-        StartCoroutine(FadeCanvas(nextCG, nextCG.alpha, 1, time));
-
-        actualCanvas = nextCG;
-
-        eventSystem.SetSelectedGameObject(actualCanvas.GetComponentInChildren<Button>().gameObject);
-        actualCanvas.GetComponentInChildren<Button>().OnSelect(null);
-        
+        animator.SetTrigger("fadeOut"+ actualCG.name);
     }
 
 
     public void OnStartClick()
     {
-        SceneController.LoadScene(SceneController.Scene.FortressLevelTest, true);
+        SceneController.LoadScene(SceneController.Scene.FortressLevel, true);
     }
     public void OnOptionsClick()
     {
-        SwitchCanvas(actualCanvas, options, 0.5f);
+        SwitchCanvas(actualCanvas, options);
         
     }
     

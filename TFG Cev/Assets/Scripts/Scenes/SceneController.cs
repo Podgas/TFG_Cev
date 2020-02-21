@@ -13,7 +13,7 @@ public static class SceneController
         TitleScreen,
         TestScene,
         LoadingScene,
-        FortressLevelTest,
+        FortressLevel,
         FinalScene
     }
 

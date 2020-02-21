@@ -13,20 +13,27 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
-        mc.ClearLists();
+        /*mc.ClearLists();
         foreach (CollectableObject cObject in collectablesContainer.GetComponentsInChildren<CollectableObject>())
         {
 
             mc.extras.Add(cObject.gameObject);
 
-        }
+        }*/
 
     }
+
+    
 
     public void OnCollectablePickUp(GameObject collectable)
     {
         mc.completedExtras.Add(collectable);
         onExtrasListUpdate.Raise();
+    }
+
+    public void LoseScreen()
+    {
+        Debug.Log("HOLA");
     }
 
 }

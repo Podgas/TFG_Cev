@@ -8,6 +8,10 @@ public class OrochiBehave : EnemyBase
 
     [SerializeField]
     float attackCD;
+    [SerializeField]
+    float catchRadius;
+    [SerializeField]
+    VoidEvent onPlayerDetect;
 
     float combatTime;
 
@@ -16,9 +20,23 @@ public class OrochiBehave : EnemyBase
     [Task]
     protected bool isAttacking = false;
 
+    public GameObject loseCanvas;
+
+
+
+
+
     protected override void Start()
     {
         base.Start();
+    }
+    private void LateUpdate()
+    {
+        Collider[] player = Physics.OverlapSphere(transform.position, catchRadius, playerLayer);
+        if(player.Length > 0)
+        {
+            PlayerDetect();
+        }
     }
 
     [Task]
@@ -67,6 +85,18 @@ public class OrochiBehave : EnemyBase
     {
         hitCollider.SetActive(!hitCollider.activeSelf);
     }
-    
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, catchRadius);
+    }
+
+    private void PlayerDetect()
+    {
+        Time.timeScale = 0.05f;
+        loseCanvas.SetActive(true);
+    }
+
 
 }

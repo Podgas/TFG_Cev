@@ -5,6 +5,8 @@ using UnityEngine;
 public class FieldOfViewSystem : MonoBehaviour
 {
     [SerializeField]
+    public float alertRadius;
+    [SerializeField]
     public float viewRadius;
     [SerializeField]
     [Range(0,360)]
@@ -16,6 +18,7 @@ public class FieldOfViewSystem : MonoBehaviour
     public LayerMask obstacleMask;
 
     public List<Transform> visibleTargets = new List<Transform>();
+    public List<Transform> alertedTargets = new List<Transform>();
 
     public float meshResolution;
     public float edgeResolveIterations;
@@ -41,19 +44,20 @@ public class FieldOfViewSystem : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(delay);
-            FindVisibleTargets();
+            FindVisibleTargets(viewRadius, visibleTargets);
+            FindVisibleTargets(alertRadius, alertedTargets);
         }
     }
 
     protected virtual void LateUpdate()
     {
-        DrawFieldOfView();
+        //DrawFieldOfView();
     }
 
-    void FindVisibleTargets()
+    void FindVisibleTargets(float radius, List<Transform> viewArray)
     {
-        visibleTargets.Clear();
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
+        viewArray.Clear();
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, radius, targetMask);
 
         for(int i =0; i < targetsInViewRadius.Length; i++)
         {
@@ -67,7 +71,7 @@ public class FieldOfViewSystem : MonoBehaviour
 
                 if (!Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
                 {
-                    visibleTargets.Add(targetsInViewRadius[i].transform);
+                    viewArray.Add(targetsInViewRadius[i].transform);
                 }
             }
         }

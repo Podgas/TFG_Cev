@@ -25,6 +25,9 @@ public class EnemyBase : MonoBehaviour
     protected float combatRadius;
     [SerializeField]
     protected LayerMask playerLayer;
+    [SerializeField]
+    bool useNode = true;
+    
 
     Transform currentNode;
     Vector3 _moveDirection;
@@ -154,7 +157,7 @@ public class EnemyBase : MonoBehaviour
     [Task]
     protected void PatrolBehave()
     {
-        if (isPatroling && !isAlert) { 
+        if (isPatroling && !isAlert && useNode) { 
             agent.SetDestination(currentNode.position);
 
             Vector3 lookPos = currentNode.position - transform.position;
@@ -188,13 +191,7 @@ public class EnemyBase : MonoBehaviour
         if (isAlert)
         {
             agent.isStopped = true;
-            Task.current.Succeed();
-        }
-        else
-        {
-            Task.current.Fail();
-        }
-             
+        }    
     }
 
     [Task]
@@ -211,20 +208,17 @@ public class EnemyBase : MonoBehaviour
     protected void Chase()
     {
         Collider[] targets = Physics.OverlapSphere(transform.position, escapeRadius, playerLayer);
-
         if (targets.Length == 0)
         {
-            
-            Task.current.Fail();
             target = null;
-            //SetPandaConditionsToFalse();
+            SetPandaConditionsToFalse();
             isPatroling = true;
             isSearching = true;
+            Task.current.Fail();
         }
         else
         {
             Task.current.Succeed();
-
         }
     }
     [Task]
@@ -258,6 +252,7 @@ public class EnemyBase : MonoBehaviour
         SetPandaConditionsToFalse();
         isAlert = true;
         alertPosition = alertDetectionPoint;
+        
 
     }
     public void SetCalm()
@@ -266,9 +261,12 @@ public class EnemyBase : MonoBehaviour
         isPatroling = true;
         agent.isStopped = false;
     }
-    public void OnDetected()
+    public void OnDetected(GameObject objectDetected)
     {
-
+        SetPandaConditionsToFalse();
+        isChasing = true;
+        agent.isStopped = false;
+        target = objectDetected.transform;
     }
 
 

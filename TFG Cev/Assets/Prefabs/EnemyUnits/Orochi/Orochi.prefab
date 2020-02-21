@@ -281,10 +281,10 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1134340632393166632}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: -2378116947316002166, guid: e5ae5ae7eec8cf64887a9748bfe6824a, type: 3}
 --- !u!95 &1262283614
@@ -318,6 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7cc1816daa45d843b99eeed00b59071, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  alertRadius: 0
   viewRadius: 24
   viewAngle: 185
   model: {x: 0, y: 0, z: 0}
@@ -328,6 +329,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 32768
   visibleTargets: []
+  alertedTargets: []
   meshResolution: 1
   edgeResolveIterations: 0
   edgeDistanceThreshold: 0
@@ -369,6 +371,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 2048
+  useNode: 1
   agent: {fileID: 1262283618}
   nm: {fileID: 0}
   hitCollider: {fileID: 2068892732}
@@ -439,7 +442,7 @@ PrefabInstance:
     - target: {fileID: 8020674328079563919, guid: e6234d3de939f2f43a442bdac05321ec,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.59
+      value: 0.739
       objectReference: {fileID: 0}
     - target: {fileID: 8020674328079563919, guid: e6234d3de939f2f43a442bdac05321ec,
         type: 3}
