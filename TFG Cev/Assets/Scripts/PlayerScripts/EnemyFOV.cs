@@ -47,7 +47,7 @@ public class EnemyFOV : FieldOfViewSystem
         block = new MaterialPropertyBlock();
         color = freeColor;
         block.SetColor("_BaseColor", color);
-        go.GetComponent<Renderer>().SetPropertyBlock(block);
+        //go.GetComponent<Renderer>().SetPropertyBlock(block);
        
     }
 
@@ -106,7 +106,7 @@ public class EnemyFOV : FieldOfViewSystem
         }
 
         block.SetColor("_BaseColor", color);
-        go.GetComponent<Renderer>().SetPropertyBlock(block);
+        //go.GetComponent<Renderer>().SetPropertyBlock(block);
     }
 
     public void OnObjectDetected(GameObject objectDetected)

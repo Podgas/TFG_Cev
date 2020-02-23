@@ -192,7 +192,15 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                if (Input.GetButtonDown("Transform")){
+                    Debug.Log("Traaansform");
+                    if (stats.playerStatus.isFox)
+                    {
+                        UnTransform();
+                    }
+                    else Transform();
 
+                }
 
                 //IsGrounded();
                 stats.playerStatus.isGrounded = cc.isGrounded;
@@ -412,7 +420,11 @@ public class PlayerController : MonoBehaviour
         if(!stats.playerStatus.isFox)
             _moveDirection.y = jumpForce;
         else
+        {
             _moveDirection.y = jumpFox;
+            foxModel.GetComponent<Animator>().SetTrigger("Jump");
+        }
+            
 
         stats.playerStatus.isJumping = true;
         jumpCount++;
@@ -697,5 +709,21 @@ public class PlayerController : MonoBehaviour
         model.gameObject.SetActive(false);
         model = mts;
         model.gameObject.SetActive(true);
+    }
+
+    public void SetGodMode(bool isGod)
+    {
+        if (isGod)
+        {
+
+            jumpTimes = 999;
+            speed = 25;
+        }
+        else
+        {
+
+            jumpTimes = 1;
+            speed = 4;
+        }
     }
 }

@@ -71,6 +71,10 @@ public class MenuManager : MonoBehaviour
         optionPanel.gameObject.SetActive(true);
         pausePanel.gameObject.SetActive(false);
     }
+    public void OnRetry()
+    {
+        SceneController.LoadScene(SceneController.Scene.FortressLevel,true);
+    }
 
     
 

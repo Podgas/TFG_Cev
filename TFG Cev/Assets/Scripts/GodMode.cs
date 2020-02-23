@@ -40,15 +40,15 @@ public class GodMode : MonoBehaviour
         {
             if (isGodMode)
             {
-                Cursor.visible = false;
+
                 isGodMode = false;
-                godModePanel.SetActive(false);
+                player.SetGodMode(true);
             }
             else
             {
-                Cursor.visible = true;
+
                 isGodMode = true;
-                godModePanel.SetActive(true);
+                player.SetGodMode(false);
             }
             
         }
@@ -58,14 +58,6 @@ public class GodMode : MonoBehaviour
     public void GoTo(Transform pos)
     {
         player.GoTo(pos);
-    }
-
-    public void SwitchModel()
-    {
-        if (player.model == player.testModel)
-            player.SwitchModel(player.playerModel);
-        else
-            player.SwitchModel(player.testModel);
     }
     
 

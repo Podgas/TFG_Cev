@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 3639316502037159995, guid: 02f8b9a7d3f1a954385b0efa807ee40a,
         type: 3}
       propertyPath: m_Name
-      value: TreeSakura (1)
+      value: TreeSakura01
       objectReference: {fileID: 0}
     - target: {fileID: 349638973761688104, guid: 02f8b9a7d3f1a954385b0efa807ee40a,
         type: 3}
@@ -67,10 +67,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3331108292544000354, guid: 02f8b9a7d3f1a954385b0efa807ee40a,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 70596978dc27f594da638a8a69e51536, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02f8b9a7d3f1a954385b0efa807ee40a, type: 3}

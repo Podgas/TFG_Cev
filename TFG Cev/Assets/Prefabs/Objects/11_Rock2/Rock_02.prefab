@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1156199551875542827}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Rock_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1156199551875542827
 Transform:
@@ -42,12 +42,13 @@ GameObject:
   - component: {fileID: 6991435766232955819}
   - component: {fileID: 7972059451928795416}
   - component: {fileID: 8845311412860516205}
-  m_Layer: 0
+  - component: {fileID: 5011264426823982270}
+  m_Layer: 15
   m_Name: Rock_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6991435766232955819
 Transform:
@@ -109,3 +110,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &5011264426823982270
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9135670496285682940}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -7487517835020932457, guid: 7028f1e1ad26fc745986306ee927621b, type: 3}

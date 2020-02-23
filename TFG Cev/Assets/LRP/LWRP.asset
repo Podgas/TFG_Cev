@@ -15,15 +15,15 @@ MonoBehaviour:
   k_AssetVersion: 4
   m_RendererType: 1
   m_RendererData: {fileID: 11400000, guid: 618d298269e66c542b306de85db1faea, type: 2}
-  m_RequireDepthTexture: 0
+  m_RequireDepthTexture: 1
   m_RequireOpaqueTexture: 0
-  m_OpaqueDownsampling: 1
+  m_OpaqueDownsampling: 3
   m_SupportsHDR: 1
   m_MSAA: 8
-  m_RenderScale: 1.49
+  m_RenderScale: 0.95
   m_MainLightRenderingMode: 1
   m_MainLightShadowsSupported: 1
-  m_MainLightShadowmapResolution: 4096
+  m_MainLightShadowmapResolution: 2048
   m_AdditionalLightsRenderingMode: 1
   m_AdditionalLightsPerObjectLimit: 4
   m_AdditionalLightShadowsSupported: 1
@@ -31,7 +31,7 @@ MonoBehaviour:
   m_ShadowDistance: 300
   m_ShadowCascades: 2
   m_Cascade2Split: 0.09464556
-  m_Cascade4Split: {x: 0.4506224, y: 0.6445086, z: 0.7859994}
+  m_Cascade4Split: {x: 0.36388782, y: 0.6445086, z: 0.7859994}
   m_ShadowDepthBias: 1
   m_ShadowNormalBias: 1
   m_SoftShadowsSupported: 1

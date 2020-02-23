@@ -6,7 +6,10 @@ public class SceneControllerCallBack : MonoBehaviour
 {
 
     private bool isFirstUpdate = true;
-
+    private void Start()
+    {
+        Time.timeScale = 1;
+    }
     private void Update()
     {
         if (isFirstUpdate)

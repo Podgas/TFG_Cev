@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 3081135748686374508}
   - component: {fileID: 2583425079601141526}
   - component: {fileID: 8652147908340109012}
+  - component: {fileID: 8845818267949192346}
   m_Layer: 0
   m_Name: StoneWallOUT_SIDE
   m_TagString: Untagged
@@ -109,3 +110,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &8845818267949192346
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810269646873877013}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 5351157841463084256, guid: 4abebf9ef8761aa4b8112b5a916c2485, type: 3}

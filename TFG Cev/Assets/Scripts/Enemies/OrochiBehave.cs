@@ -95,7 +95,7 @@ public class OrochiBehave : EnemyBase
     private void PlayerDetect()
     {
         Time.timeScale = 0.05f;
-        loseCanvas.SetActive(true);
+        onPlayerDetect.Raise();
     }
 
 
