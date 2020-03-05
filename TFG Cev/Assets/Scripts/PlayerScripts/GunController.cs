@@ -48,7 +48,6 @@ public class GunController : MonoBehaviour
         {
             if (Input.GetAxisRaw("Shoot") != 0 && playerCondition.GetCondition() == PlayerCondition.Conditions.Aim)
             {
-
                 if (isShooting == false){ 
                     if(playerStats.ammo > 0)
                     {
@@ -70,7 +69,6 @@ public class GunController : MonoBehaviour
 
     private void FireGun()
     {
-
         Vector3 centre = new Vector3(0.5f, 0.5f, 0f);
         Ray ray = Camera.main.ViewportPointToRay(centre);
         RaycastHit raycastHit;
@@ -78,7 +76,6 @@ public class GunController : MonoBehaviour
 
         Vector3 direction = ray.direction;
 
-        vfx.PlayVFX(AudioLibrary.VfxSounds.GunShot);
         GameObject.Instantiate(bullet, firePoint.position, Quaternion.identity);
 
         if (!GodMode.Instance.isGodMode)

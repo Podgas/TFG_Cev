@@ -13,15 +13,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Transform aimCameraPosition;
     [SerializeField]
-    Transform cameraAnchor;
-    [SerializeField]
     PlayerCondition playerCondition;
     [SerializeField]
     public Transform playerModel;
     [SerializeField]
     private Transform foxModel;
-    [SerializeField]
-    public Transform testModel;
 
     [HideInInspector]
     public Transform model;
@@ -37,12 +33,6 @@ public class PlayerController : MonoBehaviour
     [Header("Combat")]
     [SerializeField]
     private VoidEvent onAttackLaunch;
-    [SerializeField]
-    private VoidEvent onAttackStops;
-    [SerializeField]
-    GameObject bulletPrefab;
-    [SerializeField]
-    public Transform bulletSpawn;
 
     //------------Move Vars ---------------//
     [Header("Movement")]
@@ -57,35 +47,29 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float timeToMin;
     [SerializeField]
-    public CharacterController cc;
+    private CharacterController cc;
 
     private float speed;
-    public Vector3 _moveDirection;
+    private Vector3 _moveDirection;
+    //Var rotacion player
     Vector3 joystickDirection;
     public Vector3 forward;
     Vector3 right;
-    public Vector3 dir;
+    //Vars aceleracion/deceleracion
     float accelRatePerSec;
     float decelRatePerSec;
-    [SerializeField]
     float velocity;
-
-    float playerHeight;
 
     //------------Jump Vars ---------------//
     [Header("Jumping")]
     [SerializeField]
     float gravity = 2.5f;
     [SerializeField]
+    float fallMultiplier;
+    [SerializeField]
     private float jumpForce;
     [SerializeField]
     private float jumpFox;
-    [SerializeField]
-    float hitDistance;
-    [SerializeField]
-    float fallMultiplier;
-    [SerializeField]
-    LayerMask groundHitLayer;
     [SerializeField]
     public int jumpTimes;
 
@@ -106,33 +90,15 @@ public class PlayerController : MonoBehaviour
     Vector3 dashDirection;
 
     //--------Interaction Vars----------//
-
-    [Header("Interaction")]
-    [SerializeField]
-    private LayerMask interactionLayer;
-    [SerializeField]
-    private LayerMask obstacleMask;
-    [SerializeField]
-    public float viewRadius;
-    [SerializeField]
-    [Range(0, 360)]
-    public float viewAngle;
-
-    public List<Transform> interactableTargets = new List<Transform>();
-
     [SerializeField]
     FieldOfViewSystem fov;
 
     //--------Climb Vars----------//
     [SerializeField]
     private LayerMask climbMask;
-
-
-    Transform carriedObject;
-
+    //TODO: climbSpeed
 
     //----------Attack Vars------------------//
-
     [Header("Attack")]
     [SerializeField]
     float timeToCharge;
@@ -150,85 +116,78 @@ public class PlayerController : MonoBehaviour
     Animator anim;
 
 
-
-    [SerializeField]
-    LevelChanger levelChanger;
+    //-----------Sound Vars--------------//
+    [Header("SoundVars")]
     [SerializeField]
     AudioLibrary vfx;
 
+    //Variables para ejecutar el sonido de pasos
     float actualFootTime;
     float footTime = 0.5f;
 
-
+    //-----------Other Vars---------------/
+    [Header("OtherVars")]
+    [SerializeField]
+    LevelChanger levelChanger;
 
     private void Awake()
     {
-        InitStats();
-        playerHeight = cc.height;
-        playerModel.gameObject.SetActive(true);
-        //foxModel.gameObject.SetActive(false);
-        model = playerModel;
-        
+        InitStats();         
     }
+
     void Start()
     {
+        //TODO: Controlar por dispositivo utilizado
         Cursor.visible = false;
+
         RecalculatePivot(cameraPosition);
-        speed = walkSpeed;
-        accelRatePerSec = speed / timeToMax;
-        decelRatePerSec = speed / timeToMin;
     }
-
-
 
     void Update()
     {
-        
+        //Comprobamos que el juego no esta pausado ni estamos muertos
         if (!MenuManager.GetPaused() || !stats.playerStatus.isDead)
         {
+            //Comprobación climb
             if (stats.playerStatus.isClimbing)
             {
                 Climb();
             }
             else
             {
-                if (Input.GetButtonDown("Transform")){
-                    Debug.Log("Traaansform");
-                    if (stats.playerStatus.isFox)
-                    {
-                        UnTransform();
-                    }
-                    else Transform();
-
-                }
-
-                //IsGrounded();
+                //TODO: Realizar isGrounded propio
                 stats.playerStatus.isGrounded = cc.isGrounded;
-
+                if (Input.GetButtonDown("Transform")){
+                    Metamorphosis();
+                }
+               
+                //Comprobamos si el jugador esta pisando el suelo y estuvo 
                 if (stats.playerStatus.isGrounded && stats.playerStatus.isJumping)
                 {
                     stats.playerStatus.isJumping = false;
                     jumpCount = 0;
                 }
 
-                
-
-                Move(forward, right, dir);
-
                 switch (playerCondition.GetCondition())
                 {
                     case PlayerCondition.Conditions.Main:
-
                         MainUpdate();
                         break;
                     case PlayerCondition.Conditions.Aim:
                         AimUpdate();
                         break;
-                    case PlayerCondition.Conditions.Fox:
-                        FoxUpdate();
-                        break;
                 }
-
+                //Comprobamos si el jugador toca el joystick
+                if ((Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
+                {
+                    Move(forward, right);
+                }
+                else
+                {
+                    Brake();
+                }
+                
+                //Aplicamos la fuerza dela gravedad en funcion de si saltamos o caemos.
                 if (!stats.playerStatus.isGrounded)
                 {
                     if (stats.playerStatus.isJumping)
@@ -236,23 +195,19 @@ public class PlayerController : MonoBehaviour
                     else
                         _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
                 }
-
-
-                if(stats.playerStatus.isGrounded)
+                else 
                 {
+                    //TODO: realizar reproducción de sonidos
                     actualFootTime += Time.deltaTime;
                     if (actualFootTime >= footTime)
-                    {
                         actualFootTime = 0;
-                        //vfx.PlayVFX(AudioLibrary.VfxSounds.Footstep,0.04f);
-                    }
                 }
 
+                //Movemos al jugador
                 if (velocity !=0 || stats.playerStatus.isJumping)
                     cc.Move(_moveDirection * Time.deltaTime);
                 
-    
-                
+                //Sistema de interacción
                 if (Input.GetButtonDown("Interact") && !stats.playerStatus.isFox)
                 {
                     FindVisibleInteractObjects();
@@ -260,23 +215,21 @@ public class PlayerController : MonoBehaviour
             }
         }
         
-
-
     }
-
-
-        void MainUpdate()
+    //Se ejecuta cuando alguno de los otors estados no esta activo
+    void MainUpdate()
     {
-        if (Input.GetAxis("Axis-3") != 0 || Input.GetAxis("Axis-4") != 0 && !stats.playerStatus.isDashing)
+    
+        if (stats.playerStatus.isMoving && !stats.playerStatus.isDashing)
         {
             RecalculatePivot(cameraPosition);
         }
-
         if ((stats.playerStatus.isGrounded || jumpCount < jumpTimes) && Input.GetButtonDown("Jump"))
         {
             Jump();
         }
 
+        //TODO: Pulir carga de ataque
         if (Input.GetButton("Attack"))
         {
             Attack();
@@ -285,7 +238,7 @@ public class PlayerController : MonoBehaviour
         {
             stats.playerStatus.isCharging = false;
 
-            anim.SetBool("isCharging", stats.playerStatus.isCharging);
+            //anim.SetBool("isCharging", stats.playerStatus.isCharging);
 
             damageDealt = stats.baseDamage + damageModifier;
             actualTime = 0;
@@ -293,128 +246,89 @@ public class PlayerController : MonoBehaviour
 
         }
 
-
-        /*DEBUGS*/
-
+        if (stats.playerStatus.isDashing || Input.GetButtonDown("Dash"))
+        {
+            Dash();
+        }
+        #region Debug
         Debug.DrawRay(transform.position, forward, Color.blue);
         Debug.DrawRay(transform.position, right, Color.green);
         Debug.DrawRay(transform.position, transform.up, Color.red);
+        #endregion
+        //Gestionamos la rotación del modelo
 
-        //////////////////////////////////////////
-
-        if (stats.playerStatus.isMoving)
+        if (stats.playerStatus.isMoving && 
+                ((Input.GetAxisRaw("Horizontal") >= 0.1 || Input.GetAxisRaw("Vertical") >= 0.1) ||
+                (Input.GetAxisRaw("Horizontal") <= -0.1 || Input.GetAxisRaw("Vertical") <= -0.1)))
         {
             if (!stats.playerStatus.isDashing)
             {
-                model.rotation = Quaternion.Lerp(model.rotation, Quaternion.LookRotation(joystickDirection * 
-                    Time.deltaTime), speed * Time.deltaTime);
-            }
-               
-
+                //TODO: Agregar velocidad de rotación
+                model.rotation = Quaternion.Lerp(model.rotation, Quaternion.LookRotation(joystickDirection *
+                                    Time.deltaTime), 10 * Time.deltaTime);
+            }       
         }
-        if(stats.playerStatus.isDashing || Input.GetButtonDown("Dash")){
-
-            Dash();
-        }
-
     }
-
+    //Se ejecuta cuando estamos apuntando con el arma
     void AimUpdate()
     {
         if (Input.GetAxis("Axis-4") != 0)
         {
-            RotatePlayer();
+            RecalculatePivot(aimCameraPosition);
         }
-        /*
-
-        if (Input.GetAxisRaw("Shoot") != 0)
-        {
-            if (isShooting == false)
-            {
-                Shoot();
-                isShooting = true;  
-            }
-        }
-        if (Input.GetAxisRaw("Shoot") == 0)
-        {
-            isShooting = false;
-        }
-        */
         if (stats.playerStatus.isMoving ||
             (playerCondition.GetCondition() == PlayerCondition.Conditions.Aim && Input.GetAxis("Axis-4") != 0))
         {
             if (!stats.playerStatus.isDashing)
                 model.rotation = Quaternion.LookRotation(forward);
-
         }
     }
 
-    void FoxUpdate()
+    //Mueve al player en función del pivote calculado
+    //TODO: Unificar el pivote en una unica variable
+    //TODO: Modificar el movimiento aereo
+    void Move(Vector3 forward, Vector3 right)
     {
-
-        if (Input.GetAxis("Axis-3") != 0 || Input.GetAxis("Axis-4") != 0 && !stats.playerStatus.isDashing)
-        {
-            RecalculatePivot(cameraPosition);
-        }
-
-        if ((stats.playerStatus.isGrounded || jumpCount < jumpTimes) && Input.GetButtonDown("Jump"))
-        {
-            Jump();
-        }
-        if (stats.playerStatus.isMoving || Input.GetAxis("Axis-4") != 0 && !stats.playerStatus.isDashing)
-        {
-            
-            model.rotation = Quaternion.LookRotation(joystickDirection);
-
-        }
-    }
-
-    void Move(Vector3 forward, Vector3 right, Vector3 dir)
-    {
-
-        if ((Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
-        {
-
-            dir = (Input.GetAxisRaw("Horizontal") * right * velocity) +
-                (Input.GetAxisRaw("Vertical") * forward * velocity);
-            velocity += accelRatePerSec * Time.deltaTime;
-            velocity = Mathf.Min(velocity, speed);
-
-            stats.playerStatus.isMoving = true;
-            anim.SetBool("isMoving", stats.playerStatus.isMoving);
-            
-        }
-        else if (velocity != 0)
-        {
-            velocity = 0;
-            /*velocity -= decelRatePerSec * Time.deltaTime;
-            velocity = Mathf.Max(velocity, 0);*/
-
-        }
-        else if (velocity == 0)
-        {
-            dir = Vector3.zero;
-            stats.playerStatus.isMoving = false;
-            anim.SetBool("isMoving", stats.playerStatus.isMoving);
-        }
-
-        float storeY = _moveDirection.y;
+        //TODO: Revisar el cauclo de velocidad
         if (stats.playerStatus.isGrounded)
         {
             CalculateSpeed();
         }
- 
+        //Aceleramos al movernos y controlamos que el máximo nunca sea mas que la velocidad máxima
+        velocity += accelRatePerSec * Time.deltaTime;
+        velocity = Mathf.Min(velocity, speed);
+
+        Vector3 dir;
+        dir = (Input.GetAxisRaw("Horizontal") * right * velocity) +
+            (Input.GetAxisRaw("Vertical") * forward * velocity);
+        stats.playerStatus.isMoving = true;
+        //anim.SetBool("isMoving", stats.playerStatus.isMoving);
+        //Guardamos la dirección en Y en caso de estar saltando
+        float storeY = _moveDirection.y;
         _moveDirection = dir;
         _moveDirection.y = storeY;
+
         if(Input.GetAxisRaw("Horizontal")!=0|| Input.GetAxisRaw("Vertical") != 0){
             joystickDirection = dir.normalized;
             joystickDirection.y = 0;
         }
-        
-
-
     }
-
+    //Frenamos al jugador
+    void Brake()
+    {
+        Vector3 _dir = Vector3.zero;
+        velocity -= decelRatePerSec * Time.deltaTime;
+        velocity = Mathf.Max(velocity, 0f);
+        if (velocity == 0)
+        {
+            stats.playerStatus.isMoving = false;
+            //anim.SetBool("isMoving", stats.playerStatus.isMoving);
+        }
+        float storeY = _moveDirection.y;
+        _moveDirection = _dir;
+        _moveDirection.y = storeY;
+    }
+    //Saltamos en función de la forma del jugador
     void Jump()
     {
         if(!stats.playerStatus.isFox)
@@ -424,19 +338,11 @@ public class PlayerController : MonoBehaviour
             _moveDirection.y = jumpFox;
             foxModel.GetComponent<Animator>().SetTrigger("Jump");
         }
-            
-
         stats.playerStatus.isJumping = true;
         jumpCount++;
-
     }
 
-    void IsGrounded()
-    {
-
-            
-    }
-
+    //Recalcula el pivote de referencia para las rotaciones
     void RecalculatePivot(Transform camPosition)
     {
         forward = transform.position - camPosition.position;
@@ -445,11 +351,10 @@ public class PlayerController : MonoBehaviour
         right.y = 0;
         forward.Normalize();
         right.Normalize();
-        
     }
+    //Asignamos a la velocidad su valor en función de la forma y si estamos apretandoe l botón de correr.
     void CalculateSpeed()
     {
-
         if(Input.GetAxis("Run") != 0 && !stats.playerStatus.isRunning)
         {
             if (stats.playerStatus.isFox)
@@ -464,11 +369,13 @@ public class PlayerController : MonoBehaviour
             stats.playerStatus.isRunning = false;
         }
     }
-
+    //Llamamos a esta función cuando recibimos daño o cura
     public void UpdateHp(float value)
     {
         stats.hp.value += value;
+        //calculamos el nuevo porciento de vida
         float percentage = (stats.hp.value) / stats.hp.maxValue;
+
         if (percentage >= 1)
         {
             percentage = 1;
@@ -479,31 +386,40 @@ public class PlayerController : MonoBehaviour
             percentage = 0;
             stats.hp.value = stats.hp.minValue;
         }
-
-        Debug.Log("HPChange");
+        //Lanzamos el evento capturado por la UI
         onHPChange.Raise(percentage);
+        //Perdemos
         if (percentage == 0)
         {
             stats.playerStatus.isDead = true;
             levelChanger.FadeToLevel(SceneController.Scene.FinalScene);
             stats.win = false;
         }
-
     }
 
+    //Inicializamos estadisticas y estados del player
     void InitStats()
     {
         playerCondition.ChangeCondition(PlayerCondition.Conditions.Main);
+
+        model = playerModel;
+
         stats.hp.value = stats.hp.maxValue;
         stats.baseDamage = 1;
         stats.ammo = stats.maxAmmo;
+
         jumpCount = 1;
+
+        speed = walkSpeed;
+        accelRatePerSec = speed / timeToMax;
+        decelRatePerSec = speed / timeToMin;
     }
 
     void Attack()
     {
+        //TODO: Mejorar el ataque
         stats.playerStatus.isCharging = true;
-        anim.SetBool("isCharging", stats.playerStatus.isCharging);
+        //anim.SetBool("isCharging", stats.playerStatus.isCharging);
         actualTime += Time.deltaTime;
 
         if(actualTime >= timeToCharge)
@@ -512,25 +428,11 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-    void Shoot()
-    {
-        Vector3 instancePosition = bulletSpawn.position;
-       
-
-        Instantiate(bulletPrefab, instancePosition, Quaternion.identity);
-    }
-
-    void RotatePlayer()
-    {
-        RecalculatePivot(aimCameraPosition);
-
-    }
-
+    //TODO: Rehacer dash
     void Dash()
     {
         if (Input.GetButtonDown("Dash") && !stats.playerStatus.isDashing && stats.playerStatus.isGrounded)
         {
-
             _moveDirection.y = 0;
             dashDirection = _moveDirection;
             currentDashTime = 0.0f;
@@ -551,31 +453,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
-    public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
-    {
-        if (!angleIsGlobal)
-        {
-            angleInDegrees += model.eulerAngles.y;
-        }
-        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
-    }
-
     void FindVisibleInteractObjects()
     {
-
-        interactableTargets.Clear();
-
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, interactionLayer);
-
-        for(int i = 0; i < targetsInViewRadius.Length; i++)
+        for(int i = 0; i < fov.visibleTargets.Count; i++)
         {
-            
-            Transform target = targetsInViewRadius[i].transform;
+            Transform target = fov.visibleTargets[i].transform;
             Vector3 targetNoY = target.position;
             targetNoY.y = transform.position.y;
-
             Vector3 dirToTarget = (targetNoY - transform.position).normalized;
 
             Interact(target, dirToTarget);
@@ -584,88 +468,55 @@ public class PlayerController : MonoBehaviour
 
     void Interact(Transform target, Vector3 dirToTarget)
     {
-        Debug.DrawRay(transform.position, dirToTarget, Color.red, 1f);
-
         if (target.tag == "Climb" && Vector3.Angle(model.forward, dirToTarget) < 180 && !stats.playerStatus.isFox)
         {
-
             stats.playerStatus.isClimbing = true;
             stats.playerStatus.isGrounded = false;
             _moveDirection.y = 0;
         }
-        else if (Vector3.Angle(model.forward, dirToTarget) < viewAngle / 2)
-        {
-
-            float dstToTarget = Vector3.Distance(transform.position, target.position);
-
-            if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
-            {
-                target.GetComponent<IInteractObjects>().OnInteract();
-            }
-        }
-
     }
-
 
     private void OnTriggerEnter(Collider other)
     {
+        //TODO:Revisar funcionamiento
         if (other.tag == "Ground")
         {
             stats.playerStatus.isClimbing = false;
         }
-
+        //TODO:Revisar funcionamiento
         if(other.tag == "ClimbBoundaries")
         {
             stats.playerStatus.isClimbing = false;
         }
+        //TODO: Reacer para recibir daño por cada enemigo en función del ataque
         if(other.tag == "HitBoxEnemy" && !GodMode.Instance.isGodMode)
         {
             UpdateHp(-10);
             vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
-           
         }
         if (other.tag == "LamiaAttack" && !GodMode.Instance.isGodMode)
         {
             UpdateHp(-7);
         }
-
-
-
     }
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.tag == "BossAttack" && !GodMode.Instance.isGodMode)
-        {
-            UpdateHp(-1f);
-        }
-    }
-
+    //Fncion apra controlar la escalada
     void Climb()
     {
-        
-
         RaycastHit hit;
-        Debug.DrawRay(transform.position, forward,Color.blue, 30f);
-        Debug.Log(Physics.Raycast(transform.position, forward, out hit,300f, climbMask));
-
-        
+        //Comprobamos si seguimos delante del objeto a trepar
         if(Physics.Raycast(transform.position, forward, out hit, 5f, climbMask)) {
-            stats.playerStatus.isClimbing = true;
-            Debug.Log(hit.transform.gameObject.layer);
 
+            //Movemos en X,Y para trepar (pared) 
             Vector3 climbDirection;
-
             climbDirection = new Vector3(-Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 
+            //TODO: Unificar los move
             cc.Move(climbDirection * speed * Time.deltaTime);
-
         }
         else
         {
             stats.playerStatus.isClimbing = false;
-        }
-
-        
+        }   
     }
 
     private void OnDrawGizmos()
@@ -677,16 +528,16 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawRay(transform.position, forward);
         
     }
-
+    //Transforma al jugador en Zorro
     private void Transform()
     {
-        playerCondition.ChangeCondition(PlayerCondition.Conditions.Fox);
         stats.playerStatus.isFox = true;
         jumpTimes = 2;
         model.gameObject.SetActive(false);
         model = foxModel;
         model.gameObject.SetActive(true);
     }
+    //Transforma el jugador en Humanoide
     private void UnTransform()
     {
         playerCondition.ChangeCondition(PlayerCondition.Conditions.Main);
@@ -697,20 +548,15 @@ public class PlayerController : MonoBehaviour
         model.gameObject.SetActive(true);
 
     }
+    //Controlamos el cambio de forma
+    private void Metamorphosis() {
+        //TODO: Unificar cambio de forma en esta función
+        if (stats.playerStatus.isFox)
+            UnTransform();
 
-    public void GoTo(Transform pos)
-    {
-        cc.enabled = false;
-        transform.position = pos.position;
-        cc.enabled = true;
+        else Transform();
     }
-    public void SwitchModel(Transform mts)
-    {
-        model.gameObject.SetActive(false);
-        model = mts;
-        model.gameObject.SetActive(true);
-    }
-
+    //TODO: Rehacer GODMODE
     public void SetGodMode(bool isGod)
     {
         if (isGod)

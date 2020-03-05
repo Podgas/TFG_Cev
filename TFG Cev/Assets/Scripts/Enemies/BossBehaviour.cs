@@ -94,7 +94,7 @@ public class BossBehaviour : MonoBehaviour
                 isPushing = false;
                 isKnockBack = false;
                 knockBackActualTime = 0;
-                player.GetComponent<PlayerController>().dir = Vector3.zero;
+                //player.GetComponent<PlayerController>().dir = Vector3.zero;
             }
 
         }
@@ -188,7 +188,7 @@ public class BossBehaviour : MonoBehaviour
 
         isKnockBack = true;
         isPushing = true;
-        player.GetComponent<PlayerController>().dir = direction * knockBackForce;
+        //player.GetComponent<PlayerController>().dir = direction * knockBackForce;
     }
     void EarthQuake()
     {

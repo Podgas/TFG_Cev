@@ -54,11 +54,4 @@ public class GodMode : MonoBehaviour
         }
 
     }
-
-    public void GoTo(Transform pos)
-    {
-        player.GoTo(pos);
-    }
-    
-
 }

@@ -51,7 +51,7 @@ public class FieldOfViewSystem : MonoBehaviour
 
     protected virtual void LateUpdate()
     {
-        //DrawFieldOfView();
+        DrawFieldOfView();
     }
 
     void FindVisibleTargets(float radius, List<Transform> viewArray)

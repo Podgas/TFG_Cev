@@ -153,16 +153,16 @@ namespace Substance.Platform
             [DllImport("kernel32.dll", SetLastError = true)]
             static extern bool FreeLibrary(IntPtr hModule);
 
-            [DllImport("libdl.dylib")]
+            [DllImport("libdl")]
             protected static extern IntPtr dlopen(string filename, int flags);
 
-            [DllImport("libdl.dylib")]
+            [DllImport("libdl")]
             protected static extern IntPtr dlsym(IntPtr handle, string symbol);
 
-            [DllImport("libdl.dylib")]
+            [DllImport("libdl")]
             protected static extern IntPtr dlerror();
 
-            [DllImport("libdl.dylib")]
+            [DllImport("libdl")]
             protected static extern int dlclose(IntPtr handle);
 
             internal static IntPtr DllHandle = IntPtr.Zero;
@@ -193,6 +193,12 @@ namespace Substance.Platform
 
                         DllHandle = dlopen(LibDestination, 3);
                     }
+                    else if (IsLinux())
+                    {
+                        LibDestination = Path.Combine(dataPath, "Plugins/libSubstance.Engine.so");
+
+                        DllHandle = dlopen(LibDestination, 3);
+                    }
 
                     if (DllHandle == IntPtr.Zero)
                     {
@@ -209,7 +215,7 @@ namespace Substance.Platform
                     {
                         FreeLibrary(DllHandle);
                     }
-                    else if (IsMac())
+                    else if (IsMac() || IsLinux())
                     {
                         dlclose(DllHandle);
                     }
@@ -228,7 +234,7 @@ namespace Substance.Platform
                 {
                     ptr = GetProcAddress(DllHandle, funcname);
                 }
-                else if (IsMac())
+                else if (IsMac() || IsLinux())
                 {
                     ptr = dlsym(DllHandle, funcname);
                 }
@@ -691,6 +697,24 @@ namespace Substance.Platform
 #else
         [DllImport(attributeValue)]
         public static extern void cppSetDirtyOutputs(IntPtr graphHandle);
+#endif
+
+#if IMPORT_DYNAMIC
+        public delegate void cppHandleMaskDelegate(IntPtr graphHandle);
+        public static void cppHandleMask(IntPtr graphHandle)
+        {
+            string myName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            if (DLLHelpers.DllHandle == IntPtr.Zero)
+                return;
+
+            cppHandleMaskDelegate function = DLLHelpers.GetFunction(
+                myName, typeof(cppHandleMaskDelegate)) as cppHandleMaskDelegate;
+            function.Invoke(graphHandle);
+        }
+#else
+        [DllImport(attributeValue)]
+        public static extern void cppHandleMask(IntPtr graphHandle);
 #endif
 
 #if IMPORT_DYNAMIC
