@@ -317,15 +317,15 @@ MonoBehaviour:
   timeToMin: 0.2
   cc: {fileID: 1539298956279234039}
   forward: {x: 0, y: 0, z: 0}
-  gravity: 3.5
+  gravity: 3
   fallMultiplier: 2
-  jumpForce: 11
-  jumpFox: 13
-  jumpTimes: 2
+  jumpForce: 7
+  jumpFox: 9
+  jumpTimes: 1
   maxDashTime: 1
   dashSpeed: 1
   dashStoppingSpeed: 0.1
-  fov: {fileID: 0}
+  fov: {fileID: 655242637842938366}
   climbMask:
     serializedVersion: 2
     m_Bits: 512
@@ -333,7 +333,7 @@ MonoBehaviour:
   damageModifier: 2
   damageDealt: 0
   anim: {fileID: 0}
-  vfx: {fileID: 0}
+  vfx: {fileID: 11400000, guid: cc24ca2624be3e54495b693d4d0fcbc1, type: 2}
   levelChanger: {fileID: 0}
 --- !u!143 &1539298956279234039
 CharacterController:
@@ -451,7 +451,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8093379682945717905
 Transform:
   m_ObjectHideFlags: 0
@@ -530,7 +530,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7487998749935209012
 Transform:
   m_ObjectHideFlags: 0

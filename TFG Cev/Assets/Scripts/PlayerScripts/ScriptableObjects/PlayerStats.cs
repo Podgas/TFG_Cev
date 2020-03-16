@@ -20,7 +20,7 @@ public class PlayerStats : ScriptableObject
         public bool isGrounded = true;
         public bool isMoving = false;
         public bool isRunning = false;
-        public bool isJumping = false;
+        public bool jumpPressed = false;
         public bool isCharging = false;
         public bool isShooting = false;
         public bool isDashing = false;
@@ -53,7 +53,7 @@ public class PlayerStats : ScriptableObject
         playerStatus.isGrounded = true;
         playerStatus.isMoving = false;
         playerStatus.isRunning = false;
-        playerStatus.isJumping = false;
+        playerStatus.jumpPressed = false;
         playerStatus.isCharging = false;
         playerStatus.isShooting = false;
         playerStatus.isDashing = false;

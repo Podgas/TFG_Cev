@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
     public int jumpTimes;
 
     int jumpCount = 0;
+    float jumpCoolDown = 0;
 
     //---------Dash Vars---------------//
 
@@ -145,9 +146,17 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
         //Comprobamos que el juego no esta pausado ni estamos muertos
         if (!MenuManager.GetPaused() || !stats.playerStatus.isDead)
         {
+            jumpCoolDown += Time.deltaTime;
+            if (stats.playerStatus.isGrounded && jumpCoolDown >= 0.5f)
+            {
+                jumpCount = 0;
+                jumpCoolDown = 0;
+            }
+
             //Comprobación climb
             if (stats.playerStatus.isClimbing)
             {
@@ -160,13 +169,6 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetButtonDown("Transform")){
                     Metamorphosis();
                 }
-               
-                //Comprobamos si el jugador esta pisando el suelo y estuvo 
-                if (stats.playerStatus.isGrounded && stats.playerStatus.isJumping)
-                {
-                    stats.playerStatus.isJumping = false;
-                    jumpCount = 0;
-                }
 
                 switch (playerCondition.GetCondition())
                 {
@@ -177,6 +179,7 @@ public class PlayerController : MonoBehaviour
                         AimUpdate();
                         break;
                 }
+
                 //Comprobamos si el jugador toca el joystick
                 if ((Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
                 {
@@ -190,7 +193,7 @@ public class PlayerController : MonoBehaviour
                 //Aplicamos la fuerza dela gravedad en funcion de si saltamos o caemos.
                 if (!stats.playerStatus.isGrounded)
                 {
-                    if (stats.playerStatus.isJumping)
+                    if (stats.playerStatus.jumpPressed)
                         _moveDirection.y += Physics.gravity.y * gravity * Time.deltaTime;
                     else
                         _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
@@ -204,9 +207,8 @@ public class PlayerController : MonoBehaviour
                 }
 
                 //Movemos al jugador
-                if (velocity !=0 || stats.playerStatus.isJumping)
-                    cc.Move(_moveDirection * Time.deltaTime);
-                
+                cc.Move(_moveDirection * Time.deltaTime);
+
                 //Sistema de interacción
                 if (Input.GetButtonDown("Interact") && !stats.playerStatus.isFox)
                 {
@@ -224,10 +226,21 @@ public class PlayerController : MonoBehaviour
         {
             RecalculatePivot(cameraPosition);
         }
-        if ((stats.playerStatus.isGrounded || jumpCount < jumpTimes) && Input.GetButtonDown("Jump"))
+
+        if (stats.playerStatus.jumpPressed)
         {
-            Jump();
+            stats.playerStatus.jumpPressed = false;
+
+            //Debug.Log((stats.playerStatus.isGrounded || jumpCount < jumpTimes) && stats.playerStatus.jumpPressed);
+            if (jumpCoolDown >= 0.5f && stats.playerStatus.isGrounded || (jumpCount < jumpTimes))
+            {
+                jumpCoolDown = 0;
+                Debug.Log("stats.playerStatus.isGrounded " + stats.playerStatus.isGrounded);
+                Debug.Log("jumpCount " + jumpCount+ " / jumpTimes" + jumpTimes);
+                Jump();
+            }
         }
+        
 
         //TODO: Pulir carga de ataque
         if (Input.GetButton("Attack"))
@@ -338,8 +351,8 @@ public class PlayerController : MonoBehaviour
             _moveDirection.y = jumpFox;
             foxModel.GetComponent<Animator>().SetTrigger("Jump");
         }
-        stats.playerStatus.isJumping = true;
         jumpCount++;
+        Debug.Log(jumpCount);
     }
 
     //Recalcula el pivote de referencia para las rotaciones
@@ -407,8 +420,6 @@ public class PlayerController : MonoBehaviour
         stats.hp.value = stats.hp.maxValue;
         stats.baseDamage = 1;
         stats.ammo = stats.maxAmmo;
-
-        jumpCount = 1;
 
         speed = walkSpeed;
         accelRatePerSec = speed / timeToMax;
