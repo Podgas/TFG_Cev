@@ -12,10 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bdd89d8f489be45b92237fa0b51cb7, type: 3}
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
+  ammo: 6
+  baseDamage: 1
+  win: 0
   hp:
     maxValue: 300
     minValue: 0
     value: 300
   maxAmmo: 6
-  ammo: 6
-  baseDamage: 1
+  playerStatus:
+    isGrounded: 1
+    isMoving: 0
+    isRunning: 0
+    isCharging: 0
+    isShooting: 0
+    isDashing: 0
+    isClimbing: 0
+    isFox: 0
+    isDead: 0
+    canClimb: 0
+    jumpPressed: 0
+    interactPressed: 0

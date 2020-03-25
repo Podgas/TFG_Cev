@@ -6,6 +6,13 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
 
+    struct ControllerVars
+    {
+        public Vector3 center;
+        public float height;
+        public float radius;
+    }
+
     //------------Components Vars ---------------//
     [Header("Components")]
     [SerializeField]
@@ -60,6 +67,9 @@ public class PlayerController : MonoBehaviour
     float decelRatePerSec;
     float velocity;
 
+    ControllerVars foxCC;
+    ControllerVars humanCC;
+
     //------------Jump Vars ---------------//
     [Header("Jumping")]
     [SerializeField]
@@ -90,9 +100,8 @@ public class PlayerController : MonoBehaviour
 
     Vector3 dashDirection;
 
-    //--------Interaction Vars----------//
-    [SerializeField]
-    FieldOfViewSystem fov;
+    //--------Interact Vars-------//
+    Transform objectToInteract;
 
     //--------Climb Vars----------//
     [SerializeField]
@@ -142,6 +151,7 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
 
         RecalculatePivot(cameraPosition);
+        
     }
 
     void Update()
@@ -210,9 +220,13 @@ public class PlayerController : MonoBehaviour
                 cc.Move(_moveDirection * Time.deltaTime);
 
                 //Sistema de interacción
-                if (Input.GetButtonDown("Interact") && !stats.playerStatus.isFox)
+                if (stats.playerStatus.interactPressed)
                 {
-                    FindVisibleInteractObjects();
+                    if (objectToInteract != null)
+                    {
+                        Interact(objectToInteract);
+                    }
+                    stats.playerStatus.interactPressed = false;
                 }
             }
         }
@@ -413,6 +427,19 @@ public class PlayerController : MonoBehaviour
     //Inicializamos estadisticas y estados del player
     void InitStats()
     {
+
+        humanCC.height = cc.height;
+        humanCC.radius = cc.radius;
+        humanCC.center = cc.center;
+
+        Vector3 center = Vector3.zero;
+        center.y = 0.42f;
+        center.z = 0.06f;
+
+        foxCC.height = 0.64f;
+        foxCC.radius = 0.47f;
+        foxCC.center = center;
+
         playerCondition.ChangeCondition(PlayerCondition.Conditions.Main);
 
         model = playerModel;
@@ -420,6 +447,8 @@ public class PlayerController : MonoBehaviour
         stats.hp.value = stats.hp.maxValue;
         stats.baseDamage = 1;
         stats.ammo = stats.maxAmmo;
+
+        stats.InitStatus();
 
         speed = walkSpeed;
         accelRatePerSec = speed / timeToMax;
@@ -464,41 +493,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void FindVisibleInteractObjects()
+    void Interact(Transform objectToInteract)
     {
-        for(int i = 0; i < fov.visibleTargets.Count; i++)
-        {
-            Transform target = fov.visibleTargets[i].transform;
-            Vector3 targetNoY = target.position;
-            targetNoY.y = transform.position.y;
-            Vector3 dirToTarget = (targetNoY - transform.position).normalized;
+        if (!stats.playerStatus.isFox) {
 
-            Interact(target, dirToTarget);
-        }
-    }
-
-    void Interact(Transform target, Vector3 dirToTarget)
-    {
-        if (target.tag == "Climb" && Vector3.Angle(model.forward, dirToTarget) < 180 && !stats.playerStatus.isFox)
-        {
-            stats.playerStatus.isClimbing = true;
-            stats.playerStatus.isGrounded = false;
-            _moveDirection.y = 0;
+            switch (objectToInteract.tag)
+            {
+                case "Climb":
+                    stats.playerStatus.isClimbing = true;
+                    stats.playerStatus.isGrounded = false;
+                    _moveDirection.y = 0;
+                break;
+            }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        //TODO:Revisar funcionamiento
-        if (other.tag == "Ground")
+        if (other.tag == "Climb")
         {
-            stats.playerStatus.isClimbing = false;
+            stats.playerStatus.canClimb = true;
+            objectToInteract = other.transform;
         }
         //TODO:Revisar funcionamiento
-        if(other.tag == "ClimbBoundaries")
-        {
-            stats.playerStatus.isClimbing = false;
-        }
         //TODO: Reacer para recibir daño por cada enemigo en función del ataque
         if(other.tag == "HitBoxEnemy" && !GodMode.Instance.isGodMode)
         {
@@ -510,16 +527,24 @@ public class PlayerController : MonoBehaviour
             UpdateHp(-7);
         }
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Climb")
+        {
+            stats.playerStatus.canClimb = false;
+            objectToInteract = null;
+        }
+    }
+
     //Fncion apra controlar la escalada
     void Climb()
     {
-        RaycastHit hit;
-        //Comprobamos si seguimos delante del objeto a trepar
-        if(Physics.Raycast(transform.position, forward, out hit, 5f, climbMask)) {
-
+        if (stats.playerStatus.canClimb)
+        {
             //Movemos en X,Y para trepar (pared) 
             Vector3 climbDirection;
-            climbDirection = new Vector3(-Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+            climbDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 
             //TODO: Unificar los move
             cc.Move(climbDirection * speed * Time.deltaTime);
@@ -527,7 +552,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             stats.playerStatus.isClimbing = false;
-        }   
+        }
+        
     }
 
     private void OnDrawGizmos()
@@ -547,6 +573,7 @@ public class PlayerController : MonoBehaviour
         model.gameObject.SetActive(false);
         model = foxModel;
         model.gameObject.SetActive(true);
+        SetCC(foxCC);
     }
     //Transforma el jugador en Humanoide
     private void UnTransform()
@@ -557,7 +584,7 @@ public class PlayerController : MonoBehaviour
         model.gameObject.SetActive(false);
         model = playerModel;
         model.gameObject.SetActive(true);
-
+        SetCC(humanCC);
     }
     //Controlamos el cambio de forma
     private void Metamorphosis() {
@@ -582,5 +609,12 @@ public class PlayerController : MonoBehaviour
             jumpTimes = 1;
             speed = 4;
         }
+    }
+
+    private void SetCC(ControllerVars cv)
+    {
+        cc.height = cv.height;
+        cc.center = cv.center;
+        cc.radius = cv.radius;
     }
 }

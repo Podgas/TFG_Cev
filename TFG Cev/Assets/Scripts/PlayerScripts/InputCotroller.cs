@@ -14,6 +14,6 @@ public class InputCotroller : MonoBehaviour
 
     public void OnInteraction()
     {
-        Debug.Log("INTERACT");
+        palyerStats.playerStatus.interactPressed = true;
     }
 }
