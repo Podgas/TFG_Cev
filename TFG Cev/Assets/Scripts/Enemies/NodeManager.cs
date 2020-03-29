@@ -7,11 +7,13 @@ public class NodeManager : MonoBehaviour
 
     private Transform nextNode;
 
+
     List<Transform> nodes = new List<Transform>();
 
     private void Awake()
     {
         GetPatrolNodes();
+
     }
 
     void GetPatrolNodes()

@@ -249,8 +249,6 @@ public class PlayerController : MonoBehaviour
             if (jumpCoolDown >= 0.5f && stats.playerStatus.isGrounded || (jumpCount < jumpTimes))
             {
                 jumpCoolDown = 0;
-                Debug.Log("stats.playerStatus.isGrounded " + stats.playerStatus.isGrounded);
-                Debug.Log("jumpCount " + jumpCount+ " / jumpTimes" + jumpTimes);
                 Jump();
             }
         }
@@ -366,7 +364,7 @@ public class PlayerController : MonoBehaviour
             foxModel.GetComponent<Animator>().SetTrigger("Jump");
         }
         jumpCount++;
-        Debug.Log(jumpCount);
+
     }
 
     //Recalcula el pivote de referencia para las rotaciones

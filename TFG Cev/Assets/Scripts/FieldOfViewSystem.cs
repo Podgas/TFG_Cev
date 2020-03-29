@@ -4,92 +4,103 @@ using UnityEngine;
 
 public class FieldOfViewSystem : MonoBehaviour
 {
-    [SerializeField]
-    public float alertRadius;
+    [Header("Base FOV Options")]
     [SerializeField]
     public float viewRadius;
     [SerializeField]
-    [Range(0,360)]
+    [Range(0, 360)]
     public float viewAngle;
-
-    public Vector3 model;
-
+    [SerializeField]
+    Transform pointOfView;
     public LayerMask targetMask;
     public LayerMask obstacleMask;
-
+    public Vector3 model;
+    
     public List<Transform> visibleTargets = new List<Transform>();
-    public List<Transform> alertedTargets = new List<Transform>();
 
+    [Header("Mesh Debug")]
     public float meshResolution;
     public float edgeResolveIterations;
     public float edgeDistanceThreshold;
     public Material testMaterial;
-
     public MeshFilter viewMeshFilter;
-    Mesh viewMesh;
 
+    Mesh viewMesh;
     Vector3 minPointDebug;
     Vector3 maxPointDebug;
 
     protected virtual void Start()
     {
-        viewMesh = new Mesh();
-        viewMesh.name = "View Mesh";
-        viewMeshFilter.mesh = viewMesh;
-        StartCoroutine("FindTargetWithDelay", .2f);
+        StartMeshDebug();
+        StartCoroutine("FindTargetWithDelay",Time.deltaTime);
     }
 
     IEnumerator FindTargetWithDelay(float delay)
     {
         while (true)
         {
-            yield return new WaitForSeconds(delay);
             FindVisibleTargets(viewRadius, visibleTargets);
-            FindVisibleTargets(alertRadius, alertedTargets);
+
+            yield return new WaitForSeconds(delay);
+            
         }
     }
+    private void Update()
+    {
 
+    }
     protected virtual void LateUpdate()
     {
         DrawFieldOfView();
     }
 
+
     void FindVisibleTargets(float radius, List<Transform> viewArray)
     {
-        viewArray.Clear();
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, radius, targetMask);
 
-        for(int i =0; i < targetsInViewRadius.Length; i++)
+        Collider[] targetsInViewRadius = null;
+
+        viewArray.Clear();
+        targetsInViewRadius = Physics.OverlapSphere(pointOfView.position, radius, targetMask);
+
+        for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
-            
             Vector3 target = targetsInViewRadius[i].transform.position;
-            target.y = transform.position.y;
-            Vector3 dirToTarget = (target - transform.position).normalized;
-            if(Vector3.Angle(transform.forward,dirToTarget) < viewAngle / 2)
+            Vector3 dirToTarget = (target - pointOfView.position).normalized;
+            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
                 float distToTarget = Vector3.Distance(transform.position, target);
-
-                if (!Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
+                
+                if (!Physics.Raycast(pointOfView.position, dirToTarget, distToTarget, obstacleMask))
                 {
-                    viewArray.Add(targetsInViewRadius[i].transform);
+                    Debug.DrawRay(pointOfView.position, dirToTarget, Color.red);
+                    if (!viewArray.Contains(targetsInViewRadius[0].transform))
+                        viewArray.Add(targetsInViewRadius[0].transform);
                 }
             }
         }
     }
 
+    //DEBUG FUNCTIONS FOV
+    void StartMeshDebug()
+    {
+        viewMesh = new Mesh();
+        viewMesh.name = "View Mesh";
+        viewMeshFilter.mesh = viewMesh;
+    }
     void DrawFieldOfView()
     {
         int stepcount = Mathf.RoundToInt(viewAngle * meshResolution);
-        
+
         float stepAngleSize = viewAngle / stepcount;
         List<Vector3> viewPoints = new List<Vector3>();
         ViewCastInfo oldViewCast = new ViewCastInfo();
 
-        for(int i = 0; i <= stepcount; i++)
+        for (int i = 0; i <= stepcount; i++)
         {
-            float angle = transform.eulerAngles.y - viewAngle/2 + stepAngleSize * i;
+            float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
             ViewCastInfo newViewCast = ViewCast(angle);
-            if(newViewCast.viewObject != null)
+            if (newViewCast.viewObject != null)
             {
 
             }
@@ -98,10 +109,10 @@ public class FieldOfViewSystem : MonoBehaviour
             if (i >= 0)
             {
                 bool edgeDistanceThresholdExceeded = Mathf.Abs(oldViewCast.distance - newViewCast.distance) > edgeDistanceThreshold;
-                if(oldViewCast.hit != newViewCast.hit || (oldViewCast.hit && newViewCast.hit && edgeDistanceThresholdExceeded))
+                if (oldViewCast.hit != newViewCast.hit || (oldViewCast.hit && newViewCast.hit && edgeDistanceThresholdExceeded))
                 {
                     EdgeInfo edge = FindEdge(oldViewCast, newViewCast);
-                    if(edge.pointA!= Vector3.zero)
+                    if (edge.pointA != Vector3.zero)
                     {
                         viewPoints.Add(edge.pointA);
                     }
@@ -117,16 +128,16 @@ public class FieldOfViewSystem : MonoBehaviour
         }
 
         int vertexCount = viewPoints.Count + 1;
-        
+
         Vector3[] vertices = new Vector3[vertexCount];
-        int[] triangles = new int[(vertexCount-2) * 3 ];
+        int[] triangles = new int[(vertexCount - 2) * 3];
 
         vertices[0] = Vector3.zero;
-        for(int i = 0; i < vertexCount - 1; i++)
+        for (int i = 0; i < vertexCount - 1; i++)
         {
             vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
 
-            if(i < vertexCount - 2)
+            if (i < vertexCount - 2)
             {
                 triangles[i * 3] = 0;
                 triangles[i * 3 + 1] = i + 1;
@@ -140,7 +151,6 @@ public class FieldOfViewSystem : MonoBehaviour
 
 
     }
-    
     EdgeInfo FindEdge(ViewCastInfo minViewCast, ViewCastInfo maxViewCast)
     {
         float minAngle = minViewCast.angle;
@@ -168,24 +178,22 @@ public class FieldOfViewSystem : MonoBehaviour
         }
         minPointDebug = minPoint;
         maxPointDebug = maxPoint;
-        return new EdgeInfo(minPoint, maxPoint);    
+        return new EdgeInfo(minPoint, maxPoint);
     }
-
     ViewCastInfo ViewCast(float globalAngle)
     {
         Vector3 direction = DirFromAngle(globalAngle, true);
         RaycastHit hit;
 
-        if(Physics.Raycast(transform.position, direction, out hit, viewRadius, obstacleMask))
+        if (Physics.Raycast(transform.position, direction, out hit, viewRadius, obstacleMask))
         {
-            return new ViewCastInfo(true, hit.point, hit.distance, globalAngle,hit.transform);
+            return new ViewCastInfo(true, hit.point, hit.distance, globalAngle, hit.transform);
         }
         else
         {
-            return new ViewCastInfo(false, transform.position + direction * viewRadius, viewRadius, globalAngle,null);
+            return new ViewCastInfo(false, transform.position + direction * viewRadius, viewRadius, globalAngle, null);
         }
     }
-
     public Vector3 DirFromAngle(float angleInDegree, bool angleIsGlobal)
     {
 
@@ -196,11 +204,14 @@ public class FieldOfViewSystem : MonoBehaviour
 
         return new Vector3(Mathf.Sin(angleInDegree * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegree * Mathf.Deg2Rad));
     }
+    ///////////////////
+
 
     public void SetForward(Vector3 newForward)
     {
         model = newForward;
     }
+
     public struct ViewCastInfo
     {
         public bool hit;
@@ -230,8 +241,4 @@ public class FieldOfViewSystem : MonoBehaviour
         }
     }
 
-    /*public virtual void OnObjectDetected()
-    {
-
-    }*/
 }

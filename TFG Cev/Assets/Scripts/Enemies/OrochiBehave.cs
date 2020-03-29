@@ -10,21 +10,12 @@ public class OrochiBehave : EnemyBase
     float attackCD;
     [SerializeField]
     float catchRadius;
-    [SerializeField]
-    VoidEvent onPlayerDetect;
 
     float combatTime;
 
-    [Task]
-    protected bool isWaitingCombat = true;
-    [Task]
-    protected bool isAttacking = false;
+    CombatStates combatStates = CombatStates.CDAction;
 
     public GameObject loseCanvas;
-
-
-
-
 
     protected override void Start()
     {
@@ -35,46 +26,77 @@ public class OrochiBehave : EnemyBase
         Collider[] player = Physics.OverlapSphere(transform.position, catchRadius, playerLayer);
         if(player.Length > 0)
         {
-            PlayerDetect();
+            //PlayerDetect();
         }
     }
 
-    [Task]
+    protected override void CombatUpdate()
+    {
+        base.CombatUpdate();
+
+        switch (combatStates)
+        {
+            case CombatStates.CDAction:
+
+                CombatWait();
+                break;
+
+            case CombatStates.ChangePosition:
+
+                break;
+            case CombatStates.HorizontalAttack:
+
+                HorizontalAttack();
+                break;
+
+            case CombatStates.VerticalAttack:
+
+                VerticalAttack();
+                break;
+
+            case CombatStates.Dodge:
+
+                break;
+
+        }
+
+    }
+
     protected void CombatWait()
     {
         combatTime += Time.deltaTime;
         if (combatTime >= attackCD)
         {
-            Debug.Log("Waiting");
             combatTime = 0;
-            isAttacking = true;
-            isWaitingCombat = false;
-            Task.current.Succeed();
+            LaunchAttack();
         }
-        else
-        {
-            Task.current.Fail();
-        }
+        Debug.Log("WaitForCD");
         
-    } 
-
-    [Task]
-    protected void HorizontalAttack()
-    {
-        
-        Debug.Log("HorizontalAttack");
-        isAttacking = false;
-        isWaitingCombat = true;
-        anim.SetTrigger("horizontalAttack");
     }
 
-    [Task]
+    void LaunchAttack()
+    {
+        Random.InitState(Time.frameCount);
+        int random = Random.Range(0, 1);
+        if (random == 1)
+            combatStates = CombatStates.HorizontalAttack;
+        else
+            combatStates = CombatStates.VerticalAttack;
+    }
+
+    protected void HorizontalAttack()
+    {
+        Debug.Log("HorizontalAttack");
+        anim.SetTrigger("horizontalAttack");
+        combatStates = CombatStates.CDAction;
+    }
+
+
     protected void VerticalAttack()
     {
         Debug.Log("VerticalAttack");
-        isAttacking = false;
-        isWaitingCombat = true;
         anim.SetTrigger("verticalAttack");
+        combatStates = CombatStates.CDAction;
     }
 
     public void ActivateHitCollider()
@@ -86,17 +108,26 @@ public class OrochiBehave : EnemyBase
         hitCollider.SetActive(!hitCollider.activeSelf);
     }
 
+    public void OnCombatTutorial()
+    {
+        _target = GameObject.Find("Player").transform;
+        agent.speed = chaseSpeed;
+        currentPatrolState = PatrolStates.Chase;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, catchRadius);
     }
 
-    private void PlayerDetect()
+    protected enum CombatStates
     {
-        Time.timeScale = 0.05f;
-        onPlayerDetect.Raise();
+        CDAction,
+        ChangePosition,
+        HorizontalAttack,
+        VerticalAttack,
+        Dodge,
     }
-
 
 }

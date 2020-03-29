@@ -22,6 +22,7 @@ TagManager:
   - BossAttack
   - LamiaAttack
   - ClimbArea
+  - Event
   layers:
   - Default
   - TransparentFX

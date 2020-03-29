@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
-using Panda;
 
 
 public class EnemyBase : MonoBehaviour
 {
-    [Header("EnemyStats")]
+
+
+    [Header("Enemy Stats")]
     [SerializeField]
     float hp;
     [SerializeField]
-    float speed;
+    protected float speed;
     [SerializeField]
+    protected float chaseSpeed;
 
-    [Header("EnemyPatrol")]
-    float timeWaiting;
+    [Header("Patrol Vars")]
     [SerializeField]
-    protected float detectionRadius;
+    float timeWaiting;
     [SerializeField]
     float escapeRadius;
     [SerializeField]
@@ -26,10 +27,14 @@ public class EnemyBase : MonoBehaviour
     [SerializeField]
     protected LayerMask playerLayer;
     [SerializeField]
-    bool useNode = true;
-    
+    protected FieldOfViewSystem enemyFov;
+    [SerializeField]
+    Animator exclamation;
+    [SerializeField]
+    float rotationTime;
 
-    Transform currentNode;
+    Transform _currentNode;
+    protected Transform _target;
     Vector3 _moveDirection;
 
     [Header("Components")]
@@ -43,85 +48,111 @@ public class EnemyBase : MonoBehaviour
 
     float currentTime;
 
+    [Header("Animation")]
     [SerializeField]
     protected Animator anim;
-    
-    protected Transform target;
+
+
     protected Vector3 alertPosition;
 
-
-    //------------BT VARS-------//
-    [Task]
     protected bool isWaiting = false;
-    [Task]
     protected bool isPatroling;
-    [Task]
-    protected bool isSearching;
-    //[Task]
     protected bool isAlert = false;
-    [Task]
     protected bool isCombat = false;
-    [Task]
     protected bool isChasing = false;
-    [Task]
     protected bool isAlive = true;
 
+    //ENUMERATORS STATE MACHINES
+    [SerializeField]
+    protected EnemyBehaviour behaviourType;
 
-    /*[SerializeField]
-    AudioLibrary vfx;*/
-
-    
+    protected EnemyBaseStates currentBaseState;
+    protected PatrolStates currentPatrolState;
 
     protected virtual void Start()
     {
-        if(nm!=null)
-            currentNode = nm.GetNode(0);
-        isPatroling = true;
-        isSearching = true;
+        if (nm != null)
+            _currentNode = nm.GetNode(1);
+        else
+            Debug.LogError("Pathfinder not assigned");
+
+        currentBaseState = EnemyBaseStates.Patrol;
+
         _moveDirection = Vector3.forward;
+        agent.speed = speed;
     }
 
     private void Update()
     {
-        if (target != null)
+        //State Machine para controlar el el primel nivel de jerarquia del estado
+        switch (currentBaseState)
         {
-            Vector3 lookPos = target.position - transform.position;
-            lookPos.y = 0;
-            Quaternion rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 1);
-        }
-        if (hp <= 0)
-        {
-            isAlive = false;
-        }
-        if (isAlert)
-        {
-            Alert();
-        }
+            case EnemyBaseStates.Patrol:
 
+                switch (currentPatrolState)
+                {
+                    case PatrolStates.FindNode:
+
+                        if (_currentNode == null)
+                            _currentNode = nm.GetNode(0);
+                        else
+                            currentPatrolState = PatrolStates.GoToNode;
+                        break;
+
+                    case PatrolStates.GoToNode:
+                        
+                        if(behaviourType == EnemyBehaviour.InPlace)
+                        {
+                            LookToPoint(_currentNode.position);
+                        }
+                        else
+                        {
+                            MoveAgent(_currentNode);
+                        }
+
+                        break;
+
+                    case PatrolStates.Wait:
+
+                        Wait();
+                        break;
+
+                    case PatrolStates.Alerted:
+                        Alert();
+
+                        break;
+                    case PatrolStates.Chase:
+                        MoveAgent(_target);
+                        SearchForCombat();
+                        break;
+                }
+
+                break;
+
+            case EnemyBaseStates.Combat:
+
+                CombatUpdate();
+
+                break;
+        }
     }
 
+    protected virtual void CombatUpdate() { }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "PlayerHitBox")
+        if (other.tag == "PlayerHitBox")
         {
-
             GetDamage(GameObject.Find("Player").GetComponent<PlayerController>().damageDealt);
             /*vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
             vfx.PlayVFX(AudioLibrary.VfxSounds.Hurt);*/
 
         }
 
-        if(other.tag == "Node")
+        if (other.tag == "Node" && other.transform.parent.name == nm.name)
         {
-            if(other.transform == currentNode)
-            {
-                isPatroling = false;
-                isWaiting = true;
-                currentNode = nm.NextNode(currentNode);
-            }
-                
+            _currentNode = nm.NextNode(_currentNode);
+            currentPatrolState = PatrolStates.Wait;
         }
     }
 
@@ -129,145 +160,134 @@ public class EnemyBase : MonoBehaviour
     {
         hp -= dmg;
     }
-    
-    [Task]
-    protected void SearchForCombat()
-    {
-        Collider[] targets = Physics.OverlapSphere(transform.position, combatRadius, playerLayer);
 
-        
-        if (targets.Length == 0)
-        {
-            isCombat = false;
-            anim.SetBool("isCombat", isCombat);
-            isSearching = true;
-            isPatroling = true;
-            Task.current.Fail();
-        }
-        else
-        {
-            //SetPandaConditionsToFalse();
-            isCombat = true;
-            anim.SetBool("isCombat", isCombat);
-            Task.current.Succeed();
-
-        }
-    }
-    
-    [Task]
-    protected void PatrolBehave()
-    {
-        if (isPatroling && !isAlert && useNode) { 
-            agent.SetDestination(currentNode.position);
-
-            Vector3 lookPos = currentNode.position - transform.position;
-            lookPos.y = 0;
-            Quaternion rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 1);
-            Task.current.Succeed();
-        }
-        else
-        {
-            Task.current.Fail();
-        }
-    }
-
-    [Task]
     protected void Wait()
     {
         currentTime += Time.deltaTime;
         if (currentTime >= timeWaiting)
         {
             currentTime = 0;
-            isWaiting = false;
-            isPatroling = true;
-
+            currentPatrolState = PatrolStates.FindNode;
         }
     }
 
-    [Task]
     protected void Alert()
     {
-        if (isAlert)
-        {
-            agent.isStopped = true;
-        }    
+        agent.isStopped = true;
     }
 
-    [Task]
-    protected void MoveEnemy()
+    protected void MoveAgent(Transform destination)
     {
-        agent.SetDestination(target.position);
-        Vector3 lookPos = target.position - transform.position;
+        agent.SetDestination(destination.position);
+        Vector3 lookPos = destination.position - transform.position;
         lookPos.y = 0;
-        Quaternion rotation = Quaternion.LookRotation(lookPos);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 1);
+        Debug.DrawLine(transform.position, destination.position,Color.green);
+        Quaternion targetRot = Quaternion.LookRotation(lookPos);
+        transform.rotation = targetRot;
+    }
 
-    }
-    [Task]
-    protected void Chase()
+    protected void LookToPoint(Vector3 lookPoint)
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, escapeRadius, playerLayer);
-        if (targets.Length == 0)
-        {
-            target = null;
-            SetPandaConditionsToFalse();
-            isPatroling = true;
-            isSearching = true;
-            Task.current.Fail();
-        }
-        else
-        {
-            Task.current.Succeed();
-        }
+        StartCoroutine("SmoothRotation",lookPoint);
+        _currentNode = nm.NextNode(_currentNode);
+        currentPatrolState = PatrolStates.Wait;
     }
-    [Task]
+
+    IEnumerator SmoothRotation(Vector3 lookPos)
+    {
+        float currentTimeToRotate = 0;
+        float rate = rotationTime / rotationTime;
+        bool rotating = true;
+        Vector3 relativePosition = lookPos - transform.position;
+        Quaternion targetRot = Quaternion.LookRotation(relativePosition);
+
+        while (rotating)
+        {   
+            currentTimeToRotate += Time.deltaTime * rotationTime;
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, currentTimeToRotate);
+            if (currentTimeToRotate > 1)
+            {
+                rotating = false;
+            }
+            yield return new WaitForEndOfFrame();
+        } 
+        
+    }
+
     protected void Die()
     {
+        //TODO: implementar animacion de morir, efecto de particulas dedesaparicion y coorutina de destrucción.
         Destroy(gameObject);
     }
 
+    public void OnAlert(EventPackage package)
+    {
+        if (package.instance == gameObject)
+        {
+            _target = package.target;
+            currentPatrolState = PatrolStates.Alerted;
+            exclamation.SetTrigger("Alert");
 
+        }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, escapeRadius);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, combatRadius);
     }
-    void SetPandaConditionsToFalse()
+    public void OnDetect(EventPackage package)
     {
-        isPatroling = false;
-        isSearching = false;
-        isWaiting = false;
-        isCombat = false;
-        isChasing = false;
-        isAlert = false;
+        if (package.instance == gameObject)
+        {
+            agent.speed = chaseSpeed;
+            currentPatrolState = PatrolStates.Chase;
+        }
     }
-    public void SetAlert(Vector3 alertDetectionPoint)
+    public void OnCalm(EventPackage package)
     {
-        SetPandaConditionsToFalse();
-        isAlert = true;
-        alertPosition = alertDetectionPoint;
+        StartCoroutine("RestartPatroling",package);
+    }    
+
+    IEnumerator RestartPatroling(EventPackage package)
+    {
+        yield return new WaitForSeconds(1f);
+        if (package.instance == gameObject)
+        {
+            currentPatrolState = PatrolStates.FindNode;
+            agent.isStopped = false;
+        }
         
+    }
+    void SearchForCombat()
+    {
+        Collider[] targetsForCombat = Physics.OverlapSphere(transform.position, combatRadius, playerLayer);
 
-    }
-    public void SetCalm()
-    {
-        SetPandaConditionsToFalse();
-        isPatroling = true;
-        agent.isStopped = false;
-    }
-    public void OnDetected(GameObject objectDetected)
-    {
-        SetPandaConditionsToFalse();
-        isChasing = true;
-        agent.isStopped = false;
-        target = objectDetected.transform;
+        if (targetsForCombat != null)
+        {
+            for(int i = 0; i < targetsForCombat.Length; i++)
+            {
+                currentBaseState = EnemyBaseStates.Combat;
+            }
+        }
     }
 
+    protected enum EnemyBehaviour
+    {
+        PatrolCatch,
+        PatrolFight,
+        InPlace
+    }
+
+    protected enum EnemyBaseStates
+    {
+        Patrol,
+        Combat
+    }
+
+    protected enum PatrolStates
+    {
+        FindNode,
+        Wait,
+        GoToNode,
+        Alerted,
+        Chase
+
+    }
 
 }

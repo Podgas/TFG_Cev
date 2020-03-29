@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34294beb5382b8f4d927e33bf3dd0dd9, type: 3}
-  m_Name: OnPlayerDetected
+  m_Script: {fileID: 11500000, guid: e80c3dbc132471b4ebc831b263dd33b3, type: 3}
+  m_Name: OnCalmReach
   m_EditorClassIdentifier: 

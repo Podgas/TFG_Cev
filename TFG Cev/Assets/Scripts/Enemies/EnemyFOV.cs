@@ -1,53 +1,67 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Panda;
 
 public class EnemyFOV : FieldOfViewSystem
 {
     
-    
     MaterialPropertyBlock block;
 
 
-    public Color freeColor;
-    public Color alertColor;
-    public Color findColor;
-    public Color detectedColor;
-
     [Header("Enemy")]
     [SerializeField]
-    float aggresionRadius;
+    float aggresionDistance;
     [SerializeField]
-    float detectionValue;
+    float timeToDetect;
     [SerializeField]
-    GameObject go;
+    float actualTime;
+
+    float correctedDistance;
+    float aggresionResidue;
+
+    [Header("Enemy Mesh Colors")]
+    [SerializeField]
+    GameObject viewCone;
     public Color color;
-    [SerializeField]
-    EnemyBase enemyBehave;
+
+    public Color freeColor;
+    public Color alertColor;
+    public Color detectedColor;
 
     float distance;
 
-    public float timeToDetect;
-    public float actualTime;
 
-    //booleanStates
-    public bool isPatroling = true;
-    [Task]
-    public bool isAlert = false;
-    public bool isChasing = false;
-
+    //SoundDetection
     float detectionLerpSolver;
     public float soundDetectionRadius;
-    
+
+    //EVENTS
+    [Header("Events")]
+    [SerializeField]
+    PackageEvent playerIsAlert;
+    [SerializeField]
+    PackageEvent playerIsDetected;
+    [SerializeField]
+    PackageEvent calmIsReached;
+    [SerializeField]
+    public EventPackage packageEvent = new EventPackage();
+
+    bool isAlert = false;
+    bool isChasing = false;
+
+
 
     protected override void Start()
     {
         base.Start();
+
+        aggresionResidue = viewRadius - aggresionDistance;
+        packageEvent.instance = gameObject;
+
         block = new MaterialPropertyBlock();
         color = freeColor;
         block.SetColor("_BaseColor", color);
-        //go.GetComponent<Renderer>().SetPropertyBlock(block);
+        viewCone.GetComponent<Renderer>().SetPropertyBlock(block);
        
     }
 
@@ -55,91 +69,56 @@ public class EnemyFOV : FieldOfViewSystem
     {
        
         base.LateUpdate();
-        ListenTargets();
+        //ListenTargets();
 
-        if (isChasing)
+        if (visibleTargets.Count > 0 && !isChasing)
         {
-            color = detectedColor;
-            Collider[] targetForChase = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
+            if (!isAlert)
+            {
+                packageEvent.target = visibleTargets[0];
+                isAlert = true;
+                playerIsAlert.Raise(packageEvent);
 
-            if (targetForChase.Length == 0)
-            {
-                isChasing = false;
-                isPatroling = true;
-                color = freeColor;
-            }
-        }
-        else
-        {
-            if (alertedTargets.Count > 0 && visibleTargets.Count == 0)
-            {
-                
-                color = alertColor;
-                if (isPatroling)
-                {
-                    Debug.Log("ALERT");
-                    StateTransition(ref isPatroling, ref isAlert);
-                    OnObjectAlert(alertedTargets[0].gameObject);
-                }
-            }
-            else if (visibleTargets.Count > 0)
-            {
-                distance = Vector3.Distance(transform.position + new Vector3(aggresionRadius, 0, 0),
+                distance = Vector3.Distance(transform.position,
                     visibleTargets[0].position);
 
-                actualTime += Time.deltaTime / (distance / (viewRadius - aggresionRadius));
-                color = findColor;
+                correctedDistance = distance -= aggresionResidue;
+                color = alertColor;
+            }
+            else if (!isChasing)
+            {
+                actualTime += Time.deltaTime / (distance / correctedDistance);
                 if (actualTime >= timeToDetect)
                 {
+                    isChasing = true;
                     actualTime = 0;
-                    StateTransition(ref isAlert, ref isChasing);
-                    OnObjectDetected(visibleTargets[0].gameObject);
+                    playerIsDetected.Raise(packageEvent);
+                    color = detectedColor;
                 }
+                actualTime += Time.deltaTime / (distance / correctedDistance);
             }
-            else if (!isPatroling && !isChasing)
+        }
+        else if(!isChasing){
+            if (isAlert)
             {
-                ResetStates(ref isAlert, ref isChasing, ref isPatroling);
+                calmIsReached.Raise(packageEvent);
+                isAlert = false;
                 color = freeColor;
                 actualTime = 0;
-                OnObjectOut();
-            }
+                packageEvent.target = null;
+            } 
         }
 
         block.SetColor("_BaseColor", color);
-        //go.GetComponent<Renderer>().SetPropertyBlock(block);
-    }
-
-    public void OnObjectDetected(GameObject objectDetected)
-    {
-        enemyBehave.OnDetected(objectDetected);
-    }
-    public void OnObjectAlert(GameObject objectDetected)
-    {
-        enemyBehave.SetAlert(objectDetected.transform.position);
-    }
-    public void OnObjectOut()
-    {
-        enemyBehave.SetCalm();
-    }
-
-    private void StateTransition(ref bool initState,ref bool newState)
-    {
-        initState = !initState;
-        newState = !newState;
+        viewCone.GetComponent<Renderer>().SetPropertyBlock(block);
 
     }
-    private void ResetStates(ref bool state1, ref bool state2 , ref bool newState)
-    {
-        state1 = false;
-        state2 = false;
-        newState = true;
-    }
 
-    private void OnDrawGizmos()
+    /*void ClearBools()
     {
-        //Gizmos.DrawSphere(transform.position + new Vector3(aggresionRadius, 0, 0), 2f);
-        //Gizmos.DrawWireSphere(transform.position , soundDetectionRadius);
-    }
+        isChasing = false;
+        isAlert = false;
+    }*/
 
     void ListenTargets()
     {
@@ -151,19 +130,18 @@ public class EnemyFOV : FieldOfViewSystem
             Vector3 target = targetInListenRadius[i].transform.position;
 
             Vector3 dirToTarget = (target - transform.position).normalized;
-            Chase();
-            OnObjectDetected(targetInListenRadius[i].gameObject);
+
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
-                Chase();
+
             }
         }
     }
 
-    void Chase()
+    public void OnTutorial()
     {
+        isAlert = true;
         isChasing = true;
-        isAlert = false;
-        isPatroling = false;
     }
+
 }

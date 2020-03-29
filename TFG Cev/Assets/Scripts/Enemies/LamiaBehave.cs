@@ -66,8 +66,8 @@ public class LamiaBehave : EnemyBase
         {
             castTime = 0;
             GameObject projectyle = Instantiate(boltPrefab, hitCollider.transform.position, Quaternion.identity);
-            projectyle.GetComponent<ProjectyleBehaviour>().SetDestination(target.position - hitCollider.transform.position);
-            Debug.DrawLine(hitCollider.transform.position, target.position, Color.cyan, 3f);
+            projectyle.GetComponent<ProjectyleBehaviour>().SetDestination(_target.position - hitCollider.transform.position);
+            Debug.DrawLine(hitCollider.transform.position, _target.position, Color.cyan, 3f);
             isAttacking = false;
             isWaitingCombat = true; 
         }
@@ -81,7 +81,7 @@ public class LamiaBehave : EnemyBase
         castTime += Time.deltaTime;
         if (areaEffect == null)
         {
-            Vector3 areapos = target.position;
+            Vector3 areapos = _target.position;
             areapos.y = 0;
             areaEffect = Instantiate(areaEffectPrefab, areapos, areaEffectPrefab.transform.rotation);
         }
