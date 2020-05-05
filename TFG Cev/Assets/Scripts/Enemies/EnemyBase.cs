@@ -35,6 +35,8 @@ public class EnemyBase : MonoBehaviour
 
     Transform _currentNode;
     protected Transform _target;
+
+    protected Target _currentTarget;
     Vector3 _moveDirection;
 
     [Header("Components")]
@@ -74,9 +76,12 @@ public class EnemyBase : MonoBehaviour
         if (nm != null)
             _currentNode = nm.GetNode(1);
         else
-            Debug.LogError("Pathfinder not assigned");
+            Debug.LogWarning("Pathfinder not assigned");
 
-        currentBaseState = EnemyBaseStates.Patrol;
+        if(behaviourType != EnemyBehaviour.Static)
+            currentBaseState = EnemyBaseStates.Patrol;
+        else
+            currentBaseState = EnemyBaseStates.Static;
 
         _moveDirection = Vector3.forward;
         agent.speed = speed;
@@ -87,6 +92,8 @@ public class EnemyBase : MonoBehaviour
         //State Machine para controlar el el primel nivel de jerarquia del estado
         switch (currentBaseState)
         {
+            case EnemyBaseStates.Static:
+                break;
             case EnemyBaseStates.Patrol:
 
                 switch (currentPatrolState)
@@ -122,7 +129,7 @@ public class EnemyBase : MonoBehaviour
 
                         break;
                     case PatrolStates.Chase:
-                        MoveAgent(_target);
+                        MoveAgent(_currentTarget.currentPosition);
                         SearchForCombat();
                         break;
                 }
@@ -148,9 +155,10 @@ public class EnemyBase : MonoBehaviour
             vfx.PlayVFX(AudioLibrary.VfxSounds.Hurt);*/
 
         }
-
+        Debug.Log(gameObject.name + " - Node");
         if (other.tag == "Node" && other.transform.parent.name == nm.name)
         {
+            
             _currentNode = nm.NextNode(_currentNode);
             currentPatrolState = PatrolStates.Wait;
         }
@@ -220,38 +228,34 @@ public class EnemyBase : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void OnAlert(EventPackage package)
+    public void OnAlert(Target target)
     {
-        if (package.instance == gameObject)
-        {
-            _target = package.target;
-            currentPatrolState = PatrolStates.Alerted;
-            exclamation.SetTrigger("Alert");
-
-        }
+        _currentTarget = target;
+        currentPatrolState = PatrolStates.Alerted;
+        exclamation.SetTrigger("Alert");
 
     }
-    public void OnDetect(EventPackage package)
+    public void OnDetect(Target target)
     {
-        if (package.instance == gameObject)
-        {
-            agent.speed = chaseSpeed;
-            currentPatrolState = PatrolStates.Chase;
-        }
+        _currentTarget = target;
+        agent.speed = chaseSpeed;
+        currentPatrolState = PatrolStates.Chase;
+
     }
-    public void OnCalm(EventPackage package)
+    public void OnCalm(Target target)
     {
-        StartCoroutine("RestartPatroling",package);
+        _currentTarget = target;
+        StartCoroutine("RestartPatroling");
     }    
 
-    IEnumerator RestartPatroling(EventPackage package)
+    IEnumerator RestartPatroling()
     {
         yield return new WaitForSeconds(1f);
-        if (package.instance == gameObject)
-        {
-            currentPatrolState = PatrolStates.FindNode;
-            agent.isStopped = false;
-        }
+
+        currentPatrolState = PatrolStates.GoToNode;
+        currentTime = 0;
+        agent.isStopped = false;
+
         
     }
     void SearchForCombat()
@@ -271,13 +275,15 @@ public class EnemyBase : MonoBehaviour
     {
         PatrolCatch,
         PatrolFight,
-        InPlace
+        InPlace,
+        Static
     }
 
     protected enum EnemyBaseStates
     {
         Patrol,
-        Combat
+        Combat,
+        Static
     }
 
     protected enum PatrolStates
@@ -286,7 +292,7 @@ public class EnemyBase : MonoBehaviour
         Wait,
         GoToNode,
         Alerted,
-        Chase
+        Chase,
 
     }
 

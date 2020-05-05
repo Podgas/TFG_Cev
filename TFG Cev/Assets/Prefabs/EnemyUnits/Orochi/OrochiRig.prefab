@@ -2183,10 +2183,7 @@ GameObject:
   - component: {fileID: 482658489183693336}
   - component: {fileID: 482658489183693337}
   - component: {fileID: 482658489183693339}
-  - component: {fileID: 5428624237821159765}
-  - component: {fileID: 1922993217}
-  - component: {fileID: 1922993223}
-  - component: {fileID: 786912780}
+  - component: {fileID: 6826125132496672569}
   m_Layer: 0
   m_Name: OrochiRig
   m_TagString: Untagged
@@ -2300,15 +2297,13 @@ MonoBehaviour:
   aggresionDistance: 0
   timeToDetect: 3
   actualTime: 0
+  baseMotor: {fileID: 482658489183693339}
   viewCone: {fileID: 3103550558826642369}
   color: {r: 0, g: 0, b: 0, a: 0}
   freeColor: {r: 0, g: 1, b: 0, a: 0}
   alertColor: {r: 0.993973, g: 1, b: 0, a: 0}
   detectedColor: {r: 1, g: 0, b: 0, a: 1}
   soundDetectionRadius: 5
-  playerIsAlert: {fileID: 11400000, guid: e971c2b4b2403d443a79a2a8bfff07ea, type: 2}
-  playerIsDetected: {fileID: 11400000, guid: 73d7afb5736cd7849b8e0a09252f78b1, type: 2}
-  calmIsReached: {fileID: 11400000, guid: 5d4dcf5199d6c494dbb989edcf18cfe9, type: 2}
 --- !u!114 &482658489183693339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2341,7 +2336,7 @@ MonoBehaviour:
   attackCD: 2
   catchRadius: 3
   loseCanvas: {fileID: 0}
---- !u!136 &5428624237821159765
+--- !u!136 &6826125132496672569
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2351,91 +2346,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 0.62
+  m_Height: 2.8
   m_Direction: 1
-  m_Center: {x: 0, y: 0.34, z: 0}
---- !u!114 &1922993217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5303423786687904997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e8d30f4142b9f44aa87ca42a5ab2054, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 73d7afb5736cd7849b8e0a09252f78b1, type: 2}
-  unityEventResponse:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 482658489183693339}
-        m_MethodName: OnDetect
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &1922993223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5303423786687904997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e8d30f4142b9f44aa87ca42a5ab2054, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: e971c2b4b2403d443a79a2a8bfff07ea, type: 2}
-  unityEventResponse:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 482658489183693339}
-        m_MethodName: OnAlert
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &786912780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5303423786687904997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e8d30f4142b9f44aa87ca42a5ab2054, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 5d4dcf5199d6c494dbb989edcf18cfe9, type: 2}
-  unityEventResponse:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 482658489183693339}
-        m_MethodName: OnCalm
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  m_Center: {x: 0, y: 1.34, z: -0.1}
 --- !u!1 &5388089981219943754
 GameObject:
   m_ObjectHideFlags: 0

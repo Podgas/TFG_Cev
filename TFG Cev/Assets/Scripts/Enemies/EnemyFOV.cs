@@ -15,6 +15,8 @@ public class EnemyFOV : FieldOfViewSystem
     float timeToDetect;
     [SerializeField]
     float actualTime;
+    [SerializeField]
+    EnemyBase baseMotor;
 
     float correctedDistance;
     float aggresionResidue;
@@ -29,34 +31,20 @@ public class EnemyFOV : FieldOfViewSystem
     public Color detectedColor;
 
     float distance;
-
+    Target _target = new Target();
 
     //SoundDetection
     float detectionLerpSolver;
     public float soundDetectionRadius;
 
-    //EVENTS
-    [Header("Events")]
-    [SerializeField]
-    PackageEvent playerIsAlert;
-    [SerializeField]
-    PackageEvent playerIsDetected;
-    [SerializeField]
-    PackageEvent calmIsReached;
-    [SerializeField]
-    public EventPackage packageEvent = new EventPackage();
-
     bool isAlert = false;
     bool isChasing = false;
-
-
 
     protected override void Start()
     {
         base.Start();
 
         aggresionResidue = viewRadius - aggresionDistance;
-        packageEvent.instance = gameObject;
 
         block = new MaterialPropertyBlock();
         color = freeColor;
@@ -70,43 +58,49 @@ public class EnemyFOV : FieldOfViewSystem
        
         base.LateUpdate();
         //ListenTargets();
-
-        if (visibleTargets.Count > 0 && !isChasing)
+        if (!isChasing)
         {
-            if (!isAlert)
+            if(visibleTargets.Count > 0)
             {
-                packageEvent.target = visibleTargets[0];
-                isAlert = true;
-                playerIsAlert.Raise(packageEvent);
-
-                distance = Vector3.Distance(transform.position,
-                    visibleTargets[0].position);
-
-                correctedDistance = distance -= aggresionResidue;
-                color = alertColor;
-            }
-            else if (!isChasing)
-            {
-                actualTime += Time.deltaTime / (distance / correctedDistance);
-                if (actualTime >= timeToDetect)
+                _target.currentPosition = visibleTargets[0];
+                if (!isAlert)
                 {
-                    isChasing = true;
-                    actualTime = 0;
-                    playerIsDetected.Raise(packageEvent);
-                    color = detectedColor;
+                    _target.lastSeenPosition = visibleTargets[0].position;
+                    isAlert = true;
+                    baseMotor.OnAlert(_target);
+
+                    distance = Vector3.Distance(transform.position,
+                        visibleTargets[0].position);
+
+                    correctedDistance = distance -= aggresionResidue;
+                    color = alertColor;
                 }
-                actualTime += Time.deltaTime / (distance / correctedDistance);
+                else
+                {
+                    actualTime += Time.deltaTime / (distance / correctedDistance);
+                    if (actualTime >= timeToDetect)
+                    {
+                        isChasing = true;
+                        actualTime = 0;
+
+                        _target.Detect(visibleTargets[0]);
+                        baseMotor.OnDetect(_target);
+
+                        color = detectedColor;
+                    }
+                }
             }
-        }
-        else if(!isChasing){
-            if (isAlert)
+            else
             {
-                calmIsReached.Raise(packageEvent);
-                isAlert = false;
-                color = freeColor;
-                actualTime = 0;
-                packageEvent.target = null;
-            } 
+                if (isAlert)
+                {
+                    _target.Reset();
+                    baseMotor.OnCalm(_target);
+                    isAlert = false;
+                    color = freeColor;
+                    actualTime = 0;
+                }
+            }
         }
 
         block.SetColor("_BaseColor", color);
