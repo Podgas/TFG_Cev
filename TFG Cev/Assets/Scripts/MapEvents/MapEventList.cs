@@ -2,9 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Game Event", menuName = "Map Event", order = 52)]
+[CreateAssetMenu(fileName = "ForestEvents", menuName = "MapEvents", order = 52)]
+
+
 
 public class MapEventList : ScriptableObject
 {
-    public Dictionary<string,bool> eventCheck;
+    [System.Serializable]
+    public struct MapEvent
+    {
+        public bool isActive;
+        public string name;
+        public BoxCollider zone;
+    }
+
+    [SerializeField]
+    public List<MapEvent> eventList;
 }
