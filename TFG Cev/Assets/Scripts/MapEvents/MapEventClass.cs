@@ -4,23 +4,11 @@ using UnityEngine;
 
 public class MapEventClass : MonoBehaviour
 {
-
     [SerializeField]
-    GameObjectEvent onEventEnter;
+    public bool isActive;
     [SerializeField]
-    GameObjectEvent onEventExit;
+    public string eventName;
     [SerializeField]
-    bool isTutorial;
+    public int id;
 
-
-    private void OnTriggerEnter(Collider other)
-    {
-        onEventEnter.Raise(gameObject);
-    }
-
-
-    private void OnTriggerExit(Collider other)
-    {
-        onEventExit.Raise(gameObject);
-    }
 }

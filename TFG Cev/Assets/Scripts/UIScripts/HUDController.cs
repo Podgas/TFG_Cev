@@ -18,9 +18,6 @@ public class HUDController : MonoBehaviour
     [SerializeField]
     private Text collectableText;
 
-    [SerializeField]
-    private Text tutorialText;
-
 
     private void Start()
     {
@@ -56,16 +53,6 @@ public class HUDController : MonoBehaviour
     public void UpdateCollectables()
     {
         collectableText.text = mc.completedExtras.Count.ToString() + "/" + mc.extras.Count.ToString();
-    }
-
-    public void OnTutorialActivation(string tutorialName) 
-    {
-        tutorialText.text = "Tutorial" + tutorialName;
-        tutorialText.gameObject.SetActive(true);
-    }
-    public void OnTutorialDeactivation()
-    {
-        tutorialText.gameObject.SetActive(false);
     }
 
 }

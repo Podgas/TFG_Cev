@@ -33,7 +33,6 @@ Material:
     RenderType: Transparent
   disabledShaderPasses:
   - MOTIONVECTORS
-  - TransparentBackface
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -154,7 +153,7 @@ Material:
     - _BlendMode: 0
     - _CoatMask: 0
     - _CullMode: 0
-    - _CullModeForward: 0
+    - _CullModeForward: 2
     - _Cutoff: 0.35
     - _DepthOffsetEnable: 0
     - _DetailAlbedoScale: 1
@@ -254,7 +253,7 @@ Material:
     - _Thickness: 1
     - _ThicknessMultiplier: 1
     - _TransmissionEnable: 1
-    - _TransparentBackfaceEnable: 0
+    - _TransparentBackfaceEnable: 1
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
     - _TransparentDepthPrepassEnable: 0
@@ -269,7 +268,7 @@ Material:
     - _ZTestGBuffer: 3
     - _ZTestModeDistortion: 8
     - _ZTestTransparent: 4
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - Color_6FC6C3A4: {r: 0.5, g: 0.3773585, b: 0.25, a: 1}
     - _BaseColor: {r: 0.54999995, g: 0.4185156, b: 0.30249998, a: 1}

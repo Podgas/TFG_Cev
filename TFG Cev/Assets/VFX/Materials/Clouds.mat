@@ -113,28 +113,28 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_2A68C4E5: 3.51
-    - Vector1_32F6DAB5: -1
+    - Vector1_2A68C4E5: 1.7
+    - Vector1_32F6DAB5: 0.1
     - Vector1_36074931: 2
     - Vector1_3B988AEA: 15
     - Vector1_543FA7D2: -1
     - Vector1_59B37F03: 2
-    - Vector1_5E830282: 0.007
-    - Vector1_79F8BC0: 1500
+    - Vector1_5E830282: 0.09
+    - Vector1_79F8BC0: 28.4
     - Vector1_7C0313E2: 0.001
     - Vector1_80DAACAA: 1
-    - Vector1_91D90C75: 30
-    - Vector1_97C78647: 0.3
+    - Vector1_91D90C75: 25
+    - Vector1_97C78647: 0.8
     - Vector1_A92A457F: 300
     - Vector1_B5A8367: 8
-    - Vector1_BD072AF3: 180
+    - Vector1_BD072AF3: 35
     - Vector1_C3AC7D4E: 2
-    - Vector1_C5A3374F: 1.5
+    - Vector1_C5A3374F: 72.72
     - Vector1_C744E84E: 300
     - Vector1_CA8BAD54: 2
-    - Vector1_CC1697F2: 0.001
-    - Vector1_DDE92451: 524.6
-    - Vector1_E1ED4E33: 2
+    - Vector1_CC1697F2: 0.009
+    - Vector1_DDE92451: 880.1
+    - Vector1_E1ED4E33: 0.93
     - Vector1_ED136A19: 0.001
     - Vector1_ED67C11D: 240
     - Vector1_FCF3E981: 2
@@ -260,9 +260,9 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - Color_30FCEA61: {r: 0.25992346, g: 0.4851145, b: 0.5566038, a: 1}
+    - Color_30FCEA61: {r: 0.43204877, g: 0.5058634, b: 0.6886792, a: 1}
     - Color_617E9801: {r: 0.51677644, g: 0.69208235, b: 0.745283, a: 1}
-    - Color_9E0BE8D3: {r: 0.8924439, g: 0.9733516, b: 0.990566, a: 1}
+    - Color_9E0BE8D3: {r: 0.46569064, g: 0.53125376, b: 0.6132076, a: 1}
     - Color_B0CC9385: {r: 0.66522783, g: 0.88693386, b: 0.9339623, a: 1}
     - Vector4_819B312B: {r: 0, g: 1, b: -0.3, a: 2.7}
     - Vector4_946548D9: {r: 1, g: 0, b: 0, a: 90}
