@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BossBehaviour : MonoBehaviour
 {
@@ -12,188 +13,121 @@ public class BossBehaviour : MonoBehaviour
         Phase2,
         Phase3
     }
-    private static Phases currentPhase = Phases.Phase0;
 
-    [SerializeField]
-    GameObject lamiaPrefab;
+    private enum BossState
+    {
+        Waiting,
+        ChooseBehave,
+        MeleeAttack,
+        RangeAttack,
+        GettingDamage,
+        ChangingPhase,
+        Dead
+    }
 
+    private static Phases currentPhase = Phases.Phase1;
+    private BossState currentState = BossState.Waiting;
     [SerializeField]
-    private List<Transform> lamiaSpawnPoints = new List<Transform>();
-    int currentLamias = 0;
+    NavMeshAgent agent;
 
-    
-    int hits;
-    [SerializeField]
-    int maxHits;
-    [SerializeField]
-    Transform player;
-    [SerializeField]
-    Transform startPoint;
     [SerializeField]
     float speed;
 
+    [Header("Wait Variables")]
     [SerializeField]
-    float castTime;
+    float coolDown;
 
-    float currentCastTime;
+    float currentCDTime;
 
-    float delay = 1f;
-    float currentTime;
+    [Header("Combat Variables")]
     [SerializeField]
-    float knockBackForce;
-
-    public bool isPushing =false;
-    public bool isKnockBack = false;
-    public bool phaseChange = false;
-
-    float knockbackTime=0.2f;
-    float knockBackActualTime;
-
+    float meleeRange;
     [SerializeField]
-    GameObject earthQuakePrefab;
-    [SerializeField]
-    LevelChanger levelChanger;
-    [SerializeField]
-    PlayerStats stats;
+    float behaveRange;
+
+
+    float distance;
+    GameObject target;
+
+
+    private void Awake()
+    {
+        target = GameObject.Find("Player");
+    }
 
     void Update()
     {
-        currentTime += Time.deltaTime;
-        switch (currentPhase)
-        {
-            case Phases.Phase0:
+        //Calculate distance between boss and player + Rotation
+        transform.LookAt(target.transform);
+        DistanceToTarget();
 
+        switch (currentState)
+        {
+
+            case BossState.Waiting:
+                WaitForAttack();
                 break;
-            case Phases.Phase1:
-                if(currentLamias< 2)
-                    SpawnLamia(currentLamias);
-                    Cast();
+            case BossState.ChooseBehave:
+                currentState = ChooseBehave();
                 break;
-
-            case Phases.Phase2:
-                if (currentLamias < 4)
-                    SpawnLamia(currentLamias);
-                    Cast();
-
+            case BossState.MeleeAttack:
+                MeleeBehave();
                 break;
-
-            case Phases.Phase3:
-                if (currentLamias < 6)
-                    SpawnLamia(currentLamias);
-                    Cast();
+            case BossState.RangeAttack:
+                Debug.Log("Ranged");
+                currentState = BossState.Waiting;
+                break;
+            case BossState.GettingDamage:
+                break;
+            case BossState.ChangingPhase:
                 break;
 
         }
-        if (phaseChange)
-            PushPlayer();
-        if (isKnockBack)
-        {
-            knockBackActualTime += Time.deltaTime;
-            if (knockbackTime <= knockBackActualTime)
-            {
-                isPushing = false;
-                isKnockBack = false;
-                knockBackActualTime = 0;
-                //player.GetComponent<PlayerController>().dir = Vector3.zero;
-            }
-
-        }
 
     }
 
-    public void ChangePhase()
+
+    private void WaitForAttack()
     {
-        currentPhase++;
-        castTime -= 1f;
-        foreach(GameObject attacks in GameObject.FindGameObjectsWithTag("BossAttack"))
+        Debug.Log("Waiting");
+        if(currentCDTime >= coolDown)
         {
-            Destroy(attacks);
+            currentCDTime = 0;
+            currentState = BossState.ChooseBehave;
         }
-        foreach (GameObject attacks in GameObject.FindGameObjectsWithTag("LamiaAttack"))
+        else
         {
-            Destroy(attacks);
+            currentCDTime += Time.deltaTime;
         }
     }
 
-    private void SpawnLamia(int index)
+    private BossState ChooseBehave()
     {
-        Instantiate(lamiaPrefab,lamiaSpawnPoints[index].position,Quaternion.identity);
-        currentLamias++;
+        if(distance < behaveRange)
+            return BossState.MeleeAttack;
+
+        return BossState.RangeAttack;
     }
-
-    private void OnPlayerHit()
+    
+    private void MeleeBehave()
     {
-        Debug.Log("TE EMPUJE");
-        isPushing = true;
-        hits++;
-        ChangePhase();
-
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.tag == "PlayerHitBox")
+        if(distance <= meleeRange)
         {
-            if (currentTime >= delay)
-            {
-                if (hits == maxHits-1) {
-                    phaseChange = true;
-                    ChangePhase();
-                    stats.win = true;
-                    levelChanger.FadeToLevel(SceneController.Scene.FinalScene);
-                    
-                }
-                else
-                {
-                    OnPlayerHit();
-                    currentTime = 0;
-                    phaseChange = true;
-                }
-                
-                
-            }
-            
+
+        }
+        else
+        {
+            GoToPlayer();
         }
     }
 
-    void PushPlayer()
+    private void GoToPlayer()
     {
-
-        player.position = Vector3.MoveTowards(player.position, startPoint.position, speed * Time.deltaTime);
-        if(player.position == startPoint.position)
-        {
-            isPushing = false;
-            phaseChange = false;
-        }
+        agent.SetDestination(target.transform.position);
     }
 
-    void Cast()
+    private void DistanceToTarget()
     {
-        currentCastTime += Time.deltaTime;
-
-        if (currentCastTime >= castTime)
-        {
-            
-            EarthQuake();
-           
-            currentCastTime = 0;
-        }
-    }
-
-    void KnockBack()
-    {
-        Vector3 direction =  player.position - transform.position;
-        direction = direction.normalized;
-        direction.y = 0;
-
-        isKnockBack = true;
-        isPushing = true;
-        //player.GetComponent<PlayerController>().dir = direction * knockBackForce;
-    }
-    void EarthQuake()
-    {
-        Vector3 spawnPos = transform.position;
-        spawnPos.y = 0;
-        Instantiate(earthQuakePrefab, spawnPos, Quaternion.identity);
+        distance = Vector3.Distance(transform.position, target.transform.position);
     }
 }
