@@ -49,6 +49,9 @@ public class BossBehaviour : MonoBehaviour
     float distance;
     GameObject target;
 
+    [SerializeField]
+    ParticleSystem rangeAttack;
+
 
     private void Awake()
     {
@@ -74,7 +77,8 @@ public class BossBehaviour : MonoBehaviour
                 MeleeBehave();
                 break;
             case BossState.RangeAttack:
-                Debug.Log("Ranged");
+                RangeBehave();
+                RangeAttack();
                 currentState = BossState.Waiting;
                 break;
             case BossState.GettingDamage:
@@ -120,6 +124,10 @@ public class BossBehaviour : MonoBehaviour
             GoToPlayer();
         }
     }
+    private void RangeBehave()
+    {
+        RangeAttack();
+    }
 
     private void GoToPlayer()
     {
@@ -129,5 +137,11 @@ public class BossBehaviour : MonoBehaviour
     private void DistanceToTarget()
     {
         distance = Vector3.Distance(transform.position, target.transform.position);
+    }
+    
+    private void RangeAttack()
+    {
+        ParticleSystem ps = Instantiate(rangeAttack, transform.position, Quaternion.identity);
+        ps.transform.LookAt(target.transform);
     }
 }
