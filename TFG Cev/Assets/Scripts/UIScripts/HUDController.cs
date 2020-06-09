@@ -17,6 +17,8 @@ public class HUDController : MonoBehaviour
     private MapController mc;
     [SerializeField]
     private Text collectableText;
+    [SerializeField]
+    private GameObject tutorialPanel;
 
 
     private void Start()
@@ -53,6 +55,17 @@ public class HUDController : MonoBehaviour
     public void UpdateCollectables()
     {
         collectableText.text = mc.completedExtras.Count.ToString() + "/" + mc.extras.Count.ToString();
+    }
+
+    public void OnTutorialEnter(GameObject tutorial)
+    {
+        Debug.Log("TatuIn");
+        tutorialPanel.SetActive(true);
+    }
+    public void OnTutorialExit(GameObject tutorial)
+    {
+        Debug.Log("TatuOut");
+        tutorialPanel.SetActive(false);
     }
 
 }

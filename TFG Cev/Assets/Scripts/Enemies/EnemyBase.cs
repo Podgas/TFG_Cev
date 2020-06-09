@@ -69,6 +69,7 @@ public class EnemyBase : MonoBehaviour
     protected EnemyBehaviour behaviourType;
 
     protected EnemyBaseStates currentBaseState;
+    [SerializeField]
     protected PatrolStates currentPatrolState;
 
     protected virtual void Start()
@@ -103,13 +104,20 @@ public class EnemyBase : MonoBehaviour
                         if (_currentNode == null)
                             _currentNode = nm.GetNode(0);
                         else
+                        {
                             currentPatrolState = PatrolStates.GoToNode;
+                            _currentNode = nm.NextNode(_currentNode);
+                        }
+                            
                         break;
 
                     case PatrolStates.GoToNode:
                         
                         if(behaviourType == EnemyBehaviour.InPlace)
                         {
+                            currentPatrolState = PatrolStates.Wait;
+                            _currentNode = nm.NextNode(_currentNode);
+
                             LookToPoint(_currentNode.position);
                         }
                         else
@@ -196,6 +204,7 @@ public class EnemyBase : MonoBehaviour
 
     protected void LookToPoint(Vector3 lookPoint)
     {
+        Debug.Log("Mirando");
         StartCoroutine("SmoothRotation",lookPoint);
         _currentNode = nm.NextNode(_currentNode);
         currentPatrolState = PatrolStates.Wait;
