@@ -12,11 +12,14 @@ public class EnemyFOV : FieldOfViewSystem
     [SerializeField]
     float aggresionDistance;
     [SerializeField]
+    float escapeRadius;
+    [SerializeField]
     float timeToDetect;
     [SerializeField]
     float actualTime;
     [SerializeField]
     EnemyBase baseMotor;
+
 
     float correctedDistance;
     float aggresionResidue;
@@ -85,7 +88,6 @@ public class EnemyFOV : FieldOfViewSystem
 
                         _target.Detect(visibleTargets[0]);
                         baseMotor.OnDetect(_target);
-
                         color = detectedColor;
                     }
                 }
@@ -102,8 +104,21 @@ public class EnemyFOV : FieldOfViewSystem
                 }
             }
         }
+        else
+        {
+            float distance = Vector3.Distance(transform.position, _target.currentPosition.position);
+            if(distance > escapeRadius)
+            {
+                _target.Reset();
+                baseMotor.OnCalm(_target);
+                isAlert = false;
+                isChasing = false;
+                color = freeColor;
+                actualTime = 0;
+            }
+        }
 
-        block.SetColor("_BaseColor", color);
+        //block.SetColor("_BaseColor", color);
         viewCone.GetComponent<Renderer>().SetPropertyBlock(block);
 
     }

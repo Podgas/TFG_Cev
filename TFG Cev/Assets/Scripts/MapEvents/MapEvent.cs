@@ -33,7 +33,6 @@ public class MapEvent : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("HOLA");
         onEventEnter.Raise(gameObject);
         if (isTutorial)
         {

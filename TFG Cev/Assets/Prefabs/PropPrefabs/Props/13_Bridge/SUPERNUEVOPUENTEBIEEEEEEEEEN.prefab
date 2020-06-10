@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8272025523417186908}
   - component: {fileID: 8272025523417186909}
   - component: {fileID: 8272025523417186910}
-  - component: {fileID: 8272025523417186911}
+  - component: {fileID: 4466106912710236079}
   m_Layer: 0
   m_Name: SUPERNUEVOPUENTEBIEEEEEEEEEN
   m_TagString: Untagged
@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8272025523417186904}
-  m_LocalRotation: {x: -0, y: 0.6851057, z: -0, w: 0.7284437}
+  m_LocalRotation: {x: 0, y: 0.6851067, z: 0, w: 0.7284427}
   m_LocalPosition: {x: 108.2, y: 9.42, z: -169.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -80,7 +80,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &8272025523417186911
+--- !u!64 &4466106912710236079
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,4 +93,4 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 2532197596911439093, guid: f36a1666f43743948bd634cedd4ae6f1, type: 3}
+  m_Mesh: {fileID: -7508621424472561919, guid: 0c30502b3520e6444b2dfcede9e1ba63, type: 3}

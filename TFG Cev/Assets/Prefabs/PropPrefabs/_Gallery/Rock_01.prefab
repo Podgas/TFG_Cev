@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8654055683988898532}
   - component: {fileID: 8682620168142907102}
   - component: {fileID: 8836644241526870757}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Rock_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 544721496581875404, guid: 0366359772a5a8e46a3d4911857adb29, type: 3}
 --- !u!1 &1564026530056175510
@@ -103,7 +103,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2589517074692705669}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Rock_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,9 +117,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564026530056175510}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.0006257996, y: -0.002103452, z: -0.0024940658}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 4.1464787, y: 4.1464787, z: 4.1464787}
   m_Children:
   - {fileID: 1204149487611036160}
   m_Father: {fileID: 0}
@@ -134,7 +134,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1204149487611036160}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: group
   m_TagString: Untagged
   m_Icon: {fileID: 0}

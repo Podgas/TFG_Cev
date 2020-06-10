@@ -10,13 +10,6 @@ public class MapEventsController : MonoBehaviour
     Transform eventPool;
     private void Start()
     {
-        foreach( Collider c in eventPool.GetComponentsInChildren<Collider>()){
-
-            MapEvent eventMap = new MapEvent();
-            eventMap.name = c.gameObject.name;
-            eventMap.volume = c;
-            mapEventList.Add(eventMap);
-        }
     }
     public void OnEventEnter(GameObject mapEvent)
     {

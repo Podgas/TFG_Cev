@@ -10,6 +10,19 @@ public class OrochiBehave : EnemyBase
     float attackCD;
     [SerializeField]
     float catchRadius;
+    [SerializeField]
+    float attackTimer;
+    [SerializeField]
+    AnimationClip attk1;
+    [SerializeField]
+    AnimationClip attk2;
+    float durationAnim;
+
+    Vector2 framesGlobal;
+    Vector2 frames = new Vector2(42, 50);
+    Vector2 frames2 = new Vector2(17,25);
+    int frameCounterAnim = 0;
+    bool damaging = false;
 
     float combatTime;
 
@@ -49,11 +62,29 @@ public class OrochiBehave : EnemyBase
                 HorizontalAttack();
                 break;
 
-            case CombatStates.VerticalAttack:
+            case CombatStates.StrikeAttack:
 
-                VerticalAttack();
+                StrikeAttack();
                 break;
+            case CombatStates.Attacking:
+                attackTimer += Time.deltaTime;
+                frameCounterAnim++;
 
+                if (frameCounterAnim >= framesGlobal.x)
+                {
+                    ActivateHitCollider();
+                }
+                if(frameCounterAnim >= framesGlobal.y)
+                {
+                    DesactivateHitCollider();
+                }
+
+                if (attackTimer >= durationAnim)
+                {
+                    attackTimer = 0;
+                    combatStates = CombatStates.CDAction;
+                }
+                break;
             case CombatStates.Dodge:
 
                 break;
@@ -64,48 +95,60 @@ public class OrochiBehave : EnemyBase
 
     protected void CombatWait()
     {
+        Vector3 lookRot = _currentTarget.currentPosition.position;
+
+        LookToPoint(lookRot);
+
         combatTime += Time.deltaTime;
         if (combatTime >= attackCD)
         {
             combatTime = 0;
             LaunchAttack();
         }
-        Debug.Log("WaitForCD");
         
     }
 
     void LaunchAttack()
     {
+        
         Random.InitState(Time.frameCount);
-        int random = Random.Range(0, 1);
-        if (random == 1)
+        attackTimer = 0;
+        int random = Random.Range(0, 100);
+        if (random > 50)
             combatStates = CombatStates.HorizontalAttack;
         else
-            combatStates = CombatStates.VerticalAttack;
+            combatStates = CombatStates.StrikeAttack;
     }
 
     protected void HorizontalAttack()
     {
-        Debug.Log("HorizontalAttack");
-        anim.SetTrigger("horizontalAttack");
-        combatStates = CombatStates.CDAction;
+
+        Debug.Log("Attak1");
+        anim.SetTrigger("attak1");
+        durationAnim = attk1.length/2;
+        combatStates = CombatStates.Attacking;
+        framesGlobal = frames;
     }
 
 
-    protected void VerticalAttack()
+    protected void StrikeAttack()
     {
-        Debug.Log("VerticalAttack");
-        anim.SetTrigger("verticalAttack");
-        combatStates = CombatStates.CDAction;
+        Debug.Log("Attak2");
+        anim.SetTrigger("attak2");
+        durationAnim = attk2.length;
+        combatStates = CombatStates.Attacking;
+        framesGlobal = frames2;
     }
 
     public void ActivateHitCollider()
     {
-        hitCollider.SetActive(!hitCollider.activeSelf);
+        Debug.Log("ACTIVASION");
+        hitCollider.SetActive(true);
     }
     public void DesactivateHitCollider()
     {
-        hitCollider.SetActive(!hitCollider.activeSelf);
+        Debug.Log("DESACTIVASION");
+        hitCollider.SetActive(false);
     }
 
     public void OnCombatTutorial()
@@ -115,18 +158,13 @@ public class OrochiBehave : EnemyBase
         currentPatrolState = PatrolStates.Chase;
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, catchRadius);
-    }
-
     protected enum CombatStates
     {
         CDAction,
         ChangePosition,
         HorizontalAttack,
-        VerticalAttack,
+        StrikeAttack,
+        Attacking,
         Dodge,
     }
 

@@ -5,7 +5,22 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: 1827226128182048838
+    second: Orochi_Idle
+  - first:
+      74: -5405653242291790180
+    second: Orochi_Walk
+  - first:
+      74: -998496362607748373
+    second: Test
+  - first:
+      74: -998496362607748373
     second: Take 001
+  - first:
+      74: -5405653242291790180
+    second: Take 001 (1)
+  - first:
+      74: -3100369314251171874
+    second: Idle
   externalObjects: {}
   materials:
     materialImportMode: 1

@@ -25,19 +25,17 @@ public class EnemyBase : MonoBehaviour
     [SerializeField]
     protected float combatRadius;
     [SerializeField]
+    float rotationTime;
+    [SerializeField]
+    Transform _currentNode;
+
+    [Header("FieldOfView Vars")]
+    [SerializeField]
     protected LayerMask playerLayer;
     [SerializeField]
     protected FieldOfViewSystem enemyFov;
     [SerializeField]
     Animator exclamation;
-    [SerializeField]
-    float rotationTime;
-
-    Transform _currentNode;
-    protected Transform _target;
-
-    protected Target _currentTarget;
-    Vector3 _moveDirection;
 
     [Header("Components")]
     [SerializeField]
@@ -47,30 +45,31 @@ public class EnemyBase : MonoBehaviour
     [SerializeField]
     protected GameObject hitCollider;
 
-
-    float currentTime;
-
     [Header("Animation")]
     [SerializeField]
     protected Animator anim;
-
-
-    protected Vector3 alertPosition;
-
-    protected bool isWaiting = false;
-    protected bool isPatroling;
-    protected bool isAlert = false;
-    protected bool isCombat = false;
-    protected bool isChasing = false;
-    protected bool isAlive = true;
+    [SerializeField]
+    float chaseTimer = 0;
+    [SerializeField]
+    AnimationClip detectAnim;
 
     //ENUMERATORS STATE MACHINES
+    [Header("Info Vars")]
     [SerializeField]
     protected EnemyBehaviour behaviourType;
-
+    [SerializeField]
     protected EnemyBaseStates currentBaseState;
     [SerializeField]
     protected PatrolStates currentPatrolState;
+
+    Vector3 _moveDirection;
+    protected Transform _target;
+    protected Target _currentTarget;
+
+
+    float currentTime;
+    protected Vector3 alertPosition;
+    protected bool isAlive = true;
 
     protected virtual void Start()
     {
@@ -106,7 +105,10 @@ public class EnemyBase : MonoBehaviour
                         else
                         {
                             currentPatrolState = PatrolStates.GoToNode;
-                            _currentNode = nm.NextNode(_currentNode);
+                            if(behaviourType == EnemyBehaviour.InPlace)
+                                _currentNode = nm.NextNode(_currentNode);
+                            else
+                                anim.SetTrigger("move");
                         }
                             
                         break;
@@ -137,6 +139,16 @@ public class EnemyBase : MonoBehaviour
 
                         break;
                     case PatrolStates.Chase:
+
+                        if(chaseTimer > detectAnim.length)
+                        {
+                            Move();
+                        }
+                        else
+                        {
+                            chaseTimer += Time.deltaTime;
+                        }
+
                         MoveAgent(_currentTarget.currentPosition);
                         SearchForCombat();
                         break;
@@ -152,10 +164,13 @@ public class EnemyBase : MonoBehaviour
         }
     }
 
-    protected virtual void CombatUpdate() { }
+    protected virtual void CombatUpdate() {
+
+    }
 
     private void OnTriggerEnter(Collider other)
     {
+
         if (other.tag == "PlayerHitBox")
         {
             GetDamage(GameObject.Find("Player").GetComponent<PlayerController>().damageDealt);
@@ -163,12 +178,13 @@ public class EnemyBase : MonoBehaviour
             vfx.PlayVFX(AudioLibrary.VfxSounds.Hurt);*/
 
         }
-        Debug.Log(gameObject.name + " - Node");
-        if (other.tag == "Node" && other.transform.parent.name == nm.name)
+
+        if (currentPatrolState != PatrolStates.Chase && ( other.tag == "Node" && other.transform.parent.name == nm.name) )
         {
-            
-            _currentNode = nm.NextNode(_currentNode);
+
+            LookToPoint(_currentNode.position + (_currentNode.forward * 2));
             currentPatrolState = PatrolStates.Wait;
+
         }
     }
 
@@ -189,7 +205,7 @@ public class EnemyBase : MonoBehaviour
 
     protected void Alert()
     {
-        agent.isStopped = true;
+        Stop();
     }
 
     protected void MoveAgent(Transform destination)
@@ -204,8 +220,9 @@ public class EnemyBase : MonoBehaviour
 
     protected void LookToPoint(Vector3 lookPoint)
     {
-        Debug.Log("Mirando");
+    
         StartCoroutine("SmoothRotation",lookPoint);
+        anim.SetTrigger("stop");
         _currentNode = nm.NextNode(_currentNode);
         currentPatrolState = PatrolStates.Wait;
     }
@@ -230,7 +247,6 @@ public class EnemyBase : MonoBehaviour
         } 
         
     }
-
     protected void Die()
     {
         //TODO: implementar animacion de morir, efecto de particulas dedesaparicion y coorutina de destrucción.
@@ -242,6 +258,7 @@ public class EnemyBase : MonoBehaviour
         _currentTarget = target;
         currentPatrolState = PatrolStates.Alerted;
         exclamation.SetTrigger("Alert");
+        anim.SetTrigger("alert");
 
     }
     public void OnDetect(Target target)
@@ -249,12 +266,15 @@ public class EnemyBase : MonoBehaviour
         _currentTarget = target;
         agent.speed = chaseSpeed;
         currentPatrolState = PatrolStates.Chase;
+        anim.SetTrigger("detected");
+        chaseTimer = 0;
 
     }
     public void OnCalm(Target target)
     {
         _currentTarget = target;
         StartCoroutine("RestartPatroling");
+        anim.SetTrigger("move");
     }    
 
     IEnumerator RestartPatroling()
@@ -276,8 +296,13 @@ public class EnemyBase : MonoBehaviour
             for(int i = 0; i < targetsForCombat.Length; i++)
             {
                 currentBaseState = EnemyBaseStates.Combat;
+                anim.SetTrigger("startCombat");
             }
         }
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, combatRadius);
     }
 
     protected enum EnemyBehaviour
@@ -305,4 +330,13 @@ public class EnemyBase : MonoBehaviour
 
     }
 
+    public void Stop()
+    {
+        agent.isStopped = true;
+    }
+
+    public void Move()
+    {
+        agent.isStopped = false;
+    }
 }

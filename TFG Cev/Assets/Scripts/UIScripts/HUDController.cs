@@ -25,7 +25,7 @@ public class HUDController : MonoBehaviour
     {
         hpBar.fillAmount = playerStats.hp.value / playerStats.hp.maxValue;
         ammoText.text = playerStats.ammo + "/" + playerStats.maxAmmo;
-        collectableText.text = "0/" + mc.extras.Count.ToString();
+        //collectableText.text = "0/" + mc.extras.Count.ToString();
     }
 
     public void UpdateHpBar(float percentage) {
@@ -59,12 +59,10 @@ public class HUDController : MonoBehaviour
 
     public void OnTutorialEnter(GameObject tutorial)
     {
-        Debug.Log("TatuIn");
         tutorialPanel.SetActive(true);
     }
     public void OnTutorialExit(GameObject tutorial)
     {
-        Debug.Log("TatuOut");
         tutorialPanel.SetActive(false);
     }
 
