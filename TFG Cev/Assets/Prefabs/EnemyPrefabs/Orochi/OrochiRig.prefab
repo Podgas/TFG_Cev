@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1171391868
 Transform:
   m_ObjectHideFlags: 0
@@ -2377,7 +2377,7 @@ MonoBehaviour:
   exclamation: {fileID: 6589257256599326693}
   agent: {fileID: 482658489183693336}
   nm: {fileID: 0}
-  hitCollider: {fileID: 0}
+  hitCollider: {fileID: 1171391867}
   anim: {fileID: 1245475973544141708}
   chaseTimer: 0
   detectAnim: {fileID: -7468812420858601458, guid: 5aa999ff614641f49a4d5b48af8f31d8,
