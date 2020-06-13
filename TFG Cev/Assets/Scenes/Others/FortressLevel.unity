@@ -21305,7 +21305,6 @@ Transform:
   - {fileID: 76490580}
   - {fileID: 592686528}
   - {fileID: 885552388}
-  - {fileID: 1022777498}
   - {fileID: 535200638}
   - {fileID: 865877083}
   - {fileID: 1659755280}
@@ -21322,7 +21321,6 @@ Transform:
   - {fileID: 1357550178}
   - {fileID: 987174413}
   - {fileID: 572345425}
-  - {fileID: 135051495}
   - {fileID: 629550297}
   - {fileID: 410558658}
   - {fileID: 1604770624}
@@ -21341,17 +21339,18 @@ Transform:
   - {fileID: 1522845212}
   - {fileID: 887581842}
   - {fileID: 1324285541}
+  - {fileID: 1022777498}
   - {fileID: 233260198}
   - {fileID: 1548342679}
   - {fileID: 523679770}
   - {fileID: 1977214896}
   - {fileID: 236549578}
   - {fileID: 62349336}
+  - {fileID: 135051495}
   - {fileID: 26275188}
   - {fileID: 1652911962}
   - {fileID: 635088565}
   - {fileID: 1576533822}
-  - {fileID: 1623700390}
   - {fileID: 147477269}
   - {fileID: 702746931}
   - {fileID: 312657207}
@@ -21391,6 +21390,7 @@ Transform:
   - {fileID: 496689981}
   - {fileID: 1602476443}
   - {fileID: 46884032}
+  - {fileID: 1623700390}
   - {fileID: 172163783}
   - {fileID: 94504879}
   - {fileID: 689965821}
@@ -21419,9 +21419,9 @@ Transform:
   - {fileID: 2084905734}
   - {fileID: 433099583}
   - {fileID: 561760736}
-  - {fileID: 2092321672}
   - {fileID: 2010800353}
   - {fileID: 704869840}
+  - {fileID: 2092321672}
   - {fileID: 148284194}
   - {fileID: 1420626836}
   - {fileID: 1190084198}
@@ -35962,6 +35962,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985137777275477729, guid: 79b0b5c9a5a2e1a4ca20d148a6bf4a27,
+        type: 3}
+      propertyPath: m_Version
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985137777275477729, guid: 79b0b5c9a5a2e1a4ca20d148a6bf4a27,
+        type: 3}
+      propertyPath: m_RenderingPathCustomFrameSettings.bitDatas.data1
+      value: 1009318297664
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985137777275477729, guid: 79b0b5c9a5a2e1a4ca20d148a6bf4a27,
+        type: 3}
+      propertyPath: m_RenderingPathCustomFrameSettings.bitDatas.data2
+      value: 536805376
       objectReference: {fileID: 0}
     - target: {fileID: 7920316110768945864, guid: 79b0b5c9a5a2e1a4ca20d148a6bf4a27,
         type: 3}

@@ -10,11 +10,11 @@ Material:
   m_Name: Waterfall
   m_Shader: {fileID: -6465566751694194690, guid: d02547ceb25b31545a435eaa5bd09ab6,
     type: 3}
-  m_ShaderKeywords: _ALPHATEST_ON _BLENDMODE_ALPHA _DOUBLESIDED_ON _SURFACE_TYPE_TRANSPARENT
+  m_ShaderKeywords: _ALPHATEST_ON _BLENDMODE_ALPHA _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 2998
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
   stringTagMap:
     MotionVector: User
     RenderType: Transparent
@@ -141,8 +141,8 @@ Material:
     - _Anisotropy: 0
     - _BlendMode: 0
     - _CoatMask: 0
-    - _CullMode: 0
-    - _CullModeForward: 0
+    - _CullMode: 1
+    - _CullModeForward: 1
     - _Cutoff: 0.5
     - _DepthOffsetEnable: 0
     - _DetailAlbedoScale: 1
@@ -167,8 +167,8 @@ Material:
     - _DistortionSrcBlend: 0
     - _DistortionVectorBias: -1
     - _DistortionVectorScale: 2
-    - _DoubleSidedEnable: 1
-    - _DoubleSidedNormalMode: 1
+    - _DoubleSidedEnable: 0
+    - _DoubleSidedNormalMode: 2
     - _DstBlend: 10
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
@@ -232,10 +232,10 @@ Material:
     - _Thickness: 1
     - _TransmissionEnable: 1
     - _TransparentBackfaceEnable: 0
-    - _TransparentCullMode: 2
+    - _TransparentCullMode: 1
     - _TransparentDepthPostpassEnable: 0
     - _TransparentDepthPrepassEnable: 0
-    - _TransparentSortPriority: -2
+    - _TransparentSortPriority: 0
     - _TransparentWritingMotionVec: 0
     - _UVBase: 0
     - _UVDetail: 0
@@ -246,7 +246,7 @@ Material:
     - _ZTestGBuffer: 3
     - _ZTestModeDistortion: 8
     - _ZTestTransparent: 4
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - Color_B954644C: {r: 0.4179868, g: 0.876424, b: 0.9528302, a: 1}
     - Vector2_2290A4FB: {r: 0.19, g: 1.27, b: 0, a: 0}

@@ -16,27 +16,32 @@ public class BossBehaviour : MonoBehaviour
 
     private enum BossState
     {
+        Spawn,
         Waiting,
         ChooseBehave,
         MeleeAttack,
         RangeAttack,
+        Casting,
         GettingDamage,
         ChangingPhase,
         Dead
     }
 
-    private static Phases currentPhase = Phases.Phase1;
-    private BossState currentState = BossState.Waiting;
+    private static Phases currentPhase = Phases.Phase0;
     [SerializeField]
-    NavMeshAgent agent;
+    private BossState currentState = BossState.Spawn;
+    
+  
 
+    [Header("Movement")]
     [SerializeField]
     float speed;
+    [SerializeField]
+    NavMeshAgent agent;
 
     [Header("Wait Variables")]
     [SerializeField]
     float coolDown;
-
     float currentCDTime;
 
     [Header("Combat Variables")]
@@ -45,12 +50,36 @@ public class BossBehaviour : MonoBehaviour
     [SerializeField]
     float behaveRange;
 
+    [Header("Animation")]
+    [SerializeField]
+    Animator anim;
+
+    [Header("Skills")]
+    [SerializeField]
+    ParticleSystem rangeAttack;
+    [SerializeField]
+    ParticleSystem thunder;
+    [SerializeField]
+    ParticleSystem clouds;
+    [SerializeField]
+    Vector2 thunderStrikeCube;
+    [SerializeField]
+    int thunderNum;
+    [SerializeField]
+    float thunderDelay;
+    float currentThunderTime;
+    int thunderCount;
+    [SerializeField]
+    float attkAngle;
 
     float distance;
     GameObject target;
 
-    [SerializeField]
-    ParticleSystem rangeAttack;
+    [Header("Entring Boss")]
+
+    float currentAnimTime;
+
+
 
 
     private void Awake()
@@ -66,7 +95,9 @@ public class BossBehaviour : MonoBehaviour
 
         switch (currentState)
         {
-
+            case BossState.Spawn:
+                currentState = BossState.ChangingPhase;
+                break;
             case BossState.Waiting:
                 WaitForAttack();
                 break;
@@ -78,12 +109,12 @@ public class BossBehaviour : MonoBehaviour
                 break;
             case BossState.RangeAttack:
                 RangeBehave();
-                RangeAttack();
-                currentState = BossState.Waiting;
+                
                 break;
             case BossState.GettingDamage:
                 break;
             case BossState.ChangingPhase:
+                PhaseChange();
                 break;
 
         }
@@ -93,7 +124,7 @@ public class BossBehaviour : MonoBehaviour
 
     private void WaitForAttack()
     {
-        Debug.Log("Waiting");
+
         if(currentCDTime >= coolDown)
         {
             currentCDTime = 0;
@@ -117,7 +148,7 @@ public class BossBehaviour : MonoBehaviour
     {
         if(distance <= meleeRange)
         {
-
+            //TODDO LAUNCH MELEE ATTACK0000000000000000
         }
         else
         {
@@ -126,6 +157,7 @@ public class BossBehaviour : MonoBehaviour
     }
     private void RangeBehave()
     {
+        //Thunderstorm();
         RangeAttack();
     }
 
@@ -141,7 +173,98 @@ public class BossBehaviour : MonoBehaviour
     
     private void RangeAttack()
     {
-        ParticleSystem ps = Instantiate(rangeAttack, transform.position, Quaternion.identity);
+        Debug.DrawRay(transform.position, Vector3.forward, Color.red, 40f);
+        Debug.DrawRay(transform.position, Vector3.back, Color.blue, 40f);
+
+        ParticleSystem ps = Instantiate(rangeAttack, transform.position, transform.rotation);
+        ParticleSystem ps2 = Instantiate(rangeAttack, transform.position, transform.rotation);
+        ParticleSystem ps3 = Instantiate(rangeAttack, transform.position, transform.rotation);
         ps.transform.LookAt(target.transform);
+        ps2.transform.LookAt(target.transform);
+        ps3.transform.LookAt(target.transform);
+
+        ps2.transform.Rotate(new Vector3(0, 20, 0));
+        ps3.transform.Rotate(new Vector3(0, -20, 0));
+
+        currentState = BossState.Waiting;
+    }
+
+    private void Thunderstorm()
+    {
+        if (thunderCount == thunderNum)
+        {
+            thunderCount = 0;
+            currentState = BossState.Waiting;
+        }
+        else
+        {
+            
+            if (thunderCount == 0)
+            {
+                Vector3 spawnPoint = target.transform.position;
+                spawnPoint.y += 7;
+                Instantiate(clouds, spawnPoint, Quaternion.Euler(new Vector3(-90, 0, 0)));
+            }
+                
+
+            currentThunderTime += Time.deltaTime;
+
+            if (currentThunderTime >= thunderDelay)
+            {
+                thunderCount++;
+                SpawnThunder();
+                currentThunderTime = 0;
+            }
+        } 
+
+    }
+
+    private void PhaseChange()
+    {
+        switch (currentPhase)
+        {
+
+            case Phases.Phase1:
+
+                break;
+
+            case Phases.Phase2:
+
+                break;
+
+            case Phases.Phase3:
+
+                break;
+
+
+        }
+    }
+
+    private void LandingSpawn()
+    {
+        Debug.Log("LAND");
+        currentState = BossState.Waiting;   
+    }
+
+    private void SpawnThunder()
+    {
+        Vector3 spawnPosition = new Vector3(Random.Range(-thunderStrikeCube.x, thunderStrikeCube.x), 5, Random.Range(-thunderStrikeCube.y, thunderStrikeCube.y));
+
+        ParticleSystem ps = Instantiate(thunder, target.transform.position + spawnPosition, Quaternion.identity);
+        Destroy(ps.gameObject, 3f); 
+    }
+    public Vector3 DirFromAngle(float angleInDegree, bool angleIsGlobal)
+    {
+
+        if (!angleIsGlobal)
+        {
+            angleInDegree += transform.eulerAngles.y;
+        }
+
+        return new Vector3(Mathf.Sin(angleInDegree * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegree * Mathf.Deg2Rad));
+    }
+    private void OnDrawGizmos()
+    {
+       // Gizmos.DrawWireCube(target.transform.position, new Vector3(thunderStrikeCube.x*2, 30,  thunderStrikeCube.y*2));
     }
 }
