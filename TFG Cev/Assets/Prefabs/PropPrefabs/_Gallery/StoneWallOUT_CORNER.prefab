@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1811667376340808496}
   - component: {fileID: 8108629441185044816}
   - component: {fileID: 4509724920652148704}
+  - component: {fileID: 7450374118781767296}
   m_Layer: 0
   m_Name: StoneWallOUT_CORNER
   m_TagString: Untagged
@@ -54,6 +55,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -78,6 +80,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &7450374118781767296
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278714921651524984}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 8462268263830840063, guid: 18d7ab4acd7f7c04f88aaa054d99bfdc, type: 3}
 --- !u!1 &8040730183733789532
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1544509578396126236}
   - component: {fileID: 7508685819389048362}
   - component: {fileID: 4253857188108929747}
+  - component: {fileID: 8861227893479154484}
   m_Layer: 0
   m_Name: Ether_low
   m_TagString: Untagged
@@ -79,3 +80,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &8861227893479154484
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2536769724133129743}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3648709204912917843, guid: 63b850a2a2ff43a41bb992f8aadd0f55, type: 3}

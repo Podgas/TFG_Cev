@@ -29,7 +29,7 @@ public class HUDController : MonoBehaviour
     }
 
     public void UpdateHpBar(float percentage) {
-
+        Debug.Log("Changing");
         hpBar.fillAmount = percentage;
 
     }

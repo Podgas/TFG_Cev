@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2951813989229289950}
   - component: {fileID: 4288180873004441773}
   - component: {fileID: 2007723578481451463}
+  - component: {fileID: 2496932140651009991}
   m_Layer: 0
   m_Name: StoneWallUnder_SIDE
   m_TagString: Untagged
@@ -54,6 +55,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -78,6 +80,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &2496932140651009991
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4144285429363513910}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -554966138411514228, guid: 24ab94805e312d44c916d812af81f259, type: 3}
 --- !u!1 &5488723060920422121
 GameObject:
   m_ObjectHideFlags: 0

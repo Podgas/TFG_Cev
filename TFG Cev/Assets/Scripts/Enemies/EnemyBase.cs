@@ -81,7 +81,10 @@ public class EnemyBase : MonoBehaviour
         if(behaviourType != EnemyBehaviour.Static)
             currentBaseState = EnemyBaseStates.Patrol;
         else
+        {
             currentBaseState = EnemyBaseStates.Static;
+        }
+            
 
         _moveDirection = Vector3.forward;
         agent.speed = speed;
@@ -195,11 +198,14 @@ public class EnemyBase : MonoBehaviour
 
     protected void Wait()
     {
-        currentTime += Time.deltaTime;
-        if (currentTime >= timeWaiting)
+        if (currentBaseState != EnemyBaseStates.Static)
         {
-            currentTime = 0;
-            currentPatrolState = PatrolStates.FindNode;
+            currentTime += Time.deltaTime;
+            if (currentTime >= timeWaiting)
+            {
+                currentTime = 0;
+                currentPatrolState = PatrolStates.FindNode;
+            }
         }
     }
 
@@ -256,25 +262,36 @@ public class EnemyBase : MonoBehaviour
     public void OnAlert(Target target)
     {
         _currentTarget = target;
-        currentPatrolState = PatrolStates.Alerted;
-        exclamation.SetTrigger("Alert");
-        anim.SetTrigger("alert");
-
+        if (behaviourType != EnemyBehaviour.Static)
+        {
+            _currentTarget = target;
+            currentPatrolState = PatrolStates.Alerted;
+            Debug.Log("PASE");
+            exclamation.SetTrigger("Alert");
+            anim.SetTrigger("alert");
+        }
     }
     public void OnDetect(Target target)
     {
         _currentTarget = target;
         agent.speed = chaseSpeed;
-        currentPatrolState = PatrolStates.Chase;
-        anim.SetTrigger("detected");
-        chaseTimer = 0;
+        if (behaviourType != EnemyBehaviour.Static)
+        {
+            
+            currentPatrolState = PatrolStates.Chase;
+            anim.SetTrigger("detected");
+            chaseTimer = 0;
+        }
 
     }
     public void OnCalm(Target target)
     {
-        _currentTarget = target;
-        StartCoroutine("RestartPatroling");
-        anim.SetTrigger("move");
+        if (behaviourType != EnemyBehaviour.Static)
+        {
+            _currentTarget = target;
+            StartCoroutine("RestartPatroling");
+            anim.SetTrigger("move");
+        }
     }    
 
     IEnumerator RestartPatroling()
@@ -310,6 +327,7 @@ public class EnemyBase : MonoBehaviour
         PatrolCatch,
         PatrolFight,
         InPlace,
+        Event,
         Static
     }
 
@@ -338,5 +356,15 @@ public class EnemyBase : MonoBehaviour
     public void Move()
     {
         agent.isStopped = false;
+    }
+
+    public void OnActiveEvent()
+    {
+        Debug.Log("Eafirmativo");
+        behaviourType = EnemyBehaviour.PatrolFight;
+        currentBaseState = EnemyBaseStates.Patrol;
+        _target = _currentTarget.currentPosition;
+        OnDetect(_currentTarget);
+
     }
 }

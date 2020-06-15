@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4888442435277653049}
   - component: {fileID: 4507041930871619087}
   - component: {fileID: 7904014892815827702}
+  - component: {fileID: 167074960275707750}
   m_Layer: 0
   m_Name: StreetSign03_low
   m_TagString: Untagged
@@ -79,3 +80,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &167074960275707750
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8470256763960915498}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4383741911546431299, guid: b4ad01b913e70df4fb49d4148b30019e, type: 3}

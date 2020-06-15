@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4553246782476360305}
   - component: {fileID: 7293763586409551231}
   - component: {fileID: 4648602072419808997}
+  - component: {fileID: 5881728817906777236}
   m_Layer: 0
   m_Name: wagon_FINAL:wagon_TESTok:wagon_test:wagon_crate
   m_TagString: Untagged
@@ -79,6 +80,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &5881728817906777236
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 334787691021730803}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4313957632065193829, guid: 2c6d08693f478914c8d1f48779ef68ed, type: 3}
 --- !u!1 &1057100842802008902
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,6 +105,7 @@ GameObject:
   - component: {fileID: 1702719190560193021}
   - component: {fileID: 8201960882443572722}
   - component: {fileID: 1307427097555175078}
+  - component: {fileID: 7610286892645351102}
   m_Layer: 0
   m_Name: wagon_FINAL:wagonMAX:polySurface35
   m_TagString: Untagged
@@ -158,6 +174,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &7610286892645351102
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057100842802008902}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7176049130325764571, guid: 2c6d08693f478914c8d1f48779ef68ed, type: 3}
 --- !u!1 &2937060239443953729
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,6 +232,7 @@ GameObject:
   - component: {fileID: 6791068349518443285}
   - component: {fileID: 254081114841995938}
   - component: {fileID: 6888743172692767133}
+  - component: {fileID: 6194875876434977103}
   m_Layer: 0
   m_Name: wagon_FINAL:wagon_TESTok:wagon_test:wagon_barrels
   m_TagString: Untagged
@@ -270,3 +301,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &6194875876434977103
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8970221562693233668}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4950496253135479429, guid: 2c6d08693f478914c8d1f48779ef68ed, type: 3}

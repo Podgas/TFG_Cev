@@ -5,7 +5,8 @@ using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
-
+    [SerializeField]
+    GameObject damageVolume;
     struct ControllerVars
     {
         public Vector3 center;
@@ -258,16 +259,18 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButton("Attack"))
         {
             Attack();
+            damageVolume.SetActive(true);
         }
         if (Input.GetButtonUp("Attack"))
         {
             stats.playerStatus.isCharging = false;
 
-            //anim.SetBool("isCharging", stats.playerStatus.isCharging);
+            //anim.SetTrigger("Attack");
 
             damageDealt = stats.baseDamage + damageModifier;
             actualTime = 0;
             onAttackLaunch.Raise();
+            damageVolume.SetActive(false);
 
         }
 
@@ -403,7 +406,7 @@ public class PlayerController : MonoBehaviour
 
         if (percentage >= 1)
         {
-            percentage = 1;
+            percentage = 1;    
             stats.hp.value = stats.hp.maxValue;
         }
         else if (percentage <= 0)
@@ -455,6 +458,7 @@ public class PlayerController : MonoBehaviour
 
     void Attack()
     {
+        Debug.Log("Attacking");
         //TODO: Mejorar el ataque
         stats.playerStatus.isCharging = true;
         //anim.SetBool("isCharging", stats.playerStatus.isCharging);
@@ -519,10 +523,6 @@ public class PlayerController : MonoBehaviour
         {
             UpdateHp(-10);
             vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
-        }
-        if (other.tag == "LamiaAttack" && !GodMode.Instance.isGodMode)
-        {
-            UpdateHp(-7);
         }
     }
 

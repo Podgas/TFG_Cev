@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2490055590860688048}
   - component: {fileID: 6905551922438418566}
   - component: {fileID: 930551366781160575}
+  - component: {fileID: 4511753419348134095}
   m_Layer: 0
   m_Name: lantern_low
   m_TagString: Untagged
@@ -80,6 +81,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &4511753419348134095
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501156100516149411}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7531351030917595794, guid: f2a3daa65c12c0b46ac809a7112c70db, type: 3}
 --- !u!1001 &9144701867269528662
 PrefabInstance:
   m_ObjectHideFlags: 0

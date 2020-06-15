@@ -10,11 +10,13 @@ public class MapEvent : MonoBehaviour
     public bool _isActive = false;
     public bool wasActive = false;
     public bool isTutorial;
+    public bool isCombat;
 
     public GameObjectEvent onEventEnter;
     public GameObjectEvent onEventExit;
     public GameObjectEvent tutorialEnter;
     public GameObjectEvent tutorialExit;
+    public VoidEvent combatEvent;
 
 
     private void Start()
@@ -33,20 +35,31 @@ public class MapEvent : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        onEventEnter.Raise(gameObject);
-        if (isTutorial)
+        if(other.tag == "Player")
         {
-            tutorialEnter.Raise(gameObject);
-        }
+            onEventEnter.Raise(gameObject);
+            if (isTutorial)
+            {
+                if (isCombat)
+                {
+                    combatEvent.Raise();
+                    Debug.Log("TOCADO");
+                }
 
-
+                tutorialEnter.Raise(gameObject);
+            }
+        }  
     }
     private void OnTriggerExit(Collider other)
     {
-        onEventExit.Raise(gameObject);
-        if (isTutorial)
+        if (other.tag == "Player")
         {
-            tutorialExit.Raise(gameObject);
+            onEventExit.Raise(gameObject);
+            if (isTutorial)
+            {
+                tutorialExit.Raise(gameObject);
+            }
         }
     }
+
 }

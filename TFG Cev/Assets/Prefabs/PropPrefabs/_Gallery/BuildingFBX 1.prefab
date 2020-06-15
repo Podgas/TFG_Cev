@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3511473742836136651}
   - component: {fileID: 5611560437772763389}
   - component: {fileID: 2223877818672954372}
+  - component: {fileID: 4529872825081348356}
   m_Layer: 0
   m_Name: BuildingFBX 1
   m_TagString: Untagged
@@ -79,3 +80,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &4529872825081348356
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495425763270265048}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4207443722817456029, guid: 4195c836f6e8d1b4fbcc689055a334b7, type: 3}

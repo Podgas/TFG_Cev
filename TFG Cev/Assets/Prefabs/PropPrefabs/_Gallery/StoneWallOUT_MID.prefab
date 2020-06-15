@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 63490405406071859}
   - component: {fileID: 1062491869027373201}
   - component: {fileID: 1118667567539928873}
+  - component: {fileID: 9051127289982748455}
   m_Layer: 0
   m_Name: StoneWallOUT_MID
   m_TagString: Untagged
@@ -85,6 +86,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -109,3 +111,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &9051127289982748455
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556758825649859978}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7049574351377507026, guid: 1cb12b06ac53060438c8fbc226c05362, type: 3}

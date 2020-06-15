@@ -18,6 +18,9 @@ public class OrochiBehave : EnemyBase
     AnimationClip attk2;
     float durationAnim;
 
+    [SerializeField]
+    ParticleSystem attk1ps;
+
     Vector2 framesGlobal;
     Vector2 frames = new Vector2(42, 50);
     Vector2 frames2 = new Vector2(17,25);
@@ -130,6 +133,11 @@ public class OrochiBehave : EnemyBase
         framesGlobal = frames;
     }
 
+    public void CastAttk1()
+    {
+        attk1ps.Play();
+    }
+
 
     protected void StrikeAttack()
     {
@@ -149,13 +157,6 @@ public class OrochiBehave : EnemyBase
     {
         Debug.Log("DESACTIVASION");
         hitCollider.SetActive(false);
-    }
-
-    public void OnCombatTutorial()
-    {
-        _target = GameObject.Find("Player").transform;
-        agent.speed = chaseSpeed;
-        currentPatrolState = PatrolStates.Chase;
     }
 
     protected enum CombatStates

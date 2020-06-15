@@ -7,6 +7,22 @@ public class OnOrochiMeleeAttack : StateMachineBehaviour
 
     [SerializeField]
     VoidEvent onOrochiMeleeAttack;
+
+    float fpsCounter = 0;
+    float currentFPS;
+    
+    private void OnStateEnter()
+    {
+
+    }
+    private void OnStateUpdate()
+    {
+        currentFPS++;
+        if(currentFPS == 42)
+        {
+
+        }
+    }
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{

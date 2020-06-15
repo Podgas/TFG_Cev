@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 1762259196155517723}
   - component: {fileID: 7672603017923226396}
   - component: {fileID: 6479504236471776358}
+  - component: {fileID: 6945962941218850544}
   m_Layer: 0
   m_Name: KettleWhole_Export
   m_TagString: Untagged
@@ -110,3 +111,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &6945962941218850544
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5429096642727318896}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -849324173983231754, guid: 9e6d4ffc826f908418dd24916a79c484, type: 3}

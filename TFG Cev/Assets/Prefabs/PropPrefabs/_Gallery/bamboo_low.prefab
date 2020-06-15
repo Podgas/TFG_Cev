@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7220176111144667287}
   - component: {fileID: 1830767486820496033}
   - component: {fileID: 5356108438018379352}
+  - component: {fileID: 6024164994018239638}
   m_Layer: 0
   m_Name: bamboo_low
   m_TagString: Untagged
@@ -79,3 +80,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &6024164994018239638
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5938117276948298372}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6099800089077584851, guid: 927c2c97f4de15a4ca6bcbe5a25ccdbd, type: 3}

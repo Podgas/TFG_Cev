@@ -27,7 +27,13 @@ public class BossBehaviour : MonoBehaviour
         Dead
     }
 
-    private static Phases currentPhase = Phases.Phase0;
+    [Header("Boss Stats")]
+    [SerializeField]
+    int hitsToChangePhase;
+    int currentHP;
+
+    [SerializeField]
+    private Phases currentPhase = Phases.Phase0;
     [SerializeField]
     private BossState currentState = BossState.Spawn;
     
@@ -85,6 +91,7 @@ public class BossBehaviour : MonoBehaviour
     private void Awake()
     {
         target = GameObject.Find("Player");
+        currentHP = hitsToChangePhase;
     }
 
     void Update()
@@ -96,7 +103,7 @@ public class BossBehaviour : MonoBehaviour
         switch (currentState)
         {
             case BossState.Spawn:
-                currentState = BossState.ChangingPhase;
+                
                 break;
             case BossState.Waiting:
                 WaitForAttack();
@@ -146,9 +153,26 @@ public class BossBehaviour : MonoBehaviour
     
     private void MeleeBehave()
     {
-        if(distance <= meleeRange)
+        
+
+        if (distance <= meleeRange)
         {
+            int random = 1;
+            if (currentPhase == Phases.Phase2)
+            {
+                random = Random.Range(0, 100);
+            }
+
+            if(random <= 50)
+            {
+                MeleeAttack();
+            }
+            else
+            {
+                AreaMeleeAttack();
+            }
             //TODDO LAUNCH MELEE ATTACK0000000000000000
+            
         }
         else
         {
@@ -157,8 +181,31 @@ public class BossBehaviour : MonoBehaviour
     }
     private void RangeBehave()
     {
-        //Thunderstorm();
-        RangeAttack();
+        int random = 1;
+
+        if(currentPhase == Phases.Phase3)
+        {
+            random += Random.Range(0, 150);
+        }
+        else if (currentPhase == Phases.Phase2)
+        {
+            random += Random.Range(0, 50);
+        }
+
+        if (random <= 50)
+        {
+            EarthQuake();
+        }
+        else if(random >= 100)
+        {
+            StartCoroutine(Thunderstorm());
+        }
+        else
+        {
+
+            RangeAttack();
+        }
+
     }
 
     private void GoToPlayer()
@@ -189,61 +236,64 @@ public class BossBehaviour : MonoBehaviour
         currentState = BossState.Waiting;
     }
 
-    private void Thunderstorm()
+    IEnumerator Thunderstorm()
     {
-        if (thunderCount == thunderNum)
-        {
-            thunderCount = 0;
-            currentState = BossState.Waiting;
-        }
-        else
-        {
-            
-            if (thunderCount == 0)
-            {
-                Vector3 spawnPoint = target.transform.position;
-                spawnPoint.y += 7;
-                Instantiate(clouds, spawnPoint, Quaternion.Euler(new Vector3(-90, 0, 0)));
-            }
-                
+        Vector3 spawnPoint = target.transform.position;
+        spawnPoint.y += 7;
+        Instantiate(clouds, spawnPoint, Quaternion.Euler(new Vector3(-90, 0, 0)));
 
-            currentThunderTime += Time.deltaTime;
+        for (int i = 0; i < thunderNum; i++)
+        {
+            SpawnThunder();
+            yield return new WaitForSeconds(thunderDelay);
+        }    
 
-            if (currentThunderTime >= thunderDelay)
-            {
-                thunderCount++;
-                SpawnThunder();
-                currentThunderTime = 0;
-            }
-        } 
+        currentState = BossState.Waiting;
+    }
+
+    private void EarthQuake()
+    {
+        currentState = BossState.Waiting;
+    }
+    private void MeleeAttack()
+    {
+
+    }
+    private void AreaMeleeAttack()
+    {
 
     }
 
     private void PhaseChange()
     {
+        currentHP = hitsToChangePhase;
         switch (currentPhase)
         {
+            case Phases.Phase0:
+                currentPhase = Phases.Phase1;
+                Debug.Log("Phase1");
+                break;
 
             case Phases.Phase1:
-
+                currentPhase = Phases.Phase2;
+                Debug.Log("Phase2");
                 break;
 
             case Phases.Phase2:
-
+                currentPhase = Phases.Phase3;
+                Debug.Log("Phase3");
                 break;
 
             case Phases.Phase3:
-
+                Debug.Log("WON!");
                 break;
-
-
         }
+        currentState = BossState.Waiting;
     }
 
     private void LandingSpawn()
     {
-        Debug.Log("LAND");
-        currentState = BossState.Waiting;   
+        currentState = BossState.ChangingPhase;
     }
 
     private void SpawnThunder()
@@ -267,4 +317,27 @@ public class BossBehaviour : MonoBehaviour
     {
        // Gizmos.DrawWireCube(target.transform.position, new Vector3(thunderStrikeCube.x*2, 30,  thunderStrikeCube.y*2));
     }
+
+    public void GetDamage()
+    {
+        currentHP--;
+        Debug.Log(currentHP);
+        if(currentHP == 0)
+        {
+            currentState = BossState.ChangingPhase;
+        }
+        else
+        {
+            //ANIM DAMAGE
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "PlayerHitBox")
+        {
+            GetDamage();
+        }
+    }
+
 }
