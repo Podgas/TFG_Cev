@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -68,6 +69,8 @@ public class BossBehaviour : MonoBehaviour
     [SerializeField]
     ParticleSystem clouds;
     [SerializeField]
+    ParticleSystem earthQuake;
+    [SerializeField]
     Vector2 thunderStrikeCube;
     [SerializeField]
     int thunderNum;
@@ -77,6 +80,13 @@ public class BossBehaviour : MonoBehaviour
     int thunderCount;
     [SerializeField]
     float attkAngle;
+    [SerializeField]
+    Vector2 eqPadding;
+    [SerializeField]
+    Vector2 maxEQRange;
+    [SerializeField]
+    float eartquakeDelay;
+    Vector3 currentEQPosition;
 
     float distance;
     GameObject target;
@@ -194,15 +204,16 @@ public class BossBehaviour : MonoBehaviour
 
         if (random <= 50)
         {
+
             EarthQuake();
         }
         else if(random >= 100)
         {
+
             StartCoroutine(Thunderstorm());
         }
         else
         {
-
             RangeAttack();
         }
 
@@ -251,9 +262,21 @@ public class BossBehaviour : MonoBehaviour
         currentState = BossState.Waiting;
     }
 
-    private void EarthQuake()
+    public void EarthQuake()
     {
+        float storeX;
+        Vector3 storepos;
+        ParticleSystem go;
+        /*while(currentEQPosition.z < maxEQRange.y)
+        {*/
+        currentEQPosition.x += eqPadding.y;
+        storepos = transform.position + currentEQPosition;
+        storeX = storepos.x;
+        go =Instantiate(earthQuake, storepos, earthQuake.gameObject.transform.rotation);
+        go.GetComponent<EarthQuakeBehaviour>().SetDirection((target.transform.position - transform.position).normalized);
         currentState = BossState.Waiting;
+        currentEQPosition.x = 0;
+
     }
     private void MeleeAttack()
     {
