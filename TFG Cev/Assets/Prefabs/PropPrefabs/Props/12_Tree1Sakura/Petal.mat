@@ -197,7 +197,7 @@ Material:
     - _DistortionVectorBias: -1
     - _DistortionVectorScale: 2
     - _DoubleSidedEnable: 1
-    - _DoubleSidedNormalMode: 1
+    - _DoubleSidedNormalMode: 0
     - _DstBlend: 10
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
@@ -292,7 +292,7 @@ Material:
     - _ZTestGBuffer: 3
     - _ZTestModeDistortion: 4
     - _ZTestTransparent: 4
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - Vector2_FA083064: {r: 2, g: 1, b: 3, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
@@ -302,7 +302,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DiffusionProfileAsset: {r: 1.0631875e+32, g: 0.00000030845976, b: 0.000088019835,
         a: 2.83325e-20}
-    - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
+    - _DoubleSidedConstants: {r: -1, g: -1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 67.79352, g: 14.9074745, b: 56.43544, a: 1}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
