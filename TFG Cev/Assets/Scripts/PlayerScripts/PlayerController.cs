@@ -141,9 +141,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     LevelChanger levelChanger;
 
+
+
+    [SerializeField]
+    Transform spawnPoint;
+
+    public bool attak1;
+
+    bool inWagon;
     private void Awake()
     {
-        InitStats();         
+        InitStats();
+        stats.canMove = true;
     }
 
     void Start()
@@ -151,86 +160,101 @@ public class PlayerController : MonoBehaviour
         //TODO: Controlar por dispositivo utilizado
         Cursor.visible = false;
 
+        if(stats.spawnPoint == Vector3.zero || SceneController.CurrentScene() == "Fortess")
+        {
+            stats.spawnPoint = spawnPoint.position;
+        }
+        transform.position = stats.spawnPoint;
         RecalculatePivot(cameraPosition);
         
     }
 
     void Update()
     {
-
-        //Comprobamos que el juego no esta pausado ni estamos muertos
-        if (!MenuManager.GetPaused() || !stats.playerStatus.isDead)
-        {
-            jumpCoolDown += Time.deltaTime;
-            if (stats.playerStatus.isGrounded && jumpCoolDown >= 0.5f)
+        if (stats.canMove) {
+            //Comprobamos que el juego no esta pausado ni estamos muertos
+            if (!MenuManager.GetPaused() || !stats.playerStatus.isDead)
             {
-                jumpCount = 0;
-                jumpCoolDown = 0;
-            }
-
-            //Comprobación climb
-            if (stats.playerStatus.isClimbing)
-            {
-                Climb();
-            }
-            else
-            {
-                //TODO: Realizar isGrounded propio
-                stats.playerStatus.isGrounded = cc.isGrounded;
-                if (Input.GetButtonDown("Transform")){
-                    Metamorphosis();
+                jumpCoolDown += Time.deltaTime;
+                if (stats.playerStatus.isGrounded && jumpCoolDown >= 0.5f)
+                {
+                    jumpCount = 0;
+                    jumpCoolDown = 0;
                 }
 
-                switch (playerCondition.GetCondition())
+                //Comprobación climb
+                if (stats.playerStatus.isClimbing)
                 {
-                    case PlayerCondition.Conditions.Main:
-                        MainUpdate();
-                        break;
-                    case PlayerCondition.Conditions.Aim:
-                        AimUpdate();
-                        break;
-                }
-
-                //Comprobamos si el jugador toca el joystick
-                if ((Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
-                {
-                    Move(forward, right);
+                    Climb();
                 }
                 else
                 {
-                    Brake();
-                }
-                
-                //Aplicamos la fuerza dela gravedad en funcion de si saltamos o caemos.
-                if (!stats.playerStatus.isGrounded)
-                {
-                    if (stats.playerStatus.jumpPressed)
-                        _moveDirection.y += Physics.gravity.y * gravity * Time.deltaTime;
-                    else
-                        _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
-                }
-                else 
-                {
-                    //TODO: realizar reproducción de sonidos
-                    actualFootTime += Time.deltaTime;
-                    if (actualFootTime >= footTime)
-                        actualFootTime = 0;
-                }
-
-                //Movemos al jugador
-                cc.Move(_moveDirection * Time.deltaTime);
-
-                //Sistema de interacción
-                if (stats.playerStatus.interactPressed)
-                {
-                    if (objectToInteract != null)
+                    //TODO: Realizar isGrounded propio
+                    stats.playerStatus.isGrounded = cc.isGrounded;
+                    anim.SetBool("grounded", cc.isGrounded);
+                    if (Input.GetButtonDown("Transform"))
                     {
-                        Interact(objectToInteract);
+                        Metamorphosis();
                     }
-                    stats.playerStatus.interactPressed = false;
+
+                    switch (playerCondition.GetCondition())
+                    {
+                        case PlayerCondition.Conditions.Main:
+                            MainUpdate();
+                            break;
+                        case PlayerCondition.Conditions.Aim:
+                            AimUpdate();
+                            break;
+                    }
+
+                    //Comprobamos si el jugador toca el joystick
+                    if ((Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0))
+                    {
+                        anim.SetBool("move", true);
+                        Move(forward, right);
+                    }
+                    else
+                    {
+                        anim.SetBool("move", false);
+                        Brake();
+                    }
+
+                    //Aplicamos la fuerza dela gravedad en funcion de si saltamos o caemos.
+                    if (!stats.playerStatus.isGrounded)
+                    {
+                        if (stats.playerStatus.jumpPressed)
+                            _moveDirection.y += Physics.gravity.y * gravity * Time.deltaTime;
+                        else
+                            _moveDirection.y += Physics.gravity.y * fallMultiplier * Time.deltaTime;
+                    }
+                    else
+                    {
+                        //TODO: realizar reproducción de sonidos
+                        actualFootTime += Time.deltaTime;
+                        if (actualFootTime >= footTime)
+                            actualFootTime = 0;
+                    }
+
+                    //Movemos al jugador
+                    cc.Move(_moveDirection * Time.deltaTime);
+
+                    //Sistema de interacción
+                    if (stats.playerStatus.interactPressed)
+                    {
+                        if (objectToInteract != null)
+                        {
+                            Interact(objectToInteract);
+                        }
+                        if (inWagon)
+                        {
+                            SceneController.LoadScene(SceneController.Scene.Fortess, true);
+                        }
+                        stats.playerStatus.interactPressed = false;
+                    }
                 }
             }
         }
+        
         
     }
     //Se ejecuta cuando alguno de los otors estados no esta activo
@@ -256,8 +280,21 @@ public class PlayerController : MonoBehaviour
         
 
         //TODO: Pulir carga de ataque
-        if (Input.GetButton("Attack"))
+        if (Input.GetButtonDown("Attack"))
         {
+
+            if (!attak1)
+            {
+                anim.SetTrigger("attk1");
+                attak1 = true;
+            }
+            else if (attak1)
+            {
+                anim.SetTrigger("attk2");
+                attak1 = false;
+            }
+
+
             Attack();
             damageVolume.SetActive(true);
         }
@@ -359,6 +396,7 @@ public class PlayerController : MonoBehaviour
     //Saltamos en función de la forma del jugador
     void Jump()
     {
+        anim.SetTrigger("jump");
         if(!stats.playerStatus.isFox)
             _moveDirection.y = jumpForce;
         else
@@ -390,11 +428,13 @@ public class PlayerController : MonoBehaviour
             else
                 speed = runSpeed;
             stats.playerStatus.isRunning = true;
+            anim.SetBool("run", true);
         }
         else if(Input.GetAxis("Run")==0 && stats.playerStatus.isRunning)
         {
             speed = walkSpeed;
             stats.playerStatus.isRunning = false;
+            anim.SetBool("run", false);
         }
     }
     //Llamamos a esta función cuando recibimos daño o cura
@@ -458,14 +498,15 @@ public class PlayerController : MonoBehaviour
 
     void Attack()
     {
-        Debug.Log("Attacking");
+        anim.SetBool("haveSword", true);
+
         //TODO: Mejorar el ataque
         stats.playerStatus.isCharging = true;
         //anim.SetBool("isCharging", stats.playerStatus.isCharging);
         actualTime += Time.deltaTime;
 
-        if(actualTime >= timeToCharge)
-        {
+        if (actualTime >= timeToCharge)
+        { 
             damageDealt = damageModifier;
         }
 
@@ -524,6 +565,15 @@ public class PlayerController : MonoBehaviour
             UpdateHp(-10);
             vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
         }
+
+        if(other.tag == "Wagon")
+        {
+            inWagon = true;
+        }
+        if (other.tag == "Checkpoint")
+        {
+            stats.spawnPoint = other.transform.position;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -532,6 +582,10 @@ public class PlayerController : MonoBehaviour
         {
             stats.playerStatus.canClimb = false;
             objectToInteract = null;
+        }
+        if (other.tag == "Wagon")
+        {
+            inWagon = false;
         }
     }
 
@@ -615,4 +669,6 @@ public class PlayerController : MonoBehaviour
         cc.center = cv.center;
         cc.radius = cv.radius;
     }
+
+
 }

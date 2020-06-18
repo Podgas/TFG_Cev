@@ -31,7 +31,7 @@ public class OrochiBehave : EnemyBase
 
     CombatStates combatStates = CombatStates.CDAction;
 
-    public GameObject loseCanvas;
+
 
     protected override void Start()
     {

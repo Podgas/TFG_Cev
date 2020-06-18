@@ -73,7 +73,7 @@ public class MenuManager : MonoBehaviour
     }
     public void OnRetry()
     {
-        SceneController.LoadScene(SceneController.Scene.FortressLevel,true);
+        SceneController.LoadScene(SceneController.CurrentScene(),true);
     }
 
     

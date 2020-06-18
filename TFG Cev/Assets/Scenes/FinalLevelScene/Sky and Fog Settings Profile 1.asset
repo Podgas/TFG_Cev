@@ -89,6 +89,7 @@ MonoBehaviour:
   - {fileID: 80342880842944506}
   - {fileID: 5172673459235625978}
   - {fileID: -1452415864725013299}
+  - {fileID: 1479073404049964069}
 --- !u!114 &80342880842944506
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -111,13 +112,13 @@ MonoBehaviour:
     m_Value: 1
   color:
     m_OverrideState: 0
-    m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    m_Value: {r: 0, g: 11.537739, b: 16.1217, a: 1}
     hdr: 1
     showAlpha: 0
     showEyeDropper: 1
   maxFogDistance:
     m_OverrideState: 1
-    m_Value: 3915.5
+    m_Value: 27.01
     min: 0
   mipFogMaxMip:
     m_OverrideState: 0
@@ -134,31 +135,31 @@ MonoBehaviour:
     min: 0
   baseHeight:
     m_OverrideState: 1
-    m_Value: -2.9
+    m_Value: 4.17
   maximumHeight:
     m_OverrideState: 1
-    m_Value: 254.06
+    m_Value: 109.37
   albedo:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.7688679, g: 0.9638185, b: 1, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 361.4
+    m_Value: 96.7
     min: 1
   enableVolumetricFog:
     m_OverrideState: 1
     m_Value: 1
   anisotropy:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.01
     min: -1
     max: 1
   globalLightProbeDimmer:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.129
     min: 0
     max: 1
   depthExtent:
@@ -173,6 +174,72 @@ MonoBehaviour:
   filter:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &1479073404049964069
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaa3b8214f75b354e9ba2caadd022259, type: 3}
+  m_Name: DepthOfField
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  quality:
+    m_OverrideState: 1
+    m_Value: 2
+  focusMode:
+    m_OverrideState: 1
+    m_Value: 2
+  focusDistance:
+    m_OverrideState: 0
+    m_Value: 10
+    min: 0.1
+  nearFocusStart:
+    m_OverrideState: 1
+    m_Value: 0
+    min: 0
+  nearFocusEnd:
+    m_OverrideState: 1
+    m_Value: 2.93
+    min: 0
+  farFocusStart:
+    m_OverrideState: 1
+    m_Value: 541.6
+    min: 0
+  farFocusEnd:
+    m_OverrideState: 1
+    m_Value: 204.2
+    min: 0
+  m_NearSampleCount:
+    m_OverrideState: 0
+    m_Value: 5
+    min: 3
+    max: 8
+  m_NearMaxBlur:
+    m_OverrideState: 0
+    m_Value: 4
+    min: 0
+    max: 8
+  m_FarSampleCount:
+    m_OverrideState: 0
+    m_Value: 7
+    min: 3
+    max: 16
+  m_FarMaxBlur:
+    m_OverrideState: 0
+    m_Value: 8
+    min: 0
+    max: 16
+  m_HighQualityFiltering:
+    m_OverrideState: 0
+    m_Value: 1
+  m_Resolution:
+    m_OverrideState: 0
+    m_Value: 2
 --- !u!114 &5172673459235625978
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -224,17 +291,17 @@ MonoBehaviour:
     m_Value: 0
   sunSize:
     m_OverrideState: 1
-    m_Value: 0.074
+    m_Value: 0.069
     min: 0
     max: 1
   sunSizeConvergence:
     m_OverrideState: 1
-    m_Value: 5.81
+    m_Value: 7.97
     min: 1
     max: 10
   atmosphereThickness:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.67
     min: 0
     max: 5
   skyTint:

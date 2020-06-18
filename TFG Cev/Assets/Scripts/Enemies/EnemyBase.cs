@@ -71,6 +71,9 @@ public class EnemyBase : MonoBehaviour
     protected Vector3 alertPosition;
     protected bool isAlive = true;
 
+    [SerializeField]
+    VoidEvent onCatch;
+
     protected virtual void Start()
     {
         if (nm != null)
@@ -310,11 +313,20 @@ public class EnemyBase : MonoBehaviour
 
         if (targetsForCombat != null)
         {
-            for(int i = 0; i < targetsForCombat.Length; i++)
+
+            for (int i = 0; i < targetsForCombat.Length; i++)
             {
-                currentBaseState = EnemyBaseStates.Combat;
-                anim.SetTrigger("startCombat");
-            }
+                if (behaviourType == EnemyBehaviour.InPlaceCatch || behaviourType == EnemyBehaviour.PatrolCatch)
+                {
+                    OnCatch();
+                }
+                else
+                {
+                    currentBaseState = EnemyBaseStates.Combat;
+                    anim.SetTrigger("startCombat");
+                }
+                
+            }  
         }
     }
     private void OnDrawGizmos()
@@ -327,6 +339,7 @@ public class EnemyBase : MonoBehaviour
         PatrolCatch,
         PatrolFight,
         InPlace,
+        InPlaceCatch,
         Event,
         Static
     }
@@ -366,5 +379,10 @@ public class EnemyBase : MonoBehaviour
         _target = _currentTarget.currentPosition;
         OnDetect(_currentTarget);
 
+    }
+
+    void OnCatch()
+    {
+        onCatch.Raise();
     }
 }

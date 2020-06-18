@@ -13,7 +13,8 @@ public static class SceneController
         TitleScreen,
         TestScene,
         LoadingScene,
-        FortressLevel,
+        Tutorial_town,
+        Fortess,
         FinalScene
     }
 
@@ -38,6 +39,24 @@ public static class SceneController
         
 
     }
+    public static void LoadScene(String scene, bool loadingScene)
+    {
+        if (loadingScene)
+        {
+            onLoaderCallBack = () =>
+            {
+                SceneManager.LoadScene(scene);
+            };
+
+            SceneManager.LoadScene(Scene.LoadingScene.ToString());
+        }
+        else
+        {
+            SceneManager.LoadScene(scene);
+        }
+
+
+    }
 
     public static void LoaderCallBack()
     {
@@ -56,6 +75,11 @@ public static class SceneController
     {
         return SceneManager.GetActiveScene().name;
 
+    }
+
+    public static string CurrentScene()
+    {
+        return SceneManager.GetActiveScene().name;
     }
 
 

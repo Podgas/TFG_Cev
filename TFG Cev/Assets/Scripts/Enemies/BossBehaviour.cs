@@ -31,6 +31,7 @@ public class BossBehaviour : MonoBehaviour
     [Header("Boss Stats")]
     [SerializeField]
     int hitsToChangePhase;
+    [SerializeField]
     int currentHP;
 
     [SerializeField]
@@ -69,6 +70,8 @@ public class BossBehaviour : MonoBehaviour
     [SerializeField]
     ParticleSystem clouds;
     [SerializeField]
+    ParticleSystem jump;
+    [SerializeField]
     ParticleSystem earthQuake;
     [SerializeField]
     Vector2 thunderStrikeCube;
@@ -87,14 +90,21 @@ public class BossBehaviour : MonoBehaviour
     [SerializeField]
     float eartquakeDelay;
     Vector3 currentEQPosition;
+    [SerializeField]
+    Transform earthquakeSpawn;
 
     float distance;
-    GameObject target;
+    public GameObject target;
 
     [Header("Entring Boss")]
 
     float currentAnimTime;
 
+    [SerializeField]
+    Transform spawnPoint1;
+    [SerializeField]
+    Transform spawnPoint2;
+    Transform currentPoint;
 
 
 
@@ -102,12 +112,15 @@ public class BossBehaviour : MonoBehaviour
     {
         target = GameObject.Find("Player");
         currentHP = hitsToChangePhase;
+        agent.speed = speed;
+        currentPoint = spawnPoint1;
+
     }
 
     void Update()
     {
         //Calculate distance between boss and player + Rotation
-        transform.LookAt(target.transform);
+        LookAt();
         DistanceToTarget();
 
         switch (currentState)
@@ -163,19 +176,20 @@ public class BossBehaviour : MonoBehaviour
     
     private void MeleeBehave()
     {
-        
 
-        if (distance <= meleeRange)
+        if (meleeRange >= distance)
         {
+            anim.SetBool("isMoving", false);
             int random = 1;
-            if (currentPhase == Phases.Phase2)
+            if (currentPhase != Phases.Phase1)
             {
                 random = Random.Range(0, 100);
             }
 
             if(random <= 50)
             {
-                MeleeAttack();
+                //MeleeAttack();
+                AreaMeleeAttack();
             }
             else
             {
@@ -186,7 +200,9 @@ public class BossBehaviour : MonoBehaviour
         }
         else
         {
+            anim.SetBool("isMoving", true);
             GoToPlayer();
+            ChooseBehave();
         }
     }
     private void RangeBehave()
@@ -205,23 +221,32 @@ public class BossBehaviour : MonoBehaviour
         if (random <= 50)
         {
 
-            EarthQuake();
+            anim.SetTrigger("rangeAttk");
+
         }
         else if(random >= 100)
         {
-
-            StartCoroutine(Thunderstorm());
+            anim.SetTrigger("earthquake"); 
         }
         else
         {
-            RangeAttack();
+            anim.SetTrigger("thunderstorm");
         }
 
     }
 
     private void GoToPlayer()
     {
-        agent.SetDestination(target.transform.position);
+        agent.destination = (target.transform.position);
+        
+    }
+    private void LookAt()
+    {
+        Vector3 lookPos = target.transform.position - transform.position;
+        lookPos.y = 0;
+        Debug.DrawLine(transform.position, target.transform.position, Color.green);
+        Quaternion targetRot = Quaternion.LookRotation(lookPos);
+        transform.rotation = targetRot;
     }
 
     private void DistanceToTarget()
@@ -244,9 +269,12 @@ public class BossBehaviour : MonoBehaviour
         ps2.transform.Rotate(new Vector3(0, 20, 0));
         ps3.transform.Rotate(new Vector3(0, -20, 0));
 
-        currentState = BossState.Waiting;
+        
     }
-
+    public void StartThunder()
+    {
+        StartCoroutine(Thunderstorm());
+    }
     IEnumerator Thunderstorm()
     {
         Vector3 spawnPoint = target.transform.position;
@@ -258,33 +286,30 @@ public class BossBehaviour : MonoBehaviour
             SpawnThunder();
             yield return new WaitForSeconds(thunderDelay);
         }    
-
-        currentState = BossState.Waiting;
     }
 
     public void EarthQuake()
     {
-        float storeX;
-        Vector3 storepos;
+        Debug.Log("eq hehehe");
         ParticleSystem go;
-        /*while(currentEQPosition.z < maxEQRange.y)
-        {*/
-        currentEQPosition.x += eqPadding.y;
-        storepos = transform.position + currentEQPosition;
-        storeX = storepos.x;
-        go =Instantiate(earthQuake, storepos, earthQuake.gameObject.transform.rotation);
+
+        go =Instantiate(earthQuake, earthquakeSpawn.position, earthQuake.gameObject.transform.rotation);
         go.GetComponent<EarthQuakeBehaviour>().SetDirection((target.transform.position - transform.position).normalized);
-        currentState = BossState.Waiting;
         currentEQPosition.x = 0;
 
     }
     private void MeleeAttack()
     {
-
+        anim.SetTrigger("melee");
     }
     private void AreaMeleeAttack()
     {
+        anim.SetTrigger("area");
+    }
 
+    private void ActivateArea()
+    {
+        Instantiate(jump, earthquakeSpawn.position, jump.transform.rotation);
     }
 
     private void PhaseChange()
@@ -311,6 +336,16 @@ public class BossBehaviour : MonoBehaviour
                 Debug.Log("WON!");
                 break;
         }
+
+        if(currentPoint.position == spawnPoint1.position)
+        {
+            currentPoint = spawnPoint2;
+        }
+        else
+        {
+            currentPoint = spawnPoint1;
+        }
+        agent.Warp(currentPoint.position);
         currentState = BossState.Waiting;
     }
 
@@ -338,7 +373,11 @@ public class BossBehaviour : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-       // Gizmos.DrawWireCube(target.transform.position, new Vector3(thunderStrikeCube.x*2, 30,  thunderStrikeCube.y*2));
+        // Gizmos.DrawWireCube(target.transform.position, new Vector3(thunderStrikeCube.x*2, 30,  thunderStrikeCube.y*2));
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, behaveRange);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, meleeRange);
     }
 
     public void GetDamage()
@@ -362,5 +401,19 @@ public class BossBehaviour : MonoBehaviour
             GetDamage();
         }
     }
+
+    public void EndAnim()
+    {
+        currentState = BossState.Waiting;
+
+        foreach (AnimatorControllerParameter parameter in anim.parameters)
+        {
+            if(parameter.type == AnimatorControllerParameterType.Trigger)
+            {
+                anim.ResetTrigger(parameter.name);
+            }  
+        }
+    }
+    
 
 }

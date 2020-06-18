@@ -19,6 +19,8 @@ public class HUDController : MonoBehaviour
     private Text collectableText;
     [SerializeField]
     private GameObject tutorialPanel;
+    [SerializeField]
+    private GameObject losePanel;
 
 
     private void Start()
@@ -66,4 +68,14 @@ public class HUDController : MonoBehaviour
         tutorialPanel.SetActive(false);
     }
 
+    public void OnCatch()
+    {
+        losePanel.SetActive(true);
+        playerStats.canMove = false;
+    }
+    public void OnRestartGame()
+    {
+        SceneController.LoadScene(SceneController.CurrentScene(), true);
+        
+    }
 }

@@ -50,6 +50,9 @@ public class PlayerStats : ScriptableObject
     [SerializeField]
     public PlayerStatus playerStatus;
 
+    public bool canMove;
+    public Vector3 spawnPoint;
+
     public void InitStatus()
     {
         playerStatus.isGrounded = true;
