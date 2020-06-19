@@ -10,13 +10,13 @@ public class MapEvent : MonoBehaviour
     public bool _isActive = false;
     public bool wasActive = false;
     public bool isTutorial;
-    public bool isCombat;
+    public bool isExtra;
 
     public GameObjectEvent onEventEnter;
     public GameObjectEvent onEventExit;
     public GameObjectEvent tutorialEnter;
     public GameObjectEvent tutorialExit;
-    public VoidEvent combatEvent;
+    public VoidEvent extaEvent;
 
 
     private void Start()
@@ -40,9 +40,9 @@ public class MapEvent : MonoBehaviour
             onEventEnter.Raise(gameObject);
             if (isTutorial)
             {
-                if (isCombat)
+                if (isExtra)
                 {
-                    combatEvent.Raise();
+                    extaEvent.Raise();
                     Debug.Log("TOCADO");
                 }
 

@@ -36,6 +36,9 @@ ModelImporter:
   - first:
       74: -6007923424652821760
     second: Orochi_dodge
+  - first:
+      74: -4829989146170159145
+    second: DeadPose
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -147,15 +150,15 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.4248366
-        functionName: NewEvent
+      - time: 0.42564088
+        functionName: CastAttk1
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.42564085
-        functionName: CastAttk1
+      - time: 0.6310162
+        functionName: DesactivateHitCollider
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -276,7 +279,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.7073541
+        functionName: EndOfDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -363,7 +373,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.9411757
+        functionName: Dissolve
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -374,6 +391,35 @@ ModelImporter:
       internalID: 0
       firstFrame: 881
       lastFrame: 915
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: DeadPose
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 950
+      lastFrame: 950
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

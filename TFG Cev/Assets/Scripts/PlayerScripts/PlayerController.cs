@@ -6,7 +6,7 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    GameObject damageVolume;
+    public GameObject damageVolume;
     struct ControllerVars
     {
         public Vector3 center;
@@ -268,11 +268,13 @@ public class PlayerController : MonoBehaviour
 
         if (stats.playerStatus.jumpPressed)
         {
+            
             stats.playerStatus.jumpPressed = false;
 
             //Debug.Log((stats.playerStatus.isGrounded || jumpCount < jumpTimes) && stats.playerStatus.jumpPressed);
             if (jumpCoolDown >= 0.5f && stats.playerStatus.isGrounded || (jumpCount < jumpTimes))
             {
+                anim.SetTrigger("jump");
                 jumpCoolDown = 0;
                 Jump();
             }
@@ -294,21 +296,7 @@ public class PlayerController : MonoBehaviour
                 attak1 = false;
             }
 
-
             Attack();
-            damageVolume.SetActive(true);
-        }
-        if (Input.GetButtonUp("Attack"))
-        {
-            stats.playerStatus.isCharging = false;
-
-            //anim.SetTrigger("Attack");
-
-            damageDealt = stats.baseDamage + damageModifier;
-            actualTime = 0;
-            onAttackLaunch.Raise();
-            damageVolume.SetActive(false);
-
         }
 
         if (stats.playerStatus.isDashing || Input.GetButtonDown("Dash"))
@@ -396,7 +384,7 @@ public class PlayerController : MonoBehaviour
     //Saltamos en función de la forma del jugador
     void Jump()
     {
-        anim.SetTrigger("jump");
+        
         if(!stats.playerStatus.isFox)
             _moveDirection.y = jumpForce;
         else
@@ -443,7 +431,7 @@ public class PlayerController : MonoBehaviour
         stats.hp.value += value;
         //calculamos el nuevo porciento de vida
         float percentage = (stats.hp.value) / stats.hp.maxValue;
-
+        Debug.Log(percentage);
         if (percentage >= 1)
         {
             percentage = 1;    
@@ -500,15 +488,6 @@ public class PlayerController : MonoBehaviour
     {
         anim.SetBool("haveSword", true);
 
-        //TODO: Mejorar el ataque
-        stats.playerStatus.isCharging = true;
-        //anim.SetBool("isCharging", stats.playerStatus.isCharging);
-        actualTime += Time.deltaTime;
-
-        if (actualTime >= timeToCharge)
-        { 
-            damageDealt = damageModifier;
-        }
 
     }
     //TODO: Rehacer dash
@@ -562,8 +541,9 @@ public class PlayerController : MonoBehaviour
         //TODO: Reacer para recibir daño por cada enemigo en función del ataque
         if(other.tag == "HitBoxEnemy" && !GodMode.Instance.isGodMode)
         {
-            UpdateHp(-10);
-            vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
+            UpdateHp(-25);
+
+            //vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
         }
 
         if(other.tag == "Wagon")
@@ -669,6 +649,8 @@ public class PlayerController : MonoBehaviour
         cc.center = cv.center;
         cc.radius = cv.radius;
     }
+
+    
 
 
 }

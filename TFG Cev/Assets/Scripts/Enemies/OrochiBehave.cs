@@ -9,8 +9,6 @@ public class OrochiBehave : EnemyBase
     [SerializeField]
     float attackCD;
     [SerializeField]
-    float catchRadius;
-    [SerializeField]
     float attackTimer;
     [SerializeField]
     AnimationClip attk1;
@@ -39,11 +37,9 @@ public class OrochiBehave : EnemyBase
     }
     private void LateUpdate()
     {
-        Collider[] player = Physics.OverlapSphere(transform.position, catchRadius, playerLayer);
-        if(player.Length > 0)
-        {
-            //PlayerDetect();
-        }
+        if(currentBaseState == EnemyBaseStates.Combat)
+            IsInRange();
+        
     }
 
     protected override void CombatUpdate()
@@ -73,15 +69,6 @@ public class OrochiBehave : EnemyBase
                 attackTimer += Time.deltaTime;
                 frameCounterAnim++;
 
-                if (frameCounterAnim >= framesGlobal.x)
-                {
-                    ActivateHitCollider();
-                }
-                if(frameCounterAnim >= framesGlobal.y)
-                {
-                    DesactivateHitCollider();
-                }
-
                 if (attackTimer >= durationAnim)
                 {
                     attackTimer = 0;
@@ -91,11 +78,22 @@ public class OrochiBehave : EnemyBase
             case CombatStates.Dodge:
 
                 break;
-
         }
-
     }
 
+
+    public void IsInRange()
+    {
+        Collider[] player = Physics.OverlapSphere(transform.position, combatRadius, playerLayer);
+        if (player.Length == 0)
+        {
+            if(combatStates == CombatStates.CDAction)
+            {
+                currentBaseState = EnemyBaseStates.Patrol;
+                currentPatrolState = PatrolStates.Chase;
+            }      
+        }
+    }
     protected void CombatWait()
     {
         Vector3 lookRot = _currentTarget.currentPosition.position;
@@ -136,6 +134,11 @@ public class OrochiBehave : EnemyBase
     public void CastAttk1()
     {
         attk1ps.Play();
+        ActivateHitCollider();
+    }
+    public void CastAttk2()
+    {
+        ActivateHitCollider();
     }
 
 
@@ -150,12 +153,10 @@ public class OrochiBehave : EnemyBase
 
     public void ActivateHitCollider()
     {
-        Debug.Log("ACTIVASION");
         hitCollider.SetActive(true);
     }
     public void DesactivateHitCollider()
     {
-        Debug.Log("DESACTIVASION");
         hitCollider.SetActive(false);
     }
 
@@ -168,5 +169,7 @@ public class OrochiBehave : EnemyBase
         Attacking,
         Dodge,
     }
+
+
 
 }

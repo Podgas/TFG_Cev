@@ -113,7 +113,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - Color_2557C9A0: {r: 3.5183241, g: 7.999999, b: 3.3089, a: 0}
+    - Color_2557C9A0: {r: 3.8145053, g: 85.445015, b: 0, a: 0}
     - Color_2BFF8BBF: {r: 1, g: 1, b: 1, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}

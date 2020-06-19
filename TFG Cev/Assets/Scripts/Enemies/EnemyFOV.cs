@@ -149,6 +149,8 @@ public class EnemyFOV : FieldOfViewSystem
 
     public void OnTutorial()
     {
+        _target = baseMotor._currentTarget;
+        Debug.Log("FOV:" + _target);
         isAlert = true;
         isChasing = true;
     }

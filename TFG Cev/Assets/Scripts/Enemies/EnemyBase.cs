@@ -33,7 +33,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField]
     protected LayerMask playerLayer;
     [SerializeField]
-    protected FieldOfViewSystem enemyFov;
+    protected EnemyFOV enemyFov;
     [SerializeField]
     Animator exclamation;
 
@@ -62,9 +62,11 @@ public class EnemyBase : MonoBehaviour
     [SerializeField]
     protected PatrolStates currentPatrolState;
 
+    EnemyBaseStates damageBaseState;
+
     Vector3 _moveDirection;
     protected Transform _target;
-    protected Target _currentTarget;
+    public Target _currentTarget;
 
 
     float currentTime;
@@ -73,6 +75,16 @@ public class EnemyBase : MonoBehaviour
 
     [SerializeField]
     VoidEvent onCatch;
+
+    [Header("Dissolve")]
+    [SerializeField]
+    Renderer geo;
+    [SerializeField]
+    Renderer weapon;
+    [SerializeField]
+    float timeToDissolve;
+    bool isDissolving;
+    float dissolveTime = 0;
 
     protected virtual void Start()
     {
@@ -167,6 +179,11 @@ public class EnemyBase : MonoBehaviour
                 CombatUpdate();
 
                 break;
+            case EnemyBaseStates.Dead:
+
+                Die();
+
+                break;
         }
     }
 
@@ -179,7 +196,7 @@ public class EnemyBase : MonoBehaviour
 
         if (other.tag == "PlayerHitBox")
         {
-            GetDamage(GameObject.Find("Player").GetComponent<PlayerController>().damageDealt);
+            GetDamage(1,GameObject.Find("Player").transform);
             /*vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
             vfx.PlayVFX(AudioLibrary.VfxSounds.Hurt);*/
 
@@ -194,9 +211,37 @@ public class EnemyBase : MonoBehaviour
         }
     }
 
-    void GetDamage(float dmg)
+    void GetDamage(float dmg, Transform damager)
     {
+
+        anim.SetBool("damage", true);
+        damageBaseState = currentBaseState;
+        currentBaseState = EnemyBaseStates.Damage;
+        if(_currentTarget.currentPosition == null)
+        {
+
+            _currentTarget.Detect(damager);
+        }
+        
         hp -= dmg;
+        if (hp <= 0)
+        {
+            anim.SetBool("isDead", true);
+            currentBaseState = EnemyBaseStates.Dead;
+        }
+    }
+
+    public void EndOfDamage()
+    {
+        if(currentBaseState != EnemyBaseStates.Dead)
+        {
+            anim.SetBool("damage", false);
+            currentBaseState = EnemyBaseStates.Combat;
+            currentPatrolState = PatrolStates.Chase;
+            anim.SetTrigger("startCombat");
+            enemyFov.OnTutorial();
+        }
+        
     }
 
     protected void Wait()
@@ -258,8 +303,31 @@ public class EnemyBase : MonoBehaviour
     }
     protected void Die()
     {
-        //TODO: implementar animacion de morir, efecto de particulas dedesaparicion y coorutina de destrucción.
-        Destroy(gameObject);
+        if (isDissolving)
+        {
+            if (dissolveTime <= timeToDissolve)
+            {
+                Debug.Log("dissolving..");
+                dissolveTime += Time.deltaTime;
+                geo.material.SetFloat("_dissolve", Mathf.Lerp(0, 1, dissolveTime / timeToDissolve));
+                weapon.material.SetFloat("_dissolve", Mathf.Lerp(0, 1, dissolveTime / timeToDissolve));
+            }
+            else
+            {
+                Debug.Log("done!(Y)");
+                geo.material.SetFloat("_dissolve", 1);
+                weapon.material.SetFloat("_dissolve", 1);
+                isDissolving = false;
+                dissolveTime = 0f;
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    public void Dissolve()
+    {
+        Debug.Log("dissolve");
+        isDissolving = true;
     }
 
     public void OnAlert(Target target)
@@ -348,7 +416,9 @@ public class EnemyBase : MonoBehaviour
     {
         Patrol,
         Combat,
-        Static
+        Static,
+        Damage,
+        Dead
     }
 
     protected enum PatrolStates

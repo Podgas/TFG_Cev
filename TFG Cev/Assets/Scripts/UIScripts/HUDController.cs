@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HUDController : MonoBehaviour
 {
@@ -21,12 +22,14 @@ public class HUDController : MonoBehaviour
     private GameObject tutorialPanel;
     [SerializeField]
     private GameObject losePanel;
+    [SerializeField]
+    private TextMeshProUGUI quest;
 
 
     private void Start()
     {
         hpBar.fillAmount = playerStats.hp.value / playerStats.hp.maxValue;
-        ammoText.text = playerStats.ammo + "/" + playerStats.maxAmmo;
+
         //collectableText.text = "0/" + mc.extras.Count.ToString();
     }
 
@@ -77,5 +80,10 @@ public class HUDController : MonoBehaviour
     {
         SceneController.LoadScene(SceneController.CurrentScene(), true);
         
+    }
+    public void OnQuestEnter()
+    {
+
+        quest.text = "ENTER QUEST";
     }
 }

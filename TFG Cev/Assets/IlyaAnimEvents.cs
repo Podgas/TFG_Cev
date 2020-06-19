@@ -20,4 +20,12 @@ public class IlyaAnimEvents : MonoBehaviour
         pc.attak1 = false;
 
     }
+    void ActivateVolume()
+    {
+        pc.damageVolume.SetActive(true);
+    }
+    void DesactivateVolume()
+    {
+        pc.damageVolume.SetActive(false);
+    }
 }
