@@ -34,4 +34,4 @@ MonoBehaviour:
     jumpPressed: 0
     interactPressed: 0
   canMove: 1
-  spawnPoint: {x: 0, y: 0, z: 0}
+  spawnPoint: {x: 10.085614, y: 7.2700005, z: -17.090061}
