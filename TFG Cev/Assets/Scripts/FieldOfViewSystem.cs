@@ -22,7 +22,6 @@ public class FieldOfViewSystem : MonoBehaviour
     public float meshResolution;
     public float edgeResolveIterations;
     public float edgeDistanceThreshold;
-    public Material testMaterial;
     public MeshFilter viewMeshFilter;
 
     Mesh viewMesh;

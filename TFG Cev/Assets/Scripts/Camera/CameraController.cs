@@ -11,8 +11,6 @@ public class CameraController : MonoBehaviour
     PlayerCondition playerCondition;
     int currentCamera;
     [SerializeField]
-    Transform cameraAnchor;
-    [SerializeField]
     private PlayerConditionEvent onConditionChange;
 
     bool aimInUse = false;

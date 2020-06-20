@@ -81,9 +81,19 @@ public class HUDController : MonoBehaviour
         SceneController.LoadScene(SceneController.CurrentScene(), true);
         
     }
-    public void OnQuestEnter()
+    public void OnQuestEnter(GameObject entredQuest)
     {
 
-        quest.text = "ENTER QUEST";
+        MapEvent me;
+
+        me = entredQuest.gameObject.GetComponent<MapEvent>();
+
+        ChangeQuest(me.questLine);
+        
+    }
+
+    public void ChangeQuest(string text)
+    {
+        quest.text = text;
     }
 }

@@ -16,7 +16,9 @@ public class MapEvent : MonoBehaviour
     public GameObjectEvent onEventExit;
     public GameObjectEvent tutorialEnter;
     public GameObjectEvent tutorialExit;
-    public VoidEvent extaEvent;
+    public GameObjectEvent extaEvent;
+
+    public string questLine;
 
 
     private void Start()
@@ -40,13 +42,12 @@ public class MapEvent : MonoBehaviour
             onEventEnter.Raise(gameObject);
             if (isTutorial)
             {
-                if (isExtra)
-                {
-                    extaEvent.Raise();
-                    Debug.Log("TOCADO");
-                }
-
                 tutorialEnter.Raise(gameObject);
+            }
+            if (isExtra)
+            {
+                extaEvent.Raise(gameObject);
+                Debug.Log("TOCADO");
             }
         }  
     }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8553336289165729584}
   - component: {fileID: 858086046676641030}
   - component: {fileID: 6400743022357289471}
+  - component: {fileID: 6850276563874590909}
   m_Layer: 0
   m_Name: wallrock02_LOW
   m_TagString: Untagged
@@ -79,3 +80,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &6850276563874590909
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4677225507680988451}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 475981208166866934, guid: b62bdb082bf2b9e4aa5e7077bce440f1, type: 3}

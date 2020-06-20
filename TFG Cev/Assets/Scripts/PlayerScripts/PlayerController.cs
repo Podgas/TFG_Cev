@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
         //TODO: Controlar por dispositivo utilizado
         Cursor.visible = false;
 
-        if(stats.spawnPoint == Vector3.zero || SceneController.CurrentScene() == "Fortess")
+        if(stats.spawnPoint == Vector3.zero)
         {
             stats.spawnPoint = spawnPoint.position;
         }
@@ -248,6 +248,7 @@ public class PlayerController : MonoBehaviour
                         if (inWagon)
                         {
                             SceneController.LoadScene(SceneController.Scene.Fortess, true);
+                            stats.spawnPoint = Vector3.zero;
                         }
                         stats.playerStatus.interactPressed = false;
                     }
@@ -304,9 +305,10 @@ public class PlayerController : MonoBehaviour
             Dash();
         }
         #region Debug
+        /*
         Debug.DrawRay(transform.position, forward, Color.blue);
         Debug.DrawRay(transform.position, right, Color.green);
-        Debug.DrawRay(transform.position, transform.up, Color.red);
+        Debug.DrawRay(transform.position, transform.up, Color.red);*/
         #endregion
         //Gestionamos la rotación del modelo
 
@@ -431,7 +433,7 @@ public class PlayerController : MonoBehaviour
         stats.hp.value += value;
         //calculamos el nuevo porciento de vida
         float percentage = (stats.hp.value) / stats.hp.maxValue;
-        Debug.Log(percentage);
+
         if (percentage >= 1)
         {
             percentage = 1;    
@@ -510,7 +512,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.Log("StopDash");
             stats.playerStatus.isDashing = false;
         }
     }

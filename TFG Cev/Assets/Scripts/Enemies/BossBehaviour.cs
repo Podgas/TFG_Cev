@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -139,6 +138,8 @@ public class BossBehaviour : MonoBehaviour
                 break;
             case BossState.RangeAttack:
                 RangeBehave();
+                break;
+            case BossState.Casting:
                 
                 break;
             case BossState.GettingDamage:
@@ -190,9 +191,11 @@ public class BossBehaviour : MonoBehaviour
             {
                 //MeleeAttack();
                 AreaMeleeAttack();
+                currentState = BossState.Casting;
             }
             else
             {
+                currentState = BossState.Casting;
                 AreaMeleeAttack();
             }
             //TODDO LAUNCH MELEE ATTACK0000000000000000
@@ -220,18 +223,21 @@ public class BossBehaviour : MonoBehaviour
 
         if (random <= 50)
         {
-
+            currentState = BossState.Casting;
             anim.SetTrigger("rangeAttk");
 
         }
         else if(random >= 100)
         {
+            currentState = BossState.Casting;
             anim.SetTrigger("earthquake"); 
         }
         else
         {
+            currentState = BossState.Casting;
             anim.SetTrigger("thunderstorm");
         }
+
 
     }
 
@@ -244,7 +250,7 @@ public class BossBehaviour : MonoBehaviour
     {
         Vector3 lookPos = target.transform.position - transform.position;
         lookPos.y = 0;
-        Debug.DrawLine(transform.position, target.transform.position, Color.green);
+
         Quaternion targetRot = Quaternion.LookRotation(lookPos);
         transform.rotation = targetRot;
     }
@@ -256,8 +262,6 @@ public class BossBehaviour : MonoBehaviour
     
     private void RangeAttack()
     {
-        Debug.DrawRay(transform.position, Vector3.forward, Color.red, 40f);
-        Debug.DrawRay(transform.position, Vector3.back, Color.blue, 40f);
 
         ParticleSystem ps = Instantiate(rangeAttack, transform.position, transform.rotation);
         ParticleSystem ps2 = Instantiate(rangeAttack, transform.position, transform.rotation);
@@ -290,7 +294,6 @@ public class BossBehaviour : MonoBehaviour
 
     public void EarthQuake()
     {
-        Debug.Log("eq hehehe");
         ParticleSystem go;
 
         go =Instantiate(earthQuake, earthquakeSpawn.position, earthQuake.gameObject.transform.rotation);
@@ -319,21 +322,21 @@ public class BossBehaviour : MonoBehaviour
         {
             case Phases.Phase0:
                 currentPhase = Phases.Phase1;
-                Debug.Log("Phase1");
+
                 break;
 
             case Phases.Phase1:
                 currentPhase = Phases.Phase2;
-                Debug.Log("Phase2");
+
                 break;
 
             case Phases.Phase2:
                 currentPhase = Phases.Phase3;
-                Debug.Log("Phase3");
+
                 break;
 
             case Phases.Phase3:
-                Debug.Log("WON!");
+
                 break;
         }
 
@@ -383,7 +386,6 @@ public class BossBehaviour : MonoBehaviour
     public void GetDamage()
     {
         currentHP--;
-        Debug.Log(currentHP);
         if(currentHP == 0)
         {
             currentState = BossState.ChangingPhase;

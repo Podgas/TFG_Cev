@@ -140,7 +140,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_896C635B: 0.02
+    - Vector1_896C635B: 0.07
     - Vector1_ECAA24F1: 0.61
     - _AORemapMax: 1
     - _AORemapMin: 0
@@ -292,7 +292,7 @@ Material:
     - _ZTestGBuffer: 3
     - _ZTestModeDistortion: 4
     - _ZTestTransparent: 4
-    - _ZWrite: 0
+    - _ZWrite: 1
     m_Colors:
     - Vector2_FA083064: {r: 2, g: 1, b: 3, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

@@ -269,6 +269,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
+    - Color_B964DCDF: {r: 0.101960786, g: 0.59607846, b: 1, a: 1}
     - Vector2_365A9FD7: {r: 2, g: 2, b: 0, a: 0}
     - Vector2_5A761B98: {r: 0.43, g: 2.02, b: 0, a: 0}
     - Vector2_6970AF12: {r: 0.21, g: 0.59, b: 0, a: 0}
