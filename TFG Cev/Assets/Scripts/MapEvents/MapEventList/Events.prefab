@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 50.667908, y: 9.87606, z: 34.303226}
   m_Children: []
   m_Father: {fileID: 429253653175287741}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 56.587, z: 0}
 --- !u!65 &835611213
 BoxCollider:
@@ -62,10 +62,13 @@ MonoBehaviour:
   _isActive: 0
   wasActive: 0
   isTutorial: 1
+  isExtra: 0
   onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
   onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
   tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
   tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 0}
+  questLine: 
 --- !u!1 &842922029
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,7 +99,7 @@ Transform:
   m_LocalScale: {x: 25.641663, y: 10.665157, z: 27.767527}
   m_Children: []
   m_Father: {fileID: 429253653175287741}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 3.6430001, z: 0}
 --- !u!65 &842922032
 BoxCollider:
@@ -128,10 +131,13 @@ MonoBehaviour:
   _isActive: 0
   wasActive: 0
   isTutorial: 1
+  isExtra: 0
   onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
   onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
   tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
   tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 0}
+  questLine: 
 --- !u!1 &945443381
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,10 +200,13 @@ MonoBehaviour:
   _isActive: 0
   wasActive: 0
   isTutorial: 1
+  isExtra: 0
   onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
   onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
   tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
   tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 0}
+  questLine: 
 --- !u!1 &1531848800
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,10 +269,13 @@ MonoBehaviour:
   _isActive: 0
   wasActive: 0
   isTutorial: 1
+  isExtra: 0
   onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
   onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
   tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
   tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 0}
+  questLine: 
 --- !u!1 &1628766414
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,10 +371,13 @@ MonoBehaviour:
   _isActive: 0
   wasActive: 0
   isTutorial: 1
+  isExtra: 0
   onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
   onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
   tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
   tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 0}
+  questLine: 
 --- !u!1 &26003607514096484
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,7 +428,7 @@ MonoBehaviour:
   mapEventList:
   - {fileID: 2010089208}
   - {fileID: 62284098}
-  - {fileID: 909890938}
+  - {fileID: 0}
   - {fileID: 152777795}
   - {fileID: 1300712989}
   - {fileID: 835611212}
@@ -534,10 +549,13 @@ MonoBehaviour:
   _isActive: 0
   wasActive: 0
   isTutorial: 1
+  isExtra: 0
   onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
   onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
   tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
   tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 0}
+  questLine: 
 --- !u!1 &1592733225896689756
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,7 +586,7 @@ Transform:
   m_LocalScale: {x: 22.638, y: 3.9315, z: 8.878659}
   m_Children: []
   m_Father: {fileID: 429253653175287741}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: -2.2710001, z: 0}
 --- !u!65 &9034699589366187704
 BoxCollider:
@@ -600,10 +618,13 @@ MonoBehaviour:
   _isActive: 0
   wasActive: 0
   isTutorial: 1
+  isExtra: 0
   onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
   onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
   tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
   tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 0}
+  questLine: 
 --- !u!1 &4376894792216691691
 GameObject:
   m_ObjectHideFlags: 0
@@ -634,7 +655,7 @@ Transform:
   m_LocalScale: {x: 38.219738, y: 7.9192204, z: 8.878659}
   m_Children: []
   m_Father: {fileID: 429253653175287741}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: -11.059001, z: 0}
 --- !u!65 &1535392884545785064
 BoxCollider:
@@ -666,10 +687,13 @@ MonoBehaviour:
   _isActive: 0
   wasActive: 0
   isTutorial: 1
+  isExtra: 0
   onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
   onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
   tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
   tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 0}
+  questLine: 
 --- !u!1 &5359292068845541142
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,7 +723,6 @@ Transform:
   m_Children:
   - {fileID: 8099964966546418763}
   - {fileID: 1675643342272515191}
-  - {fileID: 6366265213142292372}
   - {fileID: 8096457498874453218}
   - {fileID: 742897273029683969}
   - {fileID: 835611211}
@@ -707,72 +730,6 @@ Transform:
   m_Father: {fileID: 4380394198366297570}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5791077657945272698
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6366265213142292372}
-  - component: {fileID: 2299166311429962162}
-  - component: {fileID: 909890938}
-  m_Layer: 0
-  m_Name: RunJump
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6366265213142292372
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5791077657945272698}
-  m_LocalRotation: {x: -0, y: -0.09478015, z: -0, w: 0.99549824}
-  m_LocalPosition: {x: 8.5, y: 9.81, z: 34.08}
-  m_LocalScale: {x: 57.620075, y: 4.976886, z: 13.981982}
-  m_Children: []
-  m_Father: {fileID: 429253653175287741}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: -10.877001, z: 0}
---- !u!65 &2299166311429962162
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5791077657945272698}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &909890938
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5791077657945272698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3480df523ab4c624da43a76b19bda883, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: 
-  volume: {fileID: 2299166311429962162}
-  _isActive: 0
-  wasActive: 0
-  isTutorial: 1
-  onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
-  onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
-  tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
-  tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
 --- !u!1 &7844265968772760239
 GameObject:
   m_ObjectHideFlags: 0
@@ -835,7 +792,10 @@ MonoBehaviour:
   _isActive: 0
   wasActive: 0
   isTutorial: 1
+  isExtra: 0
   onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
   onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
   tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
   tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 0}
+  questLine: 

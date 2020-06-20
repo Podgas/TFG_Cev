@@ -25,6 +25,9 @@ public class HUDController : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI quest;
 
+    [SerializeField]
+    List<GameObject> tutorialPanels;
+
 
     private void Start()
     {
@@ -64,11 +67,54 @@ public class HUDController : MonoBehaviour
 
     public void OnTutorialEnter(GameObject tutorial)
     {
-        tutorialPanel.SetActive(true);
+
+        switch (tutorial.name)
+        {
+
+            case "Walk":
+                tutorialPanels[0].SetActive(true);
+                break;
+            case "Jump":
+                tutorialPanels[1].SetActive(true);
+                break;
+            case "Run":
+                tutorialPanels[2].SetActive(true);
+                break;
+            case "Climb":
+                tutorialPanels[3].SetActive(true);
+                break;
+            case "Stealth":
+                tutorialPanels[4].SetActive(true);
+                break;
+            case "Combat":
+                tutorialPanels[4].SetActive(true);
+                break;
+        }
     }
     public void OnTutorialExit(GameObject tutorial)
     {
-        tutorialPanel.SetActive(false);
+        switch (tutorial.name)
+        {
+
+            case "Walk":
+                tutorialPanels[0].SetActive(false);
+                break;
+            case "Jump":
+                tutorialPanels[1].SetActive(false);
+                break;
+            case "Run":
+                tutorialPanels[2].SetActive(false);
+                break;
+            case "Climb":
+                tutorialPanels[3].SetActive(false);
+                break;
+            case "Stealth":
+                tutorialPanels[4].SetActive(false);
+                break;
+            case "Combat":
+                tutorialPanels[4].SetActive(false);
+                break;
+        }
     }
 
     public void OnCatch()

@@ -50,7 +50,7 @@ public class FieldOfViewSystem : MonoBehaviour
     }
     protected virtual void LateUpdate()
     {
-        DrawFieldOfView();
+       // DrawFieldOfView();
     }
 
 
@@ -82,10 +82,10 @@ public class FieldOfViewSystem : MonoBehaviour
 
     //DEBUG FUNCTIONS FOV
     void StartMeshDebug()
-    {
+    {/*
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
-        viewMeshFilter.mesh = viewMesh;
+        viewMeshFilter.mesh = viewMesh;*/
     }
     void DrawFieldOfView()
     {

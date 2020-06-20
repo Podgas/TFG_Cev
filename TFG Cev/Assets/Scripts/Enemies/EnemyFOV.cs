@@ -52,7 +52,7 @@ public class EnemyFOV : FieldOfViewSystem
         block = new MaterialPropertyBlock();
         color = freeColor;
         block.SetColor("_BaseColor", color);
-        viewCone.GetComponent<Renderer>().SetPropertyBlock(block);
+        //viewCone.GetComponent<Renderer>().SetPropertyBlock(block);
        
     }
 
@@ -119,7 +119,6 @@ public class EnemyFOV : FieldOfViewSystem
         }
 
         //block.SetColor("_BaseColor", color);
-        viewCone.GetComponent<Renderer>().SetPropertyBlock(block);
 
     }
 
