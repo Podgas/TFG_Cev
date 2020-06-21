@@ -140,6 +140,8 @@ public class PlayerController : MonoBehaviour
     [Header("OtherVars")]
     [SerializeField]
     LevelChanger levelChanger;
+    [SerializeField]
+    FloatEvent onObjectiveComplete;
 
 
 
@@ -149,6 +151,7 @@ public class PlayerController : MonoBehaviour
     public bool attak1;
 
     bool inWagon;
+    bool haveMedallion;
     private void Awake()
     {
         InitStats();
@@ -518,16 +521,36 @@ public class PlayerController : MonoBehaviour
 
     void Interact(Transform objectToInteract)
     {
-        if (!stats.playerStatus.isFox) {
 
-            switch (objectToInteract.tag)
-            {
-                case "Climb":
-                    stats.playerStatus.isClimbing = true;
-                    stats.playerStatus.isGrounded = false;
-                    _moveDirection.y = 0;
+        switch (objectToInteract.tag)
+        {
+            case "Climb":
+                stats.playerStatus.isClimbing = true;
+                anim.SetBool("isClimbing",true);
+                stats.playerStatus.isGrounded = false;
+                _moveDirection.y = 0;
                 break;
-            }
+            case "InteractObject":
+                
+                if(objectToInteract.name == "Medallion")
+                {
+                    onObjectiveComplete.Raise(0);
+                    haveMedallion = true;
+                    Destroy(objectToInteract.gameObject);
+                }else if(objectToInteract.name == "Ether")
+                {
+                    Destroy(objectToInteract.gameObject);
+                    onObjectiveComplete.Raise(1);
+                }else if(objectToInteract.name == "Medallion_door")
+                {
+                    if (haveMedallion)
+                        objectToInteract.GetComponent<Animator>().SetBool("isOn", true);
+                }
+
+                break;
+            case "Lever":
+                objectToInteract.GetComponent<BaseInteractObject>().OnInteract();
+                break;
         }
     }
 
@@ -538,6 +561,11 @@ public class PlayerController : MonoBehaviour
             stats.playerStatus.canClimb = true;
             objectToInteract = other.transform;
         }
+        if (other.tag == "InteractObject")
+        {
+            objectToInteract = other.transform;
+        }
+
         //TODO:Revisar funcionamiento
         //TODO: Reacer para recibir daño por cada enemigo en función del ataque
         if(other.tag == "HitBoxEnemy" && !GodMode.Instance.isGodMode)
@@ -563,6 +591,7 @@ public class PlayerController : MonoBehaviour
         {
             stats.playerStatus.canClimb = false;
             objectToInteract = null;
+            anim.SetBool("isClimbing", false);
         }
         if (other.tag == "Wagon")
         {

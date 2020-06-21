@@ -29,9 +29,12 @@ public class OrochiBehave : EnemyBase
     CombatStates combatStates = CombatStates.CDAction;
 
 
+    static List<GameObject> allOrochi = new List<GameObject>();
 
     protected override void Start()
     {
+        allOrochi.Add(gameObject);
+
         base.Start();
     }
     private void LateUpdate()
@@ -170,5 +173,11 @@ public class OrochiBehave : EnemyBase
     }
 
 
-
+    public static void DestroyAllOrochi()
+    {
+        foreach(GameObject go in allOrochi)
+        {
+            Destroy(go);
+        }
+    }
 }

@@ -6,11 +6,6 @@ public class ClimbInteract : BaseInteractObject
 {
 
 
-    protected override void Start()
-    {
-
-    }
-
     public override void OnInteract()
     {
 
