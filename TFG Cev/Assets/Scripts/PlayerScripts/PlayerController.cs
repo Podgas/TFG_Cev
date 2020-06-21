@@ -615,10 +615,12 @@ public class PlayerController : MonoBehaviour
     {
         if (stats.playerStatus.canClimb)
         {
+            stats.playerStatus.isClimbing = true;
             //Movemos en X,Y para trepar (pared) 
             Vector3 climbDirection;
             climbDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-
+            float blend = (Mathf.Abs(Input.GetAxis("Horizontal")) + Mathf.Abs(Input.GetAxis("Vertical")));
+            anim.SetFloat("Climb",blend);
             //TODO: Unificar los move
             cc.Move(climbDirection * speed * Time.deltaTime);
         }
