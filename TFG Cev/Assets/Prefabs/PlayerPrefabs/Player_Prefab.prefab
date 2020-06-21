@@ -85,6 +85,8 @@ MonoBehaviour:
   anim: {fileID: 729447796}
   vfx: {fileID: 11400000, guid: cc24ca2624be3e54495b693d4d0fcbc1, type: 2}
   levelChanger: {fileID: 0}
+  onObjectiveComplete: {fileID: 11400000, guid: 06078af76f11f9d4cb92cb3ae545262d,
+    type: 2}
   spawnPoint: {fileID: 0}
   attak1: 0
 --- !u!143 &1539298956279234039
