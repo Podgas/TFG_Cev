@@ -14,15 +14,16 @@ public class BaseInteractObject : MonoBehaviour, IInteractObjects
 
     public virtual void OnInteract()
     {
-        isOn = !isOn;
-        anim.SetBool("isOn", isOn);
+        Debug.Log("Interaction!");
+
+        anim.SetBool("isOn", true);
         StartCoroutine("StartMechanimAnim");
     }
 
     public virtual void ActivateMechanism()
     {
         
-        mechanism.GetComponent<Animator>().SetBool("isOn", isOn);
+        mechanism.GetComponent<Animator>().SetBool("isOpen", true);
     }
 
     IEnumerator StartMechanimAnim()

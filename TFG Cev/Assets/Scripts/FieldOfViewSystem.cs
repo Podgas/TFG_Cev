@@ -17,6 +17,7 @@ public class FieldOfViewSystem : MonoBehaviour
     public Vector3 model;
     
     public List<Transform> visibleTargets = new List<Transform>();
+    public List<Transform> heardTargets = new List<Transform>();
 
     [Header("Mesh Debug")]
     public float meshResolution;
@@ -39,7 +40,7 @@ public class FieldOfViewSystem : MonoBehaviour
         while (true)
         {
             FindVisibleTargets(viewRadius, visibleTargets);
-
+            ListenToTargets(7, heardTargets);
             yield return new WaitForSeconds(delay);
             
         }
@@ -77,6 +78,25 @@ public class FieldOfViewSystem : MonoBehaviour
                         viewArray.Add(targetsInViewRadius[0].transform);
                 }
             }
+        }
+    }
+
+    void ListenToTargets(float radius, List<Transform> viewArray)
+    {
+        Collider[] targetsInViewRadius = null;
+
+        viewArray.Clear();
+        targetsInViewRadius = Physics.OverlapSphere(pointOfView.position, radius, targetMask);
+
+        for (int i = 0; i < targetsInViewRadius.Length; i++)
+        {
+
+            Vector3 target = targetsInViewRadius[i].transform.position;
+            Vector3 dirToTarget = (target - pointOfView.position).normalized;
+
+            if (!viewArray.Contains(targetsInViewRadius[0].transform))
+                viewArray.Add(targetsInViewRadius[0].transform);
+
         }
     }
 

@@ -119,7 +119,7 @@ public class BossBehaviour : MonoBehaviour
     void Update()
     {
         //Calculate distance between boss and player + Rotation
-        LookAt();
+        
         DistanceToTarget();
 
         switch (currentState)
@@ -129,6 +129,7 @@ public class BossBehaviour : MonoBehaviour
                 break;
             case BossState.Waiting:
                 WaitForAttack();
+                LookAt();
                 break;
             case BossState.ChooseBehave:
                 currentState = ChooseBehave();
@@ -189,8 +190,7 @@ public class BossBehaviour : MonoBehaviour
 
             if(random <= 50)
             {
-                //MeleeAttack();
-                AreaMeleeAttack();
+                MeleeAttack();
                 currentState = BossState.Casting;
             }
             else
@@ -203,6 +203,7 @@ public class BossBehaviour : MonoBehaviour
         }
         else
         {
+            LookAt();
             anim.SetBool("isMoving", true);
             GoToPlayer();
             ChooseBehave();
@@ -218,10 +219,10 @@ public class BossBehaviour : MonoBehaviour
         }
         else if (currentPhase == Phases.Phase2)
         {
-            random += Random.Range(0, 50);
+            random += Random.Range(0, 100);
         }
 
-        if (random <= 50)
+        if (random <= 30)
         {
             currentState = BossState.Casting;
             anim.SetTrigger("rangeAttk");
@@ -244,7 +245,7 @@ public class BossBehaviour : MonoBehaviour
     private void GoToPlayer()
     {
         agent.destination = (target.transform.position);
-        
+
     }
     private void LookAt()
     {
@@ -266,9 +267,9 @@ public class BossBehaviour : MonoBehaviour
         ParticleSystem ps = Instantiate(rangeAttack, transform.position, transform.rotation);
         ParticleSystem ps2 = Instantiate(rangeAttack, transform.position, transform.rotation);
         ParticleSystem ps3 = Instantiate(rangeAttack, transform.position, transform.rotation);
-        ps.transform.LookAt(target.transform);
-        ps2.transform.LookAt(target.transform);
-        ps3.transform.LookAt(target.transform);
+        ps.transform.LookAt(transform.forward * 2);
+        ps2.transform.LookAt(transform.forward * 2);
+        ps3.transform.LookAt(transform.forward * 2);
 
         ps2.transform.Rotate(new Vector3(0, 20, 0));
         ps3.transform.Rotate(new Vector3(0, -20, 0));
@@ -312,7 +313,13 @@ public class BossBehaviour : MonoBehaviour
 
     private void ActivateArea()
     {
-        Instantiate(jump, earthquakeSpawn.position, jump.transform.rotation);
+        RaycastHit rhit;
+
+        if (Physics.Raycast(earthquakeSpawn.position, Vector3.down, out rhit, 300f, LayerMask.NameToLayer("Ground")))
+        {
+            Instantiate(earthQuake, rhit.point, earthQuake.gameObject.transform.rotation);
+        }
+
     }
 
     private void PhaseChange()
@@ -327,12 +334,12 @@ public class BossBehaviour : MonoBehaviour
 
             case Phases.Phase1:
                 currentPhase = Phases.Phase2;
-
+                ChangeSpawnPoint();
                 break;
 
             case Phases.Phase2:
                 currentPhase = Phases.Phase3;
-
+                ChangeSpawnPoint();
                 break;
 
             case Phases.Phase3:
@@ -340,7 +347,13 @@ public class BossBehaviour : MonoBehaviour
                 break;
         }
 
-        if(currentPoint.position == spawnPoint1.position)
+        
+        currentState = BossState.Waiting;
+    }
+
+    public void ChangeSpawnPoint()
+    {
+        if (currentPoint.position == spawnPoint1.position)
         {
             currentPoint = spawnPoint2;
         }
@@ -349,12 +362,13 @@ public class BossBehaviour : MonoBehaviour
             currentPoint = spawnPoint1;
         }
         agent.Warp(currentPoint.position);
-        currentState = BossState.Waiting;
     }
 
     private void LandingSpawn()
     {
         currentState = BossState.ChangingPhase;
+        anim.SetTrigger("startCombat");
+        jump.Play();
     }
 
     private void SpawnThunder()

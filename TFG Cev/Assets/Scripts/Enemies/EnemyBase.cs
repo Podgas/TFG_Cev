@@ -99,6 +99,7 @@ public class EnemyBase : MonoBehaviour
             currentBaseState = EnemyBaseStates.Patrol;
         else
         {
+            behaviourType = EnemyBehaviour.PatrolFight;
             currentBaseState = EnemyBaseStates.Static;
         }
             
@@ -128,14 +129,20 @@ public class EnemyBase : MonoBehaviour
                             if(behaviourType == EnemyBehaviour.InPlace)
                                 _currentNode = nm.NextNode(_currentNode);
                             else
-                                anim.SetTrigger("move");
+                            {
+                                if (behaviourType != EnemyBehaviour.InPlace && behaviourType != EnemyBehaviour.InPlaceCatch)
+                                {
+                                    anim.SetTrigger("move");
+                                }
+                            }
+                                
                         }
                             
                         break;
 
                     case PatrolStates.GoToNode:
                         
-                        if(behaviourType == EnemyBehaviour.InPlace)
+                        if(behaviourType == EnemyBehaviour.InPlace || behaviourType == EnemyBehaviour.InPlaceCatch)
                         {
                             currentPatrolState = PatrolStates.Wait;
                             _currentNode = nm.NextNode(_currentNode);
@@ -339,14 +346,13 @@ public class EnemyBase : MonoBehaviour
     public void OnAlert(Target target)
     {
         _currentTarget = target;
-        if (behaviourType != EnemyBehaviour.Static)
-        {
-            _currentTarget = target;
-            currentPatrolState = PatrolStates.Alerted;
-            Debug.Log("PASE");
-            exclamation.SetTrigger("Alert");
-            anim.SetTrigger("alert");
-        }
+
+        _currentTarget = target;
+        currentPatrolState = PatrolStates.Alerted;
+        Debug.Log("PASE");
+        exclamation.SetTrigger("Alert");
+        anim.SetTrigger("alert");
+        
     }
     public void OnDetect(Target target)
     {
@@ -354,11 +360,13 @@ public class EnemyBase : MonoBehaviour
         agent.speed = chaseSpeed;
         if (behaviourType != EnemyBehaviour.Static)
         {
-            
-            currentPatrolState = PatrolStates.Chase;
-            anim.SetTrigger("detected");
-            chaseTimer = 0;
+            currentBaseState = EnemyBaseStates.Patrol;
         }
+
+        currentPatrolState = PatrolStates.Chase;
+        anim.SetTrigger("detected");
+        chaseTimer = 0;
+        
 
     }
     public void OnCalm(Target target)
@@ -369,6 +377,7 @@ public class EnemyBase : MonoBehaviour
             StartCoroutine("RestartPatroling");
             anim.SetTrigger("move");
         }
+
     }    
 
     IEnumerator RestartPatroling()

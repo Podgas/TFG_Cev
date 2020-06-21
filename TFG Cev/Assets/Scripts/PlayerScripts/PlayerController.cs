@@ -564,6 +564,9 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "InteractObject")
         {
             objectToInteract = other.transform;
+        }else if(other.tag == "Lever")
+        {
+            objectToInteract = other.transform;
         }
 
         //TODO:Revisar funcionamiento
@@ -592,6 +595,14 @@ public class PlayerController : MonoBehaviour
             stats.playerStatus.canClimb = false;
             objectToInteract = null;
             anim.SetBool("isClimbing", false);
+        }
+        if (other.tag == "InteractObject")
+        {
+            objectToInteract = null;
+        }
+        else if (other.tag == "Lever")
+        {
+            objectToInteract = null;
         }
         if (other.tag == "Wagon")
         {
