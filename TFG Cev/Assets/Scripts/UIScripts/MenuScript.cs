@@ -36,10 +36,12 @@ public class MenuScript : MonoBehaviour
     }
     public void PlayButton()
     {
+        AudioManager.Instance.PlaySound("play");
         SceneController.LoadScene(SceneController.Scene.Tutorial_town, true);
     }
     public void QuitButton()
     {
+        AudioManager.Instance.PlaySound("back");
         Application.Quit();
     }
 
@@ -77,6 +79,12 @@ public class MenuScript : MonoBehaviour
 
     public void OnHover()
     {
+        AudioManager.Instance.PlaySound("hover");
         Debug.Log("hover");
+    }
+    
+    public void OnClick()
+    {
+        AudioManager.Instance.PlaySound("press");
     }
 }
