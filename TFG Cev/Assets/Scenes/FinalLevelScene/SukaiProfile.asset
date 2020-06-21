@@ -188,7 +188,7 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 6.3
+    m_Value: 6.7
   compensation:
     m_OverrideState: 1
     m_Value: 0
@@ -492,7 +492,7 @@ MonoBehaviour:
     m_Value: 0
   exposure:
     m_OverrideState: 1
-    m_Value: 5.2
+    m_Value: 3.75
   multiplier:
     m_OverrideState: 0
     m_Value: 1
@@ -524,12 +524,12 @@ MonoBehaviour:
     max: 1
   sunSizeConvergence:
     m_OverrideState: 1
-    m_Value: 6.19
+    m_Value: 6.56
     min: 1
     max: 10
   atmosphereThickness:
     m_OverrideState: 1
-    m_Value: 0.59
+    m_Value: 0.18
     min: 0
     max: 5
   skyTint:
@@ -688,7 +688,7 @@ MonoBehaviour:
   m_AdvancedMode: 0
   postExposure:
     m_OverrideState: 1
-    m_Value: 0.84
+    m_Value: 0.47
   contrast:
     m_OverrideState: 1
     m_Value: -27
@@ -707,7 +707,7 @@ MonoBehaviour:
     max: 180
   saturation:
     m_OverrideState: 1
-    m_Value: -3
+    m_Value: -21
     min: -100
     max: 100
 --- !u!114 &8836780258556273782

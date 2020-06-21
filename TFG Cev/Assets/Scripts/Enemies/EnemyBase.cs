@@ -126,16 +126,12 @@ public class EnemyBase : MonoBehaviour
                         else
                         {
                             currentPatrolState = PatrolStates.GoToNode;
-                            if(behaviourType == EnemyBehaviour.InPlace)
-                                _currentNode = nm.NextNode(_currentNode);
-                            else
+                            if(behaviourType != EnemyBehaviour.InPlace && behaviourType  != EnemyBehaviour.InPlaceCatch)
                             {
-                                if (behaviourType != EnemyBehaviour.InPlace && behaviourType != EnemyBehaviour.InPlaceCatch)
-                                {
-                                    anim.SetTrigger("move");
-                                }
+                                anim.SetTrigger("move");
                             }
-                                
+                            _currentNode = nm.NextNode(_currentNode);
+
                         }
                             
                         break;
@@ -145,8 +141,6 @@ public class EnemyBase : MonoBehaviour
                         if(behaviourType == EnemyBehaviour.InPlace || behaviourType == EnemyBehaviour.InPlaceCatch)
                         {
                             currentPatrolState = PatrolStates.Wait;
-                            _currentNode = nm.NextNode(_currentNode);
-
                             LookToPoint(_currentNode.position);
                         }
                         else
@@ -339,17 +333,13 @@ public class EnemyBase : MonoBehaviour
 
     public void Dissolve()
     {
-        Debug.Log("dissolve");
         isDissolving = true;
     }
 
     public void OnAlert(Target target)
     {
         _currentTarget = target;
-
-        _currentTarget = target;
         currentPatrolState = PatrolStates.Alerted;
-        Debug.Log("PASE");
         exclamation.SetTrigger("Alert");
         anim.SetTrigger("alert");
         
@@ -371,9 +361,10 @@ public class EnemyBase : MonoBehaviour
     }
     public void OnCalm(Target target)
     {
+
+
         if (behaviourType != EnemyBehaviour.Static)
         {
-            _currentTarget = target;
             StartCoroutine("RestartPatroling");
             anim.SetTrigger("move");
         }

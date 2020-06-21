@@ -57,6 +57,9 @@ ModelImporter:
   - first:
       74: -2377960746331218760
     second: JumpLandSword
+  - first:
+      74: -3015157843263203539
+    second: StoppedClimb
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -276,7 +279,7 @@ ModelImporter:
       name: Climb
       takeName: Take 001
       internalID: 0
-      firstFrame: 216
+      firstFrame: 217
       lastFrame: 246
       wrapMode: 0
       orientationOffsetY: 0
@@ -562,6 +565,35 @@ ModelImporter:
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
+    - serializedVersion: 16
+      name: StoppedClimb
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 219
+      lastFrame: 220
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 219
     isReadable: 0
   meshes:
     lODScreenPercentages: []

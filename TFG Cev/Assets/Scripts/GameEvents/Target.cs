@@ -13,10 +13,12 @@ public class Target
         currentPosition = target;
         lastSeenPosition = target.position;
         isSeen = true;
+        Debug.Log("Detected y pase  " + target);
     }
 
     public void Reset()
     {
+        Debug.Log("UH PAPI ");
         currentPosition = null;
         lastSeenPosition = Vector3.zero;
         isSeen = false;

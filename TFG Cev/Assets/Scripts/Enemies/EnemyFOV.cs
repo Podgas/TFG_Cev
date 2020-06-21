@@ -110,7 +110,6 @@ public class EnemyFOV : FieldOfViewSystem
             {
                 if (isAlert)
                 {
-                    _target.Reset();
                     baseMotor.OnCalm(_target);
                     isAlert = false;
                     color = freeColor;
@@ -123,7 +122,6 @@ public class EnemyFOV : FieldOfViewSystem
             float distance = Vector3.Distance(transform.position, _target.currentPosition.position);
             if(distance > escapeRadius)
             {
-                _target.Reset();
                 baseMotor.OnCalm(_target);
                 isAlert = false;
                 isChasing = false;
