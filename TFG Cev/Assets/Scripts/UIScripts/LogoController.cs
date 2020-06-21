@@ -5,9 +5,7 @@ using UnityEngine;
 public class LogoController : MonoBehaviour
 {
     [SerializeField]
-    bool fadeout = false;
-    float timeToFade = 2f;
-    float actualTime;   
+    bool sukaiLogo = false; 
     Animator anim;
 
     void Start()
@@ -18,20 +16,13 @@ public class LogoController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("FadeIn") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >=1.0f) { 
-            if (actualTime <= timeToFade)
-            {
-                actualTime += Time.deltaTime;
-            }
-            else
-            {
-                anim.SetBool("fadeOut", true);
-            }
-
-        
+   
+        if (Input.anyKeyDown && anim.GetCurrentAnimatorStateInfo(0).IsName("ProcyonLogo") || anim.GetCurrentAnimatorStateInfo(0).IsName("ProcyonLogo") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            anim.SetBool("sukaiLogo", true);
         }
 
-        if (Input.anyKey || anim.GetCurrentAnimatorStateInfo(0).IsName("FadeOut") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        if (Input.anyKeyDown && anim.GetCurrentAnimatorStateInfo(0).IsName("SukaiLogo") || anim.GetCurrentAnimatorStateInfo(0).IsName("SukaiLogo") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
             SceneController.LoadScene(SceneController.Scene.TitleScreen,false);
         }

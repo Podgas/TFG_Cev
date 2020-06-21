@@ -11,7 +11,6 @@ public static class SceneController
     {
         LogoScreen,
         TitleScreen,
-        TestScene,
         LoadingScene,
         Tutorial_town,
         Fortess,

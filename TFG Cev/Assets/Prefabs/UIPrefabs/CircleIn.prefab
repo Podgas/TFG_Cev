@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1380960448549195474}
   - component: {fileID: 8987408528227686754}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: CircleIn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ RectTransform:
   - {fileID: 3239674361450529650}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 48.095905}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 10.936958}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -30.7, y: -4.7}
