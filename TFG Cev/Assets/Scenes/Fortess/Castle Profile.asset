@@ -33,23 +33,23 @@ MonoBehaviour:
     max: 1
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.178
+    m_Value: 0.077
     min: 0.01
     max: 1
   roundness:
     m_OverrideState: 1
-    m_Value: 0.851
+    m_Value: 0.471
     min: 0
     max: 1
   rounded:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
   mask:
     m_OverrideState: 0
     m_Value: {fileID: 0}
   opacity:
-    m_OverrideState: 0
-    m_Value: 1
+    m_OverrideState: 1
+    m_Value: 0.933
     min: 0
     max: 1
 --- !u!114 &-3811870176913268376

@@ -8,6 +8,10 @@ public class MapEventsController : MonoBehaviour
     [SerializeField]
     public List<MapEvent> mapEventList;
     Transform eventPool;
+    [SerializeField]
+    List<GameObject> etherGO;
+    [SerializeField]
+    List<GameObject> spawners;
     private void Start()
     {
     }
@@ -33,6 +37,26 @@ public class MapEventsController : MonoBehaviour
             }
         }
         return index;
+    }
+
+    public void OnObjectiveComplete(float eventIndex)
+    {
+
+        switch (eventIndex) { 
+
+            case 1:
+
+                etherGO[0].SetActive(false);
+                etherGO[1].SetActive(true);
+
+                foreach(GameObject go in spawners)
+                {
+                    go.SetActive(true);
+                }
+
+            break;
+        }
+
     }
     
 

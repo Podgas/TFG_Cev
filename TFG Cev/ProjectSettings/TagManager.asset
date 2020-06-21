@@ -23,6 +23,9 @@ TagManager:
   - LamiaAttack
   - ClimbArea
   - Event
+  - Checkpoint
+  - Wagon
+  - Door
   layers:
   - Default
   - TransparentFX

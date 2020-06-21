@@ -28,6 +28,9 @@ public class HUDController : MonoBehaviour
     [SerializeField]
     List<GameObject> tutorialPanels;
 
+    [SerializeField]
+    List<GameObject> objetiveIcons;
+
 
     private void Start()
     {
@@ -141,5 +144,27 @@ public class HUDController : MonoBehaviour
     public void ChangeQuest(string text)
     {
         quest.text = text;
+    }
+
+    public void OnObjetiveComplete(float index)
+    {
+        switch (index)
+        {
+            case 0:
+
+                objetiveIcons[0].SetActive(false);
+                ChangeQuest("Use the medallion on the door");
+                    
+                break;
+            case 1:
+
+                objetiveIcons[1].SetActive(true);
+                ChangeQuest("Escape from the fortress");
+                break;
+            case 2:
+                ChangeQuest("Get the ether");
+                objetiveIcons[0].SetActive(false);
+                break;
+        }
     }
 }

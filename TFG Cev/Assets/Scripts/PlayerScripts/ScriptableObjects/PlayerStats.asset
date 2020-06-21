@@ -18,7 +18,7 @@ MonoBehaviour:
   hp:
     maxValue: 300
     minValue: 0
-    value: 300
+    value: 225
   maxAmmo: 6
   playerStatus:
     isGrounded: 1
@@ -34,4 +34,4 @@ MonoBehaviour:
     jumpPressed: 0
     interactPressed: 0
   canMove: 1
-  spawnPoint: {x: 49.631832, y: 7.6400414, z: -220.10251}
+  spawnPoint: {x: 109.50183, y: 19.400042, z: -306.88254}

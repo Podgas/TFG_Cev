@@ -86,6 +86,8 @@ public class EnemyBase : MonoBehaviour
     bool isDissolving;
     float dissolveTime = 0;
 
+    [SerializeField]
+    bool haveNode;
     protected virtual void Start()
     {
         if (nm != null)
@@ -202,13 +204,16 @@ public class EnemyBase : MonoBehaviour
 
         }
 
-        if (currentPatrolState != PatrolStates.Chase && ( other.tag == "Node" && other.transform.parent.name == nm.name) )
+
+        if (currentPatrolState != PatrolStates.Chase && (other.tag == "Node" && other.transform.parent.name == nm.name))
         {
 
             LookToPoint(_currentNode.position + (_currentNode.forward * 2));
             currentPatrolState = PatrolStates.Wait;
 
         }
+
+        
     }
 
     void GetDamage(float dmg, Transform damager)
@@ -265,11 +270,12 @@ public class EnemyBase : MonoBehaviour
     protected void MoveAgent(Transform destination)
     {
         agent.SetDestination(destination.position);
-        Vector3 lookPos = destination.position - transform.position;
+        Debug.DrawRay(transform.position, agent.desiredVelocity, Color.red);
+        Vector3 lookPos;
         lookPos.y = 0;
         Debug.DrawLine(transform.position, destination.position,Color.green);
-        Quaternion targetRot = Quaternion.LookRotation(lookPos);
-        transform.rotation = targetRot;
+        Quaternion targetRot = Quaternion.LookRotation(agent.desiredVelocity);
+        StartCoroutine("SmoothRotation",transform.position + agent.desiredVelocity*5);
     }
 
     protected void LookToPoint(Vector3 lookPoint)

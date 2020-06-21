@@ -1,5 +1,177 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &150626659
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 150626660}
+  m_Layer: 0
+  m_Name: Fortress
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &150626660
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 150626659}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1050041367}
+  - {fileID: 607264284}
+  - {fileID: 1521162554}
+  - {fileID: 180561067}
+  m_Father: {fileID: 4380394198366297570}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &180561066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 180561067}
+  - component: {fileID: 180561069}
+  - component: {fileID: 180561068}
+  m_Layer: 0
+  m_Name: StartFortress
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &180561067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180561066}
+  m_LocalRotation: {x: -0, y: -0.026631976, z: -0, w: 0.99964535}
+  m_LocalPosition: {x: 50.1, y: 12.36, z: -231.2}
+  m_LocalScale: {x: 9.316257, y: 2.632122, z: 5.606719}
+  m_Children: []
+  m_Father: {fileID: 150626660}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: -3.052, z: 0}
+--- !u!65 &180561069
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180561066}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &180561068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180561066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3480df523ab4c624da43a76b19bda883, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: 
+  volume: {fileID: 180561069}
+  _isActive: 0
+  wasActive: 0
+  isTutorial: 0
+  isExtra: 1
+  onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
+  onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
+  tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
+  tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 11400000, guid: 8b707a89988dd664fb71bbe9359f6fe7, type: 2}
+  questLine: Enter the building
+--- !u!1 &607264283
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 607264284}
+  - component: {fileID: 607264285}
+  - component: {fileID: 607264286}
+  m_Layer: 0
+  m_Name: Ether
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &607264284
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607264283}
+  m_LocalRotation: {x: -0, y: -0.02478917, z: -0, w: 0.99969274}
+  m_LocalPosition: {x: 109.47, y: 20.3, z: -309.26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 150626660}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: -2.841, z: 0}
+--- !u!65 &607264285
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607264283}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 13.29, y: 5.4, z: 5.6}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &607264286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607264283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3480df523ab4c624da43a76b19bda883, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: 
+  volume: {fileID: 607264285}
+  _isActive: 0
+  wasActive: 0
+  isTutorial: 0
+  isExtra: 1
+  onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
+  onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
+  tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
+  tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 11400000, guid: 8b707a89988dd664fb71bbe9359f6fe7, type: 2}
+  questLine: Escape from the fortress
 --- !u!1 &835611210
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,13 +266,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 842922029}
-  m_LocalRotation: {x: -0, y: 0.03178791, z: -0, w: 0.99949473}
-  m_LocalPosition: {x: 103.5, y: 20.61, z: 133.2}
+  m_LocalRotation: {x: -0, y: 0.15587804, z: -0, w: 0.98777634}
+  m_LocalPosition: {x: 96.13, y: 20.61, z: 133.2}
   m_LocalScale: {x: 25.641663, y: 10.665157, z: 27.767527}
   m_Children: []
   m_Father: {fileID: 429253653175287741}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 3.6430001, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 17.935001, z: 0}
 --- !u!65 &842922032
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -207,6 +379,144 @@ MonoBehaviour:
   tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
   extaEvent: {fileID: 0}
   questLine: 
+--- !u!1 &1050041366
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1050041367}
+  - component: {fileID: 1050041368}
+  - component: {fileID: 1050041369}
+  m_Layer: 0
+  m_Name: Medallion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1050041367
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050041366}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 106.98, y: 12.36, z: -274.93}
+  m_LocalScale: {x: 9.316257, y: 2.632122, z: 5.606719}
+  m_Children: []
+  m_Father: {fileID: 150626660}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1050041368
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050041366}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1050041369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050041366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3480df523ab4c624da43a76b19bda883, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: 
+  volume: {fileID: 1050041368}
+  _isActive: 0
+  wasActive: 0
+  isTutorial: 0
+  isExtra: 1
+  onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
+  onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
+  tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
+  tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 11400000, guid: 8b707a89988dd664fb71bbe9359f6fe7, type: 2}
+  questLine: Find the medallion
+--- !u!1 &1521162553
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1521162554}
+  - component: {fileID: 1521162555}
+  - component: {fileID: 1521162556}
+  m_Layer: 0
+  m_Name: Boss
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1521162554
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521162553}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 106.35, y: 10.8, z: -197.88}
+  m_LocalScale: {x: 4.3563, y: 2.0079, z: 3.740354}
+  m_Children: []
+  m_Father: {fileID: 150626660}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1521162555
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521162553}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1521162556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521162553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3480df523ab4c624da43a76b19bda883, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: 
+  volume: {fileID: 1521162555}
+  _isActive: 0
+  wasActive: 0
+  isTutorial: 0
+  isExtra: 1
+  onEventEnter: {fileID: 11400000, guid: 3035ce492007aaf42a352eb4a581c6b5, type: 2}
+  onEventExit: {fileID: 11400000, guid: 12a17c5b0582a4e42b8d4d3acc385ac9, type: 2}
+  tutorialEnter: {fileID: 11400000, guid: 6e53276085684534686e156a47632666, type: 2}
+  tutorialExit: {fileID: 11400000, guid: 87ab939ecb8bc0a419afecb595b3576f, type: 2}
+  extaEvent: {fileID: 11400000, guid: 8b707a89988dd664fb71bbe9359f6fe7, type: 2}
+  questLine: Defeat Raksha
 --- !u!1 &1531848800
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,6 +720,7 @@ Transform:
   m_Children:
   - {fileID: 429253653175287741}
   - {fileID: 1628766415}
+  - {fileID: 150626660}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
