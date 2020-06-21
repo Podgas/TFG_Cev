@@ -12,10 +12,6 @@ public class BaseInteractObject : MonoBehaviour, IInteractObjects
 
     bool isOn = false;
 
-    protected virtual void Start()
-    {
-        anim.SetBool("isOn", isOn);
-    }
     public virtual void OnInteract()
     {
         isOn = !isOn;
@@ -27,7 +23,6 @@ public class BaseInteractObject : MonoBehaviour, IInteractObjects
     {
         
         mechanism.GetComponent<Animator>().SetBool("isOn", isOn);
-        Debug.Log("MecanismoActivao" + isOn);
     }
 
     IEnumerator StartMechanimAnim()

@@ -29,7 +29,7 @@ public class OrochiBehave : EnemyBase
     CombatStates combatStates = CombatStates.CDAction;
 
 
-    static List<GameObject> allOrochi;
+    static List<GameObject> allOrochi = new List<GameObject>();
 
     protected override void Start()
     {

@@ -26,6 +26,7 @@ TagManager:
   - Checkpoint
   - Wagon
   - Door
+  - Lever
   layers:
   - Default
   - TransparentFX

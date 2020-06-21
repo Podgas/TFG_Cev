@@ -7,11 +7,6 @@ public class CrouchInteract : BaseInteractObject
     [SerializeField]
     VoidEvent OnPlayerCrouch;
 
-    protected override void Start()
-    {
-
-    }
-
    
     public override void OnInteract()
     {

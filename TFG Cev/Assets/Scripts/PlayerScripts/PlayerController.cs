@@ -548,6 +548,9 @@ public class PlayerController : MonoBehaviour
                 }
 
                 break;
+            case "Lever":
+                objectToInteract.GetComponent<BaseInteractObject>().OnInteract();
+                break;
         }
     }
 
