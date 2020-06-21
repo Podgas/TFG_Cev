@@ -12,6 +12,8 @@ public class MapEventsController : MonoBehaviour
     List<GameObject> etherGO;
     [SerializeField]
     List<GameObject> spawners;
+    [SerializeField]
+    GameObject door;
     private void Start()
     {
     }
@@ -53,6 +55,7 @@ public class MapEventsController : MonoBehaviour
                 {
                     go.SetActive(true);
                 }
+                door.GetComponent<Animator>().SetBool("isOpen", true);
 
             break;
         }

@@ -1874,7 +1874,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6787806694168964745}
   - component: {fileID: 7034642808265458635}
-  - component: {fileID: 7175615104612138760}
+  - component: {fileID: 8542304706091053550}
   m_Layer: 0
   m_Name: Orochi_GEO
   m_TagString: Untagged
@@ -1999,8 +1999,8 @@ SkinnedMeshRenderer:
     m_Center: {x: -1.1128359, y: 0.9662284, z: 0.000000834465}
     m_Extent: {x: 2.0092669, y: 1.3823078, z: 1.0088874}
   m_DirtyAABB: 0
---- !u!64 &7175615104612138760
-MeshCollider:
+--- !u!136 &8542304706091053550
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2009,10 +2009,10 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 0}
+  m_Radius: 0.35821238
+  m_Height: 2.6340363
+  m_Direction: 1
+  m_Center: {x: -0.0014460959, y: 1.4815127, z: 0.009682234}
 --- !u!1 &3261654663240739631
 GameObject:
   m_ObjectHideFlags: 0

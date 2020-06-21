@@ -43,8 +43,11 @@ public class EnemyFOV : FieldOfViewSystem
     bool isAlert = false;
     bool isChasing = false;
 
+    Vector3 startPos;
+
     protected override void Start()
     {
+        startPos = transform.position;
         base.Start();
 
         aggresionResidue = viewRadius - aggresionDistance;
@@ -63,7 +66,18 @@ public class EnemyFOV : FieldOfViewSystem
         //ListenTargets();
         if (!isChasing)
         {
-            if(visibleTargets.Count > 0)
+            if (heardTargets.Count > 0)
+            {
+                isChasing = true;
+                actualTime = 0;
+                isAlert = false;
+
+                _target.Detect(heardTargets[0]);
+                baseMotor.OnDetect(_target);
+                color = detectedColor;
+                    
+            }
+            else if (visibleTargets.Count > 0)
             {
                 _target.currentPosition = visibleTargets[0];
                 if (!isAlert)

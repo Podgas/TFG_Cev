@@ -244,7 +244,9 @@ public class BossBehaviour : MonoBehaviour
     private void GoToPlayer()
     {
         agent.destination = (target.transform.position);
-        
+        jump.Play();
+
+
     }
     private void LookAt()
     {
@@ -327,12 +329,12 @@ public class BossBehaviour : MonoBehaviour
 
             case Phases.Phase1:
                 currentPhase = Phases.Phase2;
-
+                ChangeSpawnPoint();
                 break;
 
             case Phases.Phase2:
                 currentPhase = Phases.Phase3;
-
+                ChangeSpawnPoint();
                 break;
 
             case Phases.Phase3:
@@ -340,7 +342,13 @@ public class BossBehaviour : MonoBehaviour
                 break;
         }
 
-        if(currentPoint.position == spawnPoint1.position)
+        
+        currentState = BossState.Waiting;
+    }
+
+    public void ChangeSpawnPoint()
+    {
+        if (currentPoint.position == spawnPoint1.position)
         {
             currentPoint = spawnPoint2;
         }
@@ -349,12 +357,12 @@ public class BossBehaviour : MonoBehaviour
             currentPoint = spawnPoint1;
         }
         agent.Warp(currentPoint.position);
-        currentState = BossState.Waiting;
     }
 
     private void LandingSpawn()
     {
         currentState = BossState.ChangingPhase;
+        anim.SetTrigger("startCombat");
     }
 
     private void SpawnThunder()

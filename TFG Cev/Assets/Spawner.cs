@@ -12,17 +12,32 @@ public class Spawner : MonoBehaviour
 
     float currentTime;
 
+    [SerializeField]
+    bool isOneSpawn;
+
+    private void Start()
+    {
+        if (isOneSpawn)
+        {
+            Instantiate(prefab, transform.position, Quaternion.identity);
+        }
+    }
     private void Update()
     {
-        currentTime += Time.deltaTime;
-
-        if (currentTime >= spawnRate)
+        
+        if(!isOneSpawn)
         {
-            currentTime = 0;
+            currentTime += Time.deltaTime;
 
-            Instantiate(prefab, transform.position, Quaternion.identity);
+            if (currentTime >= spawnRate)
+            {
+                currentTime = 0;
 
+                Instantiate(prefab, transform.position, Quaternion.identity);
+
+            }
         }
+        
 
     }
 
