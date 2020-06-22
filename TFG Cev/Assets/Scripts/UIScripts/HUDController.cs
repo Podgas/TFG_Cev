@@ -31,12 +31,29 @@ public class HUDController : MonoBehaviour
     [SerializeField]
     List<GameObject> objetiveIcons;
 
-
+    bool isChangingQuest;
+    string newQUest;
+    float currentTime = 0;
     private void Start()
     {
         hpBar.fillAmount = playerStats.hp.value / playerStats.hp.maxValue;
 
         //collectableText.text = "0/" + mc.extras.Count.ToString();
+    }
+
+    private void Update()
+    {
+        if (isChangingQuest)
+        {
+            currentTime += Time.deltaTime;
+
+            if (currentTime > 0.1f)
+            {
+                SubLetter();
+                currentTime = 0;
+            }
+        }
+            
     }
 
     public void UpdateHpBar(float percentage) {
@@ -130,19 +147,31 @@ public class HUDController : MonoBehaviour
         SceneController.LoadScene(SceneController.CurrentScene(), true);
         
     }
-    public void OnQuestEnter(GameObject entredQuest)
+    public void OnQuestEnter(GameObject enteredQuest)
     {
-
         MapEvent me;
+        me = enteredQuest.gameObject.GetComponent<MapEvent>();
+        isChangingQuest = true;
+        newQUest = me.questLine;
+    }
 
-        me = entredQuest.gameObject.GetComponent<MapEvent>();
-
-        ChangeQuest(me.questLine);
-        
+    public void SubLetter()
+    {
+        string currentQuest = quest.text;
+        int size = currentQuest.Length;
+        currentQuest = currentQuest.Substring(0, currentQuest.Length - 1);
+        quest.text = currentQuest;
+        if (currentQuest.Length == 0)
+        {
+            
+            isChangingQuest = false;
+            ChangeQuest(newQUest);
+        }
     }
 
     public void ChangeQuest(string text)
     {
+        AudioManager.Instance.PlaySound("changeQuest");
         quest.text = text;
     }
 
