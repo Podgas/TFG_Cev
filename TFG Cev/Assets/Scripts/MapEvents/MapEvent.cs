@@ -32,24 +32,31 @@ public class MapEvent : MonoBehaviour
         if (!wasActive)
         {
             _isActive = isActive;
-            wasActive = true;
         }
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player")
+        if (other.tag == "Player")
         {
             onEventEnter.Raise(gameObject);
             if (isTutorial)
             {
-                tutorialEnter.Raise(gameObject);
+                if (!wasActive)
+                {
+                    tutorialEnter.Raise(gameObject);
+                }
             }
             if (isExtra)
             {
-                extaEvent.Raise(gameObject);
-                Debug.Log("TOCADO");
+                if (!wasActive)
+                {
+                    extaEvent.Raise(gameObject);
+
+                }
             }
-        }  
+        }
+        wasActive = true;
+
     }
     private void OnTriggerExit(Collider other)
     {

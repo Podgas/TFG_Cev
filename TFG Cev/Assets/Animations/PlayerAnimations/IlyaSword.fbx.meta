@@ -60,7 +60,15 @@ ModelImporter:
   - first:
       74: -3015157843263203539
     second: StoppedClimb
-  externalObjects: {}
+  - first:
+      74: -8301610909719666830
+    second: Pose
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: 67bbc4fb8f154ee46bb0bf3a655dcafb, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -571,6 +579,35 @@ ModelImporter:
       internalID: 0
       firstFrame: 219
       lastFrame: 220
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 219
+    - serializedVersion: 16
+      name: Pose
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 130
+      lastFrame: 130
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

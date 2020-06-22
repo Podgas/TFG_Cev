@@ -20,6 +20,7 @@ public class BossEncounterManager : MonoBehaviour
 
         if(bossEvent.name == "BossEvent")
         {
+            Debug.Log("SPAWN");
             OrochiBehave.DestroyAllOrochi();
             boss.GetComponent<Animator>().SetTrigger("spawn");
             //ps.canMove = false;

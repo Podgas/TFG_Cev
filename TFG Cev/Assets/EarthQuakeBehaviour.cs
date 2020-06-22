@@ -20,6 +20,7 @@ public class EarthQuakeBehaviour : MonoBehaviour
     Vector3 storepos;
     ParticleSystem go;
     public bool parent;
+    [SerializeField]
     Vector3 _direction;
 
     float currentTime;
@@ -41,42 +42,44 @@ public class EarthQuakeBehaviour : MonoBehaviour
                 currentTime = 0;
 
                 currentEQPosition.x += eqPadding.y;
-                storepos = _direction* currentEQPosition.x + transform.position;
+                storepos = currentEQPosition + transform.position + Vector3.up * 5;
                 storeX = storepos.x;
                 if (Physics.Raycast(storepos, Vector3.down, out rhit, 300f, layerGround))
                 {
-                    go = Instantiate(earthQuake, storepos, earthQuake.gameObject.transform.rotation);
+
+                    go = Instantiate(earthQuake, rhit.point, earthQuake.gameObject.transform.rotation);
           
                     go.GetComponent<EarthQuakeBehaviour>().parent = false;
+                    Destroy(go.gameObject, 1.5f);
                 }
 
                 while (currentEQPosition.z < maxEQRange.x)
                 {
-                    
-
                     currentEQPosition.z += eqPadding.x;
-                    storepos = storepos + Vector3.Cross(_direction, Vector3.up) * currentEQPosition.z;
-                    storepos.y = 10;
+                    storepos = transform.position + currentEQPosition + Vector3.up * 5;
                     if (Physics.Raycast(storepos, Vector3.down,out rhit,300f, layerGround))
                     {
                         go = Instantiate(earthQuake, rhit.point, earthQuake.gameObject.transform.rotation);
      
                         go.GetComponent<EarthQuakeBehaviour>().parent = false;
+                        Destroy(go.gameObject, 1.5f);
                     }
 
-                    storepos = storepos - Vector3.Cross(_direction, Vector3.up) * currentEQPosition.z;
-                    storepos.x = storeX;
+                    currentEQPosition.z = -currentEQPosition.z;
+                    storepos = transform.position + currentEQPosition + Vector3.up * 5;
                     if (Physics.Raycast(storepos, Vector3.down, out rhit, 300f, layerGround))
                     {
                         go = Instantiate(earthQuake, rhit.point, earthQuake.gameObject.transform.rotation);
 
                         go.GetComponent<EarthQuakeBehaviour>().parent = false;
+                        Destroy(go.gameObject, 1.5f);
                     }
-                        
+                    currentEQPosition.z = -currentEQPosition.z;
+
+
 
                 }
                 currentEQPosition.z = 0;
-                currentEQPosition.x += eqPadding.y;
             }
         }
         
