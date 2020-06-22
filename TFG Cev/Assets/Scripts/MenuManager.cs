@@ -21,6 +21,7 @@ public class MenuManager : MonoBehaviour
     private void Awake()
     {
         pausePanel.gameObject.SetActive(false);
+        
     }
 
     private void Update()

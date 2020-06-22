@@ -159,11 +159,11 @@ public class HUDController : MonoBehaviour
             case 1:
 
                 objetiveIcons[1].SetActive(true);
+
                 ChangeQuest("Escape from the fortress");
                 break;
             case 2:
-                ChangeQuest("Get the ether");
-                objetiveIcons[0].SetActive(false);
+                ChangeQuest("Defeat Raksha");
                 break;
         }
     }

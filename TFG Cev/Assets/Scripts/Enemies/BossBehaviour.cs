@@ -11,7 +11,7 @@ public class BossBehaviour : MonoBehaviour
         Phase0,
         Phase1,
         Phase2,
-        Phase3
+        Phase3,
     }
 
     private enum BossState
@@ -71,6 +71,8 @@ public class BossBehaviour : MonoBehaviour
     [SerializeField]
     ParticleSystem jump;
     [SerializeField]
+    ParticleSystem area;
+    [SerializeField]
     ParticleSystem earthQuake;
     [SerializeField]
     Vector2 thunderStrikeCube;
@@ -105,7 +107,12 @@ public class BossBehaviour : MonoBehaviour
     Transform spawnPoint2;
     Transform currentPoint;
 
+    [SerializeField]
+    List<Renderer> meshes;
 
+    float dissolveTime;
+    float timeToDissolve = 1f;
+    bool isDissolving;
 
     private void Awake()
     {
@@ -134,6 +141,7 @@ public class BossBehaviour : MonoBehaviour
             case BossState.ChooseBehave:
                 currentState = ChooseBehave();
                 break;
+                LookAt();
             case BossState.MeleeAttack:
                 MeleeBehave();
                 break;
@@ -144,9 +152,17 @@ public class BossBehaviour : MonoBehaviour
                 
                 break;
             case BossState.GettingDamage:
+                if (isDissolving)
+                    Dissolve();
+                else
+                    Appear();
                 break;
             case BossState.ChangingPhase:
+                LookAt();
                 PhaseChange();
+                break;
+            case BossState.Dead:
+                anim.SetBool("dead",true);
                 break;
 
         }
@@ -267,9 +283,9 @@ public class BossBehaviour : MonoBehaviour
         ParticleSystem ps = Instantiate(rangeAttack, transform.position, transform.rotation);
         ParticleSystem ps2 = Instantiate(rangeAttack, transform.position, transform.rotation);
         ParticleSystem ps3 = Instantiate(rangeAttack, transform.position, transform.rotation);
-        ps.transform.LookAt(transform.forward * 2);
-        ps2.transform.LookAt(transform.forward * 2);
-        ps3.transform.LookAt(transform.forward * 2);
+        ps.transform.LookAt(target.transform.position);
+        ps2.transform.LookAt(target.transform.position);
+        ps3.transform.LookAt(target.transform.position);
 
         ps2.transform.Rotate(new Vector3(0, 20, 0));
         ps3.transform.Rotate(new Vector3(0, -20, 0));
@@ -334,16 +350,20 @@ public class BossBehaviour : MonoBehaviour
 
             case Phases.Phase1:
                 currentPhase = Phases.Phase2;
-                ChangeSpawnPoint();
+                currentState = BossState.GettingDamage;
+                anim.SetTrigger("damage");
+                isDissolving = true;
                 break;
 
             case Phases.Phase2:
+                currentState = BossState.GettingDamage;
                 currentPhase = Phases.Phase3;
-                ChangeSpawnPoint();
+                anim.SetTrigger("damage");
+                isDissolving = true;
                 break;
 
             case Phases.Phase3:
-
+                currentState = BossState.Dead;
                 break;
         }
 
@@ -368,7 +388,7 @@ public class BossBehaviour : MonoBehaviour
     {
         currentState = BossState.ChangingPhase;
         anim.SetTrigger("startCombat");
-        jump.Play();
+        area.Play();
     }
 
     private void SpawnThunder()
@@ -414,6 +434,7 @@ public class BossBehaviour : MonoBehaviour
     {
         if(other.tag == "PlayerHitBox")
         {
+
             GetDamage();
         }
     }
@@ -431,5 +452,59 @@ public class BossBehaviour : MonoBehaviour
         }
     }
     
+    public void Dissolve()
+    {
+        if (dissolveTime <= timeToDissolve)
+        {
 
+            dissolveTime += Time.deltaTime;
+            foreach(Renderer r in meshes)
+            {
+                r.material.SetFloat("_dissolve", Mathf.Lerp(0, 1, dissolveTime / timeToDissolve));
+            }
+            
+        }
+        else
+        {
+            foreach (Renderer r in meshes)
+            {
+                r.material.SetFloat("_dissolve", 1);
+            }     
+            dissolveTime = 0f;
+            anim.SetTrigger("spawn");
+            ChangeSpawnPoint();
+            isDissolving = false;
+        }
+    }
+    public void Appear()
+    {
+        if (dissolveTime <= timeToDissolve)
+        {
+
+            dissolveTime += Time.deltaTime;
+            foreach (Renderer r in meshes)
+            {
+                r.material.SetFloat("_dissolve", Mathf.Lerp(1, 0, dissolveTime / timeToDissolve));
+            }
+
+        }
+        else
+        {
+            foreach (Renderer r in meshes)
+            {
+                r.material.SetFloat("_dissolve", 0);
+            }
+            dissolveTime = 0f;
+            currentState = BossState.Waiting;
+        }
+    }
+    public void PhaseChanging()
+    {
+
+    }
+
+    public void Die()
+    {
+
+    }
 }
