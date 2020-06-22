@@ -34,9 +34,9 @@ public class AudioManager : MonoBehaviour
     public void PlaySound(string name)
     {
         AudioLB lb = GetSound(name);
-        /*
+
         lb.ac.clip = lb.clip; 
-        lb.ac.Play();*/
+        lb.ac.Play();
     }
 
     public void PlaySound(string name, float pitch)

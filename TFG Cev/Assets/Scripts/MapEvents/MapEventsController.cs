@@ -21,6 +21,12 @@ public class MapEventsController : MonoBehaviour
     {
         MapEvent me = mapEvent.gameObject.GetComponent<MapEvent>();
         me.SetActive(true);
+        if (me.name == "Walk")
+            AudioManager.Instance.PlaySound("tutorial");
+        if (me.name == "ArriveTown")
+            AudioManager.Instance.PlaySound("town");
+        if (me.name == "Wagon")
+            AudioManager.Instance.PlaySound("wagon");
     }
     public void OnEventExit(GameObject mapEvent)
     {

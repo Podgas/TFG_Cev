@@ -57,6 +57,144 @@ MonoBehaviour:
   - name: back
     clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
     ac: {fileID: -6314922610593902500}
+  - name: pisada
+    clip: {fileID: 8300000, guid: efd3e259725f385408cde13bb09ba540, type: 3}
+    ac: {fileID: 0}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: back
+    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
+    ac: {fileID: -6314922610593902500}
 --- !u!82 &-6314922610593902500
 AudioSource:
   m_ObjectHideFlags: 0

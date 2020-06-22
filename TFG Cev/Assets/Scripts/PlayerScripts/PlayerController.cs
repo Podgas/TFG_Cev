@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float maxDashTime = 1.0f;
     [SerializeField]
-    private float dashSpeed = 3.0f;
+    private float dashSpeed = 2.0f;
     [SerializeField]
     private float dashStoppingSpeed = 0.1f;
 
@@ -152,6 +152,10 @@ public class PlayerController : MonoBehaviour
 
     bool inWagon;
     bool haveMedallion;
+    [SerializeField]
+    FloatEvent onSake;
+
+    float totalSake = 2f;
     private void Awake()
     {
         InitStats();
@@ -175,6 +179,12 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (stats.canMove) {
+            if (Input.GetButtonDown("Heal"))
+            {
+                UpdateHp(35);
+                onSake.Raise(-1);
+                AudioManager.Instance.PlaySound("heal", 1, 0.4f);
+            }
             //Comprobamos que el juego no esta pausado ni estamos muertos
             if (!MenuManager.GetPaused() || !stats.playerStatus.isDead)
             {
@@ -506,6 +516,7 @@ public class PlayerController : MonoBehaviour
             if (dashDirection == Vector3.zero)
                 dashDirection = forward * -1f * speed;
             stats.playerStatus.isDashing = true;
+            anim.SetBool("dodge", true);
         }
 
         if (currentDashTime < maxDashTime && stats.playerStatus.isDashing)
@@ -516,6 +527,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             stats.playerStatus.isDashing = false;
+            anim.SetBool("dodge", false);
         }
     }
 
@@ -567,6 +579,11 @@ public class PlayerController : MonoBehaviour
         }else if(other.tag == "Lever")
         {
             objectToInteract = other.transform;
+        }
+
+        if (other.tag == "Sake")
+        {
+            onSake.Raise(1);
         }
 
         //TODO:Revisar funcionamiento

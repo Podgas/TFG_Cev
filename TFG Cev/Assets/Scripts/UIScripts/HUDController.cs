@@ -34,6 +34,9 @@ public class HUDController : MonoBehaviour
     bool isChangingQuest;
     string newQUest;
     float currentTime = 0;
+
+    [SerializeField]
+    List<GameObject> SakePlates;
     private void Start()
     {
         hpBar.fillAmount = playerStats.hp.value / playerStats.hp.maxValue;
@@ -195,5 +198,26 @@ public class HUDController : MonoBehaviour
                 ChangeQuest("Defeat Raksha");
                 break;
         }
+    }
+
+    public void OnSake(float amount)
+    {
+        GameObject goToDeactivate = null;
+        foreach(GameObject go in SakePlates)
+        {
+            if(amount > 0)
+            {
+                if (!go.active)
+                    go.SetActive(true);
+                break;
+            }
+            else
+            {
+                if (go.active)
+                    goToDeactivate = go;
+            }
+        }
+        if (goToDeactivate != null)
+            goToDeactivate.SetActive(false);
     }
 }
