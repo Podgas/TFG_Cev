@@ -314,14 +314,14 @@ public class EnemyBase : MonoBehaviour
         {
             if (dissolveTime <= timeToDissolve)
             {
-                Debug.Log("dissolving..");
+
                 dissolveTime += Time.deltaTime;
                 geo.material.SetFloat("_dissolve", Mathf.Lerp(0, 1, dissolveTime / timeToDissolve));
                 weapon.material.SetFloat("_dissolve", Mathf.Lerp(0, 1, dissolveTime / timeToDissolve));
             }
             else
             {
-                Debug.Log("done!(Y)");
+
                 geo.material.SetFloat("_dissolve", 1);
                 weapon.material.SetFloat("_dissolve", 1);
                 isDissolving = false;
@@ -361,8 +361,9 @@ public class EnemyBase : MonoBehaviour
     }
     public void OnCalm(Target target)
     {
-
-
+        Debug.Log(target.currentPosition);
+        Debug.Log(target.lastSeenPosition);
+        
         if (behaviourType != EnemyBehaviour.Static)
         {
             StartCoroutine("RestartPatroling");
