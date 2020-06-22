@@ -200,8 +200,8 @@ public class EnemyBase : MonoBehaviour
         if (other.tag == "PlayerHitBox")
         {
             GetDamage(1,GameObject.Find("Player").transform);
-            /*vfx.PlayVFX(AudioLibrary.VfxSounds.SwordHit);
-            vfx.PlayVFX(AudioLibrary.VfxSounds.Hurt);*/
+            AudioManager.Instance.PlaySound("damageOrochi");
+            AudioManager.Instance.PlaySound("damageDealt");
 
         }
 
@@ -234,6 +234,7 @@ public class EnemyBase : MonoBehaviour
         {
             anim.SetBool("isDead", true);
             currentBaseState = EnemyBaseStates.Dead;
+            AudioManager.Instance.PlaySound("derrotaOrochi");
         }
     }
 
@@ -342,7 +343,8 @@ public class EnemyBase : MonoBehaviour
         currentPatrolState = PatrolStates.Alerted;
         exclamation.SetTrigger("Alert");
         anim.SetTrigger("alert");
-        
+        AudioManager.Instance.PlaySound("alert");
+
     }
     public void OnDetect(Target target)
     {
@@ -356,8 +358,8 @@ public class EnemyBase : MonoBehaviour
         currentPatrolState = PatrolStates.Chase;
         anim.SetTrigger("detected");
         chaseTimer = 0;
-        
 
+        AudioManager.Instance.PlaySound("detect");
     }
     public void OnCalm(Target target)
     {

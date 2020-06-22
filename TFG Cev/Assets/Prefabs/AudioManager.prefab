@@ -60,33 +60,33 @@ MonoBehaviour:
   - name: pisada
     clip: {fileID: 8300000, guid: efd3e259725f385408cde13bb09ba540, type: 3}
     ac: {fileID: 0}
-  - name: back
+  - name: ilyaAttack
+    clip: {fileID: 8300000, guid: 6b3189064612c8a47b5949f32748ce39, type: 3}
+    ac: {fileID: 0}
+  - name: heal
+    clip: {fileID: 8300000, guid: b58eba473e55ca1428fbe6e41df2ef90, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: dodge
+    clip: {fileID: 8300000, guid: 9fa9ff2f58285e04c8bb6dd845ca568f, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: climb
+    clip: {fileID: 8300000, guid: a2968b6b6638db044a99b0b69827a007, type: 3}
+    ac: {fileID: -6314922610593902500}
+  - name: changeQuest
     clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
     ac: {fileID: -6314922610593902500}
   - name: back
     clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
     ac: {fileID: -6314922610593902500}
-  - name: back
-    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
-    ac: {fileID: -6314922610593902500}
-  - name: back
-    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
-    ac: {fileID: -6314922610593902500}
-  - name: back
-    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
-    ac: {fileID: -6314922610593902500}
-  - name: back
-    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
-    ac: {fileID: -6314922610593902500}
-  - name: back
-    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
-    ac: {fileID: -6314922610593902500}
-  - name: back
-    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
-    ac: {fileID: -6314922610593902500}
-  - name: back
-    clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
-    ac: {fileID: -6314922610593902500}
+  - name: tutorial
+    clip: {fileID: 8300000, guid: 0d83bfd71515d6545bc6f9e185978be4, type: 3}
+    ac: {fileID: 0}
+  - name: town
+    clip: {fileID: 8300000, guid: cb13dc410df7dc044b9b31c534a734e8, type: 3}
+    ac: {fileID: 0}
+  - name: wagon
+    clip: {fileID: 8300000, guid: 25bba02cf08aa5f40b6f6d55fdc047ad, type: 3}
+    ac: {fileID: 0}
   - name: back
     clip: {fileID: 8300000, guid: d3b69aaa206771b48a5f33561eaafb1d, type: 3}
     ac: {fileID: -6314922610593902500}

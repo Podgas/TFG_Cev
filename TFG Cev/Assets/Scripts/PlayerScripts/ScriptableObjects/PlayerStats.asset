@@ -22,7 +22,7 @@ MonoBehaviour:
   maxAmmo: 6
   playerStatus:
     isGrounded: 1
-    isMoving: 0
+    isMoving: 1
     isRunning: 0
     isCharging: 0
     isShooting: 0
@@ -34,4 +34,4 @@ MonoBehaviour:
     jumpPressed: 0
     interactPressed: 0
   canMove: 1
-  spawnPoint: {x: 107.40184, y: 17.19004, z: 84.437485}
+  spawnPoint: {x: 0, y: 0, z: 0}

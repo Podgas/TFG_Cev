@@ -41,7 +41,7 @@ public class EarthQuakeBehaviour : MonoBehaviour
                 RaycastHit rhit;
                 currentTime = 0;
 
-                currentEQPosition.x += eqPadding.y;
+                currentEQPosition.z += eqPadding.y;
                 storepos = currentEQPosition + transform.position + Vector3.up * 5;
                 storeX = storepos.x;
                 if (Physics.Raycast(storepos, Vector3.down, out rhit, 300f, layerGround))
@@ -53,9 +53,9 @@ public class EarthQuakeBehaviour : MonoBehaviour
                     Destroy(go.gameObject, 1.5f);
                 }
 
-                while (currentEQPosition.z < maxEQRange.x)
+                while (currentEQPosition.x < maxEQRange.x)
                 {
-                    currentEQPosition.z += eqPadding.x;
+                    currentEQPosition.x += eqPadding.x;
                     storepos = transform.position + currentEQPosition + Vector3.up * 5;
                     if (Physics.Raycast(storepos, Vector3.down,out rhit,300f, layerGround))
                     {
@@ -65,7 +65,7 @@ public class EarthQuakeBehaviour : MonoBehaviour
                         Destroy(go.gameObject, 1.5f);
                     }
 
-                    currentEQPosition.z = -currentEQPosition.z;
+                    currentEQPosition.x = -currentEQPosition.x;
                     storepos = transform.position + currentEQPosition + Vector3.up * 5;
                     if (Physics.Raycast(storepos, Vector3.down, out rhit, 300f, layerGround))
                     {
@@ -74,12 +74,12 @@ public class EarthQuakeBehaviour : MonoBehaviour
                         go.GetComponent<EarthQuakeBehaviour>().parent = false;
                         Destroy(go.gameObject, 1.5f);
                     }
-                    currentEQPosition.z = -currentEQPosition.z;
+                    currentEQPosition.x = -currentEQPosition.x;
 
 
 
                 }
-                currentEQPosition.z = 0;
+                currentEQPosition.x = 0;
             }
         }
         

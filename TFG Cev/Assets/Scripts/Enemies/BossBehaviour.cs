@@ -221,6 +221,28 @@ public class BossBehaviour : MonoBehaviour
                 break;
             case BossState.Dead:
                 anim.SetBool("dead",true);
+                if (isDissolving)
+                {
+                    if (dissolveTime <= timeToDissolve)
+                    {
+
+                        dissolveTime += Time.deltaTime;
+                        foreach (Renderer r in meshes)
+                        {
+                            r.material.SetFloat("_dissolve", Mathf.Lerp(0, 1, dissolveTime / timeToDissolve));
+                        }
+                    }
+                    else
+                    {
+                        foreach (Renderer r in meshes)
+                        {
+                            r.material.SetFloat("_dissolve", 1);
+                        }
+                        dissolveTime = 0f;
+                        SceneController.LoadScene(SceneController.Scene.FinalScene,false);
+                        isDissolving = false;
+                    }
+                }
                 break;
 
         }
@@ -287,13 +309,9 @@ public class BossBehaviour : MonoBehaviour
     {
         int random = 1;
 
-        if(currentPhase == Phases.Phase3)
+        if(currentPhase != Phases.Phase1)
         {
             random += Random.Range(0, 150);
-        }
-        else if (currentPhase == Phases.Phase2)
-        {
-            random += Random.Range(0, 100);
         }
 
         if (random <= 30)
@@ -354,6 +372,7 @@ public class BossBehaviour : MonoBehaviour
     }
     public void StartThunder()
     {
+        AudioManager.Instance.PlaySound("oniThunder");
         StartCoroutine(Thunderstorm());
     }
     IEnumerator Thunderstorm()
@@ -414,6 +433,7 @@ public class BossBehaviour : MonoBehaviour
                 gameObject.GetComponent<CapsuleCollider>().enabled = false;
                 anim.SetTrigger("damage");
                 isDissolving = true;
+                coolDown = 1.5f;
                 break;
 
             case Phases.Phase2:
@@ -421,11 +441,14 @@ public class BossBehaviour : MonoBehaviour
                 currentPhase = Phases.Phase3;
                 gameObject.GetComponent<CapsuleCollider>().enabled = false;
                 anim.SetTrigger("damage");
+                coolDown = 0.8f;
                 isDissolving = true;
                 break;
 
             case Phases.Phase3:
                 currentState = BossState.Dead;
+                isDissolving = true;
+                
                 break;
         }
   
@@ -525,5 +548,18 @@ public class BossBehaviour : MonoBehaviour
     public void Die()
     {
 
+    }
+
+    public void OniAttk()
+    {
+        AudioManager.Instance.PlaySound("oniMace");
+    }
+    public void OniArrive()
+    {
+        AudioManager.Instance.PlaySound("oniArrive");
+    }
+    public void OniSlash()
+    {
+        AudioManager.Instance.PlaySound("oniSlash");
     }
 }

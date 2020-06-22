@@ -179,5 +179,8 @@ public class OrochiBehave : EnemyBase
         {
             Destroy(go);
         }
+
+        Destroy(GameObject.Find("Spawner"));
+        Destroy(GameObject.Find("Spawner1"));
     }
 }
